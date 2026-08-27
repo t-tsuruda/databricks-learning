@@ -23,6 +23,19 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
 
   const userId = session.user.id;
 
+  const quizzes = await prisma.quiz.findMany({ where: { lessonId }, select: { id: true } });
+  if (quizzes.length > 0) {
+    const correctAnswerCount = await prisma.quizAnswer.count({
+      where: { userId, quizId: { in: quizzes.map((quiz) => quiz.id) }, isCorrect: true },
+    });
+    if (correctAnswerCount < quizzes.length) {
+      return NextResponse.json(
+        { error: "確認問題にすべて正解してから完了してください。" },
+        { status: 400 },
+      );
+    }
+  }
+
   await prisma.userLessonProgress.upsert({
     where: { userId_lessonId: { userId, lessonId } },
     create: { userId, lessonId, isCompleted: true, completedAt: new Date() },

@@ -21,6 +21,7 @@ export default async function EditLessonPage({
   if (!lesson || lesson.courseId !== courseId) notFound();
 
   const outcomes = safeParseOutcomes(lesson.outcomesJson).join("\n");
+  const referenceLinks = safeParseReferenceLinks(lesson.referenceLinksJson);
 
   const updateLessonBound = updateLesson.bind(null, courseId, lessonId);
   const updateQuizzesBound = updateLessonQuizzes.bind(null, courseId, lessonId);
@@ -47,6 +48,7 @@ export default async function EditLessonPage({
               handsOnContent: lesson.handsOnContent,
               outcomes,
               relatedJobs: lesson.relatedJobs,
+              referenceLinks,
             }}
           />
         </div>
@@ -72,6 +74,22 @@ function safeParseOutcomes(json: string): string[] {
   try {
     const parsed = JSON.parse(json) as unknown;
     return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
+function safeParseReferenceLinks(json: string): { label: string; url: string }[] {
+  try {
+    const parsed = JSON.parse(json) as unknown;
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (item): item is { label: string; url: string } =>
+        typeof item === "object" &&
+        item !== null &&
+        typeof (item as { label?: unknown }).label === "string" &&
+        typeof (item as { url?: unknown }).url === "string",
+    );
   } catch {
     return [];
   }

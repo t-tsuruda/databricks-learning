@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { getProgressSummary } from "@/lib/progress";
 import { pickMotivationalMessage } from "@/lib/app-settings";
 import { getLevelInfo, MAX_LEVEL } from "@/lib/skill-levels";
+import { fetchJobListings } from "@/lib/jobs";
 
 export const metadata = {
   title: "ダッシュボード | Databricks学習アプリ",
@@ -16,6 +17,9 @@ export default async function DashboardPage() {
   const summary = await getProgressSummary(userId);
   const levelInfo = getLevelInfo(summary.currentLevel);
   const motivationalMessage = await pickMotivationalMessage(summary.totalCompleted);
+
+  const jobSearchKeywords = summary.nextLevelJobs.length > 0 ? summary.nextLevelJobs : summary.relatedJobs;
+  const jobListings = jobSearchKeywords.length > 0 ? await fetchJobListings(jobSearchKeywords) : null;
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
@@ -120,6 +124,41 @@ export default async function DashboardPage() {
           ) : null}
         </section>
       </div>
+
+      {jobListings ? (
+        <section className="mt-6 rounded-xl border border-border bg-surface p-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-brand">
+              あなたのレベルに近い求人（参考）
+            </h2>
+            {!jobListings.isLive ? (
+              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-foreground/50">サンプル表示</span>
+            ) : null}
+          </div>
+          <p className="mt-1 text-xs text-foreground/60">
+            キーワード「{jobSearchKeywords[0]}」に関連する求人の参考情報です。応募条件は各求人の掲載元でご確認ください。
+          </p>
+          <ul className="mt-3 space-y-2">
+            {jobListings.jobs.map((job) => (
+              <li key={job.url} className="rounded-lg border border-border p-3 text-sm">
+                <a
+                  href={job.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-brand hover:underline"
+                >
+                  {job.title} ↗
+                </a>
+                {job.company || job.location ? (
+                  <p className="mt-0.5 text-xs text-foreground/60">
+                    {[job.company, job.location].filter(Boolean).join(" ・ ")}
+                  </p>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         {/* 達成バッジ */}

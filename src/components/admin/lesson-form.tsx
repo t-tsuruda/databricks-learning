@@ -1,3 +1,7 @@
+import { AdminActionForm, AdminSubmitButton, type ActionResult } from "@/components/admin/action-form";
+import { ReferenceLinksEditor } from "@/components/admin/reference-links-editor";
+import { HandsOnEditor } from "@/components/admin/hands-on-editor";
+
 type LessonFormValues = {
   slug: string;
   title: string;
@@ -9,6 +13,7 @@ type LessonFormValues = {
   handsOnContent: string;
   outcomes: string;
   relatedJobs: string;
+  referenceLinks: { label: string; url: string }[];
 };
 
 export function LessonForm({
@@ -16,12 +21,12 @@ export function LessonForm({
   defaultValues,
   submitLabel,
 }: {
-  action: (formData: FormData) => void;
+  action: (formData: FormData) => Promise<ActionResult>;
   defaultValues?: Partial<LessonFormValues>;
   submitLabel: string;
 }) {
   return (
-    <form action={action} className="space-y-4">
+    <AdminActionForm action={action} className="space-y-4">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Field label="スラッグ" name="slug" defaultValue={defaultValues?.slug} />
         <Field label="タイトル" name="title" defaultValue={defaultValues?.title} />
@@ -59,20 +64,16 @@ export function LessonForm({
         label="座学コンテンツ(Markdown)"
         name="lectureContent"
         defaultValue={defaultValues?.lectureContent}
-        rows={8}
+        rows={10}
       />
+      <ReferenceLinksEditor initialLinks={defaultValues?.referenceLinks ?? []} />
       <TextAreaField
         label="具体例(Markdown)"
         name="exampleContent"
         defaultValue={defaultValues?.exampleContent}
         rows={6}
       />
-      <TextAreaField
-        label="ハンズオン課題(Markdown)"
-        name="handsOnContent"
-        defaultValue={defaultValues?.handsOnContent}
-        rows={6}
-      />
+      <HandsOnEditor defaultValue={defaultValues?.handsOnContent} />
       <TextAreaField
         label="これでできるようになったこと(1行1項目)"
         name="outcomes"
@@ -85,13 +86,10 @@ export function LessonForm({
         defaultValue={defaultValues?.relatedJobs}
       />
 
-      <button
-        type="submit"
-        className="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
-      >
+      <AdminSubmitButton className="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark">
         {submitLabel}
-      </button>
-    </form>
+      </AdminSubmitButton>
+    </AdminActionForm>
   );
 }
 

@@ -25,6 +25,13 @@ export function MarkdownContent({ content }: { content: string }) {
           ),
           th: (props) => <th className="border border-border bg-slate-50 px-2 py-1 text-left" {...props} />,
           td: (props) => <td className="border border-border px-2 py-1" {...props} />,
+          a: (props) => (
+            <a className="text-brand underline hover:no-underline" target="_blank" rel="noopener noreferrer" {...props} />
+          ),
+          img: (props) => (
+            // eslint-disable-next-line @next/next/no-img-element -- content images are admin-uploaded data: URIs or arbitrary external URLs, not optimizable by next/image
+            <img className="mb-3 max-w-full rounded-lg border border-border" alt={props.alt ?? ""} {...props} />
+          ),
         }}
       >
         {content}

@@ -1,4 +1,5 @@
 import { isSignupEnabled, getMotivationalMessages } from "@/lib/app-settings";
+import { AdminActionForm, AdminSubmitButton } from "@/components/admin/action-form";
 
 import { updateSignupEnabled, updateMotivationalMessages } from "./actions";
 
@@ -16,18 +17,15 @@ export default async function AdminSettingsPage() {
         <p className="mt-1 text-sm text-foreground/60">
           停止すると、新規登録ページに「受付を停止しています」と表示され、登録できなくなります。
         </p>
-        <form action={updateSignupEnabled} className="mt-4">
+        <AdminActionForm action={updateSignupEnabled} className="mt-4">
           <label className="flex items-center gap-2 text-sm font-medium">
             <input type="checkbox" name="signupEnabled" defaultChecked={signupEnabled} className="h-4 w-4" />
             サインアップ受付を有効にする
           </label>
-          <button
-            type="submit"
-            className="mt-4 rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
-          >
+          <AdminSubmitButton className="mt-4 rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark">
             保存する
-          </button>
-        </form>
+          </AdminSubmitButton>
+        </AdminActionForm>
       </section>
 
       <section className="max-w-xl rounded-xl border border-border bg-surface p-6">
@@ -35,20 +33,17 @@ export default async function AdminSettingsPage() {
         <p className="mt-1 text-sm text-foreground/60">
           ダッシュボードに表示されるメッセージのプールです。1行につき1メッセージで入力してください。
         </p>
-        <form action={updateMotivationalMessages} className="mt-4">
+        <AdminActionForm action={updateMotivationalMessages} className="mt-4">
           <textarea
             name="messages"
             rows={8}
             defaultValue={messages.join("\n")}
             className="w-full rounded-md border border-border px-3 py-2 text-sm"
           />
-          <button
-            type="submit"
-            className="mt-4 rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
-          >
+          <AdminSubmitButton className="mt-4 rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark">
             保存する
-          </button>
-        </form>
+          </AdminSubmitButton>
+        </AdminActionForm>
       </section>
     </div>
   );

@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { DeleteAccountForm } from "@/components/delete-account-form";
+import { ChangePasswordForm } from "@/components/change-password-form";
 
 export const metadata = {
   title: "マイページ | Databricks学習アプリ",
@@ -34,6 +35,13 @@ export default async function MyPage() {
             <dd className="font-medium">{user.createdAt.toLocaleDateString("ja-JP")}</dd>
           </div>
         </dl>
+      </section>
+
+      <section className="mt-8 max-w-md">
+        <h2 className="text-lg font-semibold">パスワードの変更</h2>
+        <div className="mt-3">
+          <ChangePasswordForm />
+        </div>
       </section>
 
       <section className="mt-8">

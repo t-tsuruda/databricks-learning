@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type QuizOption = { id: string; label: string };
 type QuizData = {
@@ -11,7 +11,13 @@ type QuizData = {
   wasCorrect: boolean | null;
 };
 
-export function LessonQuiz({ quiz }: { quiz: QuizData }) {
+export function LessonQuiz({
+  quiz,
+  onResult,
+}: {
+  quiz: QuizData;
+  onResult?: (isCorrect: boolean | null) => void;
+}) {
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(quiz.answeredOptionId);
   const [feedback, setFeedback] = useState<{ isCorrect: boolean; correctOptionId: string | null } | null>(
     quiz.wasCorrect !== null && quiz.answeredOptionId
@@ -19,6 +25,12 @@ export function LessonQuiz({ quiz }: { quiz: QuizData }) {
       : null,
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Report the initial (already-answered) state once on mount.
+  useEffect(() => {
+    onResult?.(quiz.wasCorrect ?? null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSubmit = async () => {
     if (!selectedOptionId) return;
@@ -32,6 +44,7 @@ export function LessonQuiz({ quiz }: { quiz: QuizData }) {
       const data = await response.json();
       if (response.ok) {
         setFeedback({ isCorrect: data.isCorrect, correctOptionId: data.correctOptionId });
+        onResult?.(data.isCorrect);
       }
     } finally {
       setIsSubmitting(false);
@@ -57,6 +70,7 @@ export function LessonQuiz({ quiz }: { quiz: QuizData }) {
               onChange={() => {
                 setSelectedOptionId(option.id);
                 setFeedback(null);
+                onResult?.(null);
               }}
               className="h-4 w-4"
             />

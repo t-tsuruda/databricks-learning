@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useState } from "react";
+
+import { AdminSubmitButton, type ActionResult } from "@/components/admin/action-form";
 
 type QuizOption = { label: string; isCorrect: boolean };
 type Quiz = { question: string; options: QuizOption[] };
@@ -12,9 +14,12 @@ export function QuizEditor({
   action,
   initialQuizzes,
 }: {
-  action: (formData: FormData) => void;
+  action: (formData: FormData) => Promise<ActionResult>;
   initialQuizzes: Quiz[];
 }) {
+  const [state, formAction] = useActionState(async (_prev: ActionResult | null, formData: FormData) => {
+    return action(formData);
+  }, null as ActionResult | null);
   const [quizzes, setQuizzes] = useState<Quiz[]>(
     initialQuizzes.length > 0 ? initialQuizzes : [structuredClone(EMPTY_QUIZ)],
   );
@@ -66,7 +71,7 @@ export function QuizEditor({
   };
 
   return (
-    <form action={action} className="space-y-4">
+    <form action={formAction} className="space-y-4">
       <input type="hidden" name="quizzesJson" value={JSON.stringify(quizzes)} />
 
       {quizzes.map((quiz, quizIndex) => (
@@ -139,13 +144,15 @@ export function QuizEditor({
         >
           + 問題を追加
         </button>
-        <button
-          type="submit"
-          className="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
-        >
+        <AdminSubmitButton className="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark">
           確認問題を保存
-        </button>
+        </AdminSubmitButton>
       </div>
+      {state ? (
+        <p role="status" className={`text-sm ${state.ok ? "text-emerald-700" : "text-red-600"}`}>
+          {state.message}
+        </p>
+      ) : null}
     </form>
   );
 }

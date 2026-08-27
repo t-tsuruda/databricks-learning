@@ -4,8 +4,9 @@ import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
 import { requireAdminSession } from "@/lib/require-admin";
+import type { ActionResult } from "@/components/admin/action-form";
 
-export async function updateSignupEnabled(formData: FormData) {
+export async function updateSignupEnabled(formData: FormData): Promise<ActionResult> {
   await requireAdminSession();
   const enabled = formData.get("signupEnabled") === "on";
 
@@ -16,9 +17,10 @@ export async function updateSignupEnabled(formData: FormData) {
   });
 
   revalidatePath("/admin/settings");
+  return { ok: true, message: "保存しました。" };
 }
 
-export async function updateMotivationalMessages(formData: FormData) {
+export async function updateMotivationalMessages(formData: FormData): Promise<ActionResult> {
   await requireAdminSession();
   const raw = String(formData.get("messages") ?? "");
   const messages = raw
@@ -33,4 +35,5 @@ export async function updateMotivationalMessages(formData: FormData) {
   });
 
   revalidatePath("/admin/settings");
+  return { ok: true, message: "保存しました。" };
 }

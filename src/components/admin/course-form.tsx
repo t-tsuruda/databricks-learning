@@ -1,3 +1,5 @@
+import { AdminActionForm, AdminSubmitButton, type ActionResult } from "@/components/admin/action-form";
+
 type CourseFormValues = {
   slug: string;
   title: string;
@@ -13,15 +15,13 @@ export function CourseForm({
   submitLabel,
   courseId,
 }: {
-  action: (formData: FormData) => void;
+  action: (formData: FormData) => Promise<ActionResult>;
   defaultValues?: Partial<CourseFormValues>;
   submitLabel: string;
   courseId?: string;
 }) {
   return (
-    <form action={action} className="space-y-4">
-      {courseId ? <input type="hidden" name="courseId" value={courseId} /> : null}
-
+    <AdminActionForm action={action} hidden={courseId ? { courseId } : undefined} className="space-y-4">
       <Field label="スラッグ(URL用、半角英数字とハイフン)" name="slug" defaultValue={defaultValues?.slug} />
       <Field label="タイトル" name="title" defaultValue={defaultValues?.title} />
       <TextAreaField label="説明文" name="description" defaultValue={defaultValues?.description} rows={2} />
@@ -46,13 +46,10 @@ export function CourseForm({
         />
       </div>
 
-      <button
-        type="submit"
-        className="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
-      >
+      <AdminSubmitButton className="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark">
         {submitLabel}
-      </button>
-    </form>
+      </AdminSubmitButton>
+    </AdminActionForm>
   );
 }
 

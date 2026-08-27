@@ -6,6 +6,8 @@ type QuizSeed = {
   options: { label: string; isCorrect: boolean }[];
 };
 
+type ReferenceLink = { label: string; url: string };
+
 type LessonSeed = {
   slug: string;
   title: string;
@@ -16,6 +18,7 @@ type LessonSeed = {
   handsOnContent: string;
   outcomes: string[];
   relatedJobs: string[];
+  referenceLinks: ReferenceLink[];
   quizzes: QuizSeed[];
 };
 
@@ -49,12 +52,16 @@ const courses: CourseSeed[] = [
         exampleContent:
           "例えば、以下のような `orders`（注文）テーブルを考えます。\n\n| order_id | customer_name | amount | order_date |\n|---|---|---|---|\n| 1 | 田中 | 3000 | 2026-01-05 |\n| 2 | 鈴木 | 5400 | 2026-01-06 |\n\nこの表から「合計売上はいくらか」「一番多く買っている顧客は誰か」を求めるのがデータ分析の第一歩です。",
         handsOnContent:
-          "**ハンズオン課題**\n\n1. 手元の紙またはメモアプリに、あなたの好きな題材（本棚、家計簿、好きな曲リストなど）を表形式データとして書き出してみましょう。\n2. 行・列・主キーがそれぞれ何にあたるかを1行ずつ書き添えてください。\n3. できたら「確認する」に進み、理解度チェックに答えましょう。",
+          "**ハンズオン課題**\n\n1. 手元の紙・スプレッドシート・メモアプリのいずれかを用意してください。\n2. あなたの好きな題材（本棚、家計簿、好きな曲リストなど）を選び、表のタイトルを1行目に書きます。\n3. 2行目に列名（ヘッダー）を書き出します。最低4つの列を用意してください（例：家計簿なら「日付・項目・金額・カテゴリ」）。\n4. 3行目以降に、実際のデータを最低5行入力してください。\n5. どの列が「主キー」に使えそうか（他の行と重複しない値を持つ列、または連番のID列を追加する）を検討し、メモに書き加えてください。\n6. 完成した表を見直し、「行が何を表しているか」「列が何を表しているか」を、それぞれ1文で説明してみましょう。\n7. できたら「確認する」に進み、理解度チェックに答えましょう。",
         outcomes: [
           "表形式データの行・列・主キーの意味を説明できる",
           "身の回りの情報を表形式データとして捉え直せる",
         ],
         relatedJobs: ["Data Analyst", "Reporting Analyst", "BI Support"],
+        referenceLinks: [
+          { label: "Databricks公式ドキュメント", url: "https://docs.databricks.com/en/index.html" },
+          { label: "Wikipedia: リレーショナルデータベース", url: "https://ja.wikipedia.org/wiki/%E3%83%AA%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9" },
+        ],
         quizzes: [
           {
             question: "表形式データにおいて「1件のデータ」を表す単位はどれですか？",
@@ -77,12 +84,16 @@ const courses: CourseSeed[] = [
         exampleContent:
           "```sql\n-- 3000円より高い注文だけを取得する\nSELECT customer_name, amount\nFROM orders\nWHERE amount > 3000;\n```\n\nこのクエリは `orders` テーブルから、`amount` が3000より大きい行の `customer_name` と `amount` を取り出します。",
         handsOnContent:
-          "**ハンズオン課題（Databricks Free Edition推奨）**\n\n1. Databricks Free EditionのSQLエディタ、または任意のSQL実行環境を開きます。\n2. サンプルテーブル（`samples.tpch.orders` など、Databricksが提供するサンプルデータ）に対して `SELECT` 文を実行し、上位10件を表示してみましょう。\n3. `WHERE` 句を使って、任意の条件（金額・日付など）で絞り込みを行いましょう。",
+          "**ハンズオン課題（Databricks Free Edition推奨）**\n\n1. Databricks Free Editionにサインアップ（無料）し、Workspaceにログインします。\n2. 左メニューから「SQL Editor」を開きます。\n3. まず `SELECT * FROM samples.tpch.orders LIMIT 10;` を実行し、テーブル全体の雰囲気（列名・データ型）を確認しましょう。\n4. 次に `SELECT o_custkey, o_totalprice, o_orderdate FROM samples.tpch.orders LIMIT 10;` を実行し、特定の列だけを取り出してみましょう。\n5. `WHERE o_totalprice > 300000` を追加し、高額注文だけに絞り込んでみましょう。実行結果の件数が減ることを確認してください。\n6. さらに `WHERE o_totalprice > 300000 AND o_orderstatus = 'O'` のように条件を `AND` で組み合わせ、結果がどう変化するか比較してみましょう。\n7. 最後に、自分で条件を1つ考えて（例：特定の日付以降の注文）SQLを書き、実行結果をスクリーンショットで残しておきましょう。",
         outcomes: [
           "SELECT / FROM / WHERE の役割を説明できる",
           "簡単な条件でデータを絞り込むSQLを書ける",
         ],
         relatedJobs: ["Data Analyst", "Reporting Analyst", "Junior Data Engineer"],
+        referenceLinks: [
+          { label: "Databricks SQL言語マニュアル", url: "https://docs.databricks.com/en/sql/language-manual/index.html" },
+          { label: "W3Schools: SQL SELECT", url: "https://www.w3schools.com/sql/sql_select.asp" },
+        ],
         quizzes: [
           {
             question: "取得する行を条件で絞り込むために使う句はどれですか？",
@@ -105,12 +116,16 @@ const courses: CourseSeed[] = [
         exampleContent:
           "上記のクエリを実行すると、顧客ごとの合計購入金額が一覧で得られます。これは「優良顧客はだれか」を把握する際によく使われる分析パターンです。",
         handsOnContent:
-          "**ハンズオン課題**\n\n1. サンプルの注文データに対して、顧客ごとの合計金額を集計するSQLを書いて実行しましょう。\n2. `ORDER BY total_amount DESC` を追加し、合計金額が多い順に並び替えてみましょう。\n3. 結果からどの顧客が最も貢献しているかをメモしましょう。",
+          "**ハンズオン課題**\n\n1. Databricks SQL Editorで `samples.tpch.orders` を対象に、`SELECT o_orderstatus, COUNT(*) AS cnt FROM samples.tpch.orders GROUP BY o_orderstatus;` を実行し、注文ステータスごとの件数を確認しましょう。\n2. 次に `SELECT o_custkey, SUM(o_totalprice) AS total_amount FROM samples.tpch.orders GROUP BY o_custkey;` を実行し、顧客ごとの合計金額を集計しましょう。\n3. `ORDER BY total_amount DESC` を末尾に追加し、合計金額が多い顧客から順に並び替えてみましょう。\n4. `LIMIT 5` を追加し、上位5顧客だけに絞り込みましょう。\n5. さらに `AVG(o_totalprice)` に置き換えて実行し、SUMとAVGで結果の意味がどう変わるかを比較してください。\n6. 結果を見て、「最も貢献している顧客」と「平均注文額が高い顧客」が同じかどうかをメモしましょう。",
         outcomes: [
           "COUNT/SUM/AVGなど集計関数を使える",
           "GROUP BYでデータをグループ単位に集計できる",
         ],
         relatedJobs: ["Data Analyst", "BI Support", "Junior Data Engineer"],
+        referenceLinks: [
+          { label: "W3Schools: SQL GROUP BY", url: "https://www.w3schools.com/sql/sql_groupby.asp" },
+          { label: "Databricks SQL 集計関数リファレンス", url: "https://docs.databricks.com/en/sql/language-manual/sql-ref-functions-builtin.html" },
+        ],
         quizzes: [
           {
             question: "顧客ごとの合計金額を求めるために組み合わせる句はどれですか？",
@@ -133,12 +148,16 @@ const courses: CourseSeed[] = [
         exampleContent:
           "```sql\nSELECT o.order_id, c.customer_name, o.amount\nFROM orders o\nJOIN customers c ON o.customer_id = c.customer_id;\n```\n\nJOINを使うことで、分割されたテーブルを結合し、必要な情報を1つの結果として取得できます。",
         handsOnContent:
-          "**ハンズオン課題**\n\n1. 「顧客マスタ」と「注文」の2つの表を紙やスプレッドシートで設計してみましょう。\n2. 共通のID（顧客ID）で2つの表を結びつける設計にしましょう。\n3. 可能であれば、SQL環境でJOINを使って実際に結合結果を確認しましょう。",
+          "**ハンズオン課題**\n\n1. スプレッドシートに「顧客マスタ」シートを作り、`customer_id`（連番）・`customer_name`・`region` の3列を用意し、3件のダミー顧客を入力します。\n2. 別のシートに「注文」を作り、`order_id`・`customer_id`・`amount`・`order_date` の4列を用意し、先ほどの顧客IDを使って5件のダミー注文を入力します（同じ顧客が複数回注文しても構いません）。\n3. Databricks SQL Editorで、上記に似た構造の `samples.tpch.customer` と `samples.tpch.orders` を使い、`SELECT c.c_name, o.o_orderkey, o.o_totalprice FROM samples.tpch.orders o JOIN samples.tpch.customer c ON o.o_custkey = c.c_custkey LIMIT 10;` を実行してみましょう。\n4. 結合キー（`o_custkey` と `c_custkey`）が一致する行だけが結合されていることを、結果を見て確認してください。\n5. `JOIN` を `LEFT JOIN` に変えて実行し、結果の件数や内容がどう変わるかを比較してみましょう。",
         outcomes: [
           "テーブルを分割する理由（正規化）を説明できる",
           "JOINを使って複数テーブルを結合できる",
         ],
         relatedJobs: ["Data Analyst", "Data Engineer Intern", "Analytics Engineer"],
+        referenceLinks: [
+          { label: "W3Schools: SQL JOIN", url: "https://www.w3schools.com/sql/sql_join.asp" },
+          { label: "Wikipedia: データベース正規化", url: "https://ja.wikipedia.org/wiki/%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9%E6%AD%A3%E8%A6%8F%E5%8C%96" },
+        ],
         quizzes: [
           {
             question: "複数のテーブルを共通のキーで結びつける操作は何と呼びますか？",
@@ -146,6 +165,70 @@ const courses: CourseSeed[] = [
               { label: "GROUP BY", isCorrect: false },
               { label: "JOIN", isCorrect: true },
               { label: "ORDER BY", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "sql-subquery-case",
+        title: "サブクエリとCASE式：条件分岐とネストしたSQL",
+        type: LessonType.EXERCISE,
+        introText:
+          "実務のSQLは1本のSELECT文だけで完結しないことがほとんどです。クエリの中にクエリを埋め込む「サブクエリ」と、条件によって値を出し分ける「CASE式」を身につけ、より複雑な問いに答えられるようになりましょう。",
+        lectureContent:
+          "## サブクエリ（Subquery）\n\nサブクエリとは、SQL文の中に埋め込まれた別のSELECT文のことです。\n\n```sql\nSELECT customer_name\nFROM customers\nWHERE customer_id IN (\n  SELECT customer_id FROM orders WHERE amount > 5000\n);\n```\n\nこの例では、内側の `SELECT` で「5000円より高い注文をした顧客ID」を求め、外側の `SELECT` でその顧客の名前を取得しています。\n\n## CASE式\n\nCASE式は、条件によって出力する値を変える「条件分岐」です。\n\n```sql\nSELECT\n  order_id,\n  amount,\n  CASE\n    WHEN amount >= 10000 THEN '大口'\n    WHEN amount >= 3000 THEN '中口'\n    ELSE '小口'\n  END AS order_size\nFROM orders;\n```",
+        exampleContent:
+          "サブクエリとCASE式を組み合わせると、「平均注文額より高い注文だけを対象に、金額帯ごとにラベル付けする」といった、実務でよくある複合的な分析が可能になります。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. Databricks SQL Editorで `SELECT AVG(o_totalprice) FROM samples.tpch.orders;` を実行し、平均注文額を確認します。\n2. その値を使って `SELECT * FROM samples.tpch.orders WHERE o_totalprice > (SELECT AVG(o_totalprice) FROM samples.tpch.orders) LIMIT 10;` を実行し、平均より高い注文だけを抽出しましょう（サブクエリを使うことで、平均値を手打ちせずに済むことを確認してください）。\n3. 次に `CASE` 式を使い、`SELECT o_orderkey, o_totalprice, CASE WHEN o_totalprice >= 300000 THEN '大口' WHEN o_totalprice >= 100000 THEN '中口' ELSE '小口' END AS order_size FROM samples.tpch.orders LIMIT 20;` を実行してみましょう。\n4. 閾値（300000, 100000）を自分で変えて再実行し、分類結果がどう変わるか確認しましょう。\n5. 最後に、サブクエリとCASE式を1つのSQLに組み合わせて、「平均より高い注文だけを大口/中口に分類する」クエリを自分で書いてみましょう。",
+        outcomes: [
+          "サブクエリを使って動的な条件で絞り込みができる",
+          "CASE式で条件に応じたラベル付けができる",
+        ],
+        relatedJobs: ["Data Analyst", "BI Support", "Junior Data Engineer"],
+        referenceLinks: [
+          { label: "W3Schools: SQL CASE", url: "https://www.w3schools.com/sql/sql_case.asp" },
+          { label: "W3Schools: SQL Subqueries", url: "https://www.w3schools.com/sql/sql_subqueries.asp" },
+        ],
+        quizzes: [
+          {
+            question: "SQL文の中に埋め込まれた別のSELECT文のことを何と呼びますか？",
+            options: [
+              { label: "サブクエリ", isCorrect: true },
+              { label: "CASE式", isCorrect: false },
+              { label: "ビュー", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "sql-null-handling",
+        title: "NULLと欠損値の扱い：実務データの落とし穴",
+        type: LessonType.EXERCISE,
+        introText:
+          "実務のデータには「値が入っていない（NULL）」ケースが必ず存在します。NULLを正しく扱えないと、集計結果が誤った印象を与えてしまいます。NULLの性質と対処法を学びましょう。",
+        lectureContent:
+          "## NULLとは何か\n\nNULLは「値が存在しない」ことを表す特別な状態で、0や空文字とは異なります。NULLの重要な性質は、**比較演算（`=`, `!=`など）では判定できない**ことです。\n\n```sql\n-- 誤り: NULLは = では絶対にヒットしない\nSELECT * FROM orders WHERE discount = NULL;\n\n-- 正しい書き方\nSELECT * FROM orders WHERE discount IS NULL;\n```\n\n## NULLを考慮した集計\n\n`COUNT(列名)` はNULLを除外してカウントしますが、`COUNT(*)` は全行をカウントします。この違いを理解していないと、集計結果を読み違えます。\n\n`COALESCE(列名, デフォルト値)` を使うと、NULLの場合に代わりの値を使えます。\n\n```sql\nSELECT customer_name, COALESCE(discount, 0) AS discount\nFROM orders;\n```",
+        exampleContent:
+          "例えば、`discount`（割引額）列にNULLが混ざっている状態で `AVG(discount)` を計算すると、NULLの行は計算から除外されるため、「全顧客の平均」ではなく「割引が設定されている顧客だけの平均」になってしまいます。`COALESCE(discount, 0)` で0埋めしてから平均を取ると、意図した「全顧客の平均」に近づきます。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. Databricks SQL Editorで `SELECT COUNT(*) AS all_rows, COUNT(o_comment) AS non_null_comment FROM samples.tpch.orders;` を実行し、`COUNT(*)` と `COUNT(列名)` の結果が異なるかどうか確認しましょう。\n2. `SELECT * FROM samples.tpch.orders WHERE o_comment IS NULL LIMIT 5;` を実行し、NULLを含む行を確認しましょう（`samples.tpch.orders`にNULLが無い場合は、他のサンプルテーブルやご自身で作成したテーブルで試してください）。\n3. `COALESCE()` を使って、NULLの場合に別の文字列（例:'コメントなし'）に置き換えるSELECT文を書いて実行しましょう。\n4. `AVG()` や `SUM()` にNULLが混ざるとどう影響するか、実際に小さなテーブルを自分で作って（`VALUES` 句を使うと簡単です）試してみましょう:\n   ```sql\n   SELECT AVG(amount) FROM (VALUES (100), (200), (NULL)) AS t(amount);\n   ```\n5. 上記の結果が「150」になる（NULLを除いた2件の平均）ことを確認し、なぜそうなるかを自分の言葉で説明してみましょう。",
+        outcomes: [
+          "NULLは比較演算子ではなくIS NULLで判定することを理解している",
+          "COALESCEを使ってNULLに既定値を設定できる",
+        ],
+        relatedJobs: ["Data Analyst", "Data Engineer Intern", "Analytics Engineer"],
+        referenceLinks: [
+          { label: "Databricks SQLリファレンス: NULL値の扱い", url: "https://docs.databricks.com/en/sql/language-manual/sql-ref-null-semantics.html" },
+          { label: "W3Schools: SQL NULL Values", url: "https://www.w3schools.com/sql/sql_null_values.asp" },
+        ],
+        quizzes: [
+          {
+            question: "ある列がNULLかどうかを判定する正しい書き方はどれですか？",
+            options: [
+              { label: "WHERE 列名 = NULL", isCorrect: false },
+              { label: "WHERE 列名 IS NULL", isCorrect: true },
+              { label: "WHERE 列名 == NULL", isCorrect: false },
             ],
           },
         ],
@@ -171,9 +254,13 @@ const courses: CourseSeed[] = [
         exampleContent:
           "```python\norders = [\n    {\"customer\": \"田中\", \"amount\": 3000},\n    {\"customer\": \"鈴木\", \"amount\": 5400},\n]\ntotal = sum(o[\"amount\"] for o in orders)\nprint(total)  # 8300\n```",
         handsOnContent:
-          "**ハンズオン課題**\n\n1. Databricks Free EditionのノートブックでPythonセルを1つ作成してください。\n2. 上記のような辞書のリストを自分で作り、合計金額を計算するコードを書いて実行してみましょう。",
+          "**ハンズオン課題**\n\n1. Databricks Free Editionにログインし、左メニューから新しいNotebookを作成してください（言語はPythonを選択）。\n2. 最初のセルに `sales = [3000, 5400, 1200]` と入力して実行し、`Shift+Enter` でセルを実行する操作に慣れましょう。\n3. 次のセルで `total = sum(sales)` と `print(total)` を実行し、合計が8500になることを確認してください。\n4. 上記の例のような辞書のリスト（`orders = [{\"customer\": ..., \"amount\": ...}, ...]`）を、自分で3件以上作成してください。\n5. `for` を使わずにリスト内包表記（`sum(o[\"amount\"] for o in orders)`）で合計金額を計算し、結果を表示してください。\n6. 最後に、合計金額を件数で割って平均を求めるコードを追加し、実行結果をメモしておきましょう。",
         outcomes: ["Pythonの基本文法（変数・リスト・辞書）を使える", "簡単な集計処理をコードで書ける"],
         relatedJobs: ["Data Engineer Intern", "Junior Data Engineer"],
+        referenceLinks: [
+          { label: "Python公式チュートリアル", url: "https://docs.python.org/ja/3/tutorial/index.html" },
+          { label: "Databricks Notebooksの使い方", url: "https://docs.databricks.com/en/notebooks/index.html" },
+        ],
         quizzes: [
           {
             question: "Pythonでリストの要素数を取得する関数はどれですか？",
@@ -181,6 +268,37 @@ const courses: CourseSeed[] = [
               { label: "len()", isCorrect: true },
               { label: "sum()", isCorrect: false },
               { label: "count()", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "python-control-flow-functions",
+        title: "制御構文と関数：繰り返しと再利用可能なコード",
+        type: LessonType.EXERCISE,
+        introText:
+          "同じ処理を何度も書くのは非効率で、バグの元にもなります。`if`による条件分岐、`for`による繰り返し、そして`def`による関数定義を身につけ、再利用できるコードを書けるようになりましょう。",
+        lectureContent:
+          "## 条件分岐と繰り返し\n\n```python\nfor order in orders:\n    if order[\"amount\"] > 3000:\n        print(f\"{order['customer']}: 高額注文\")\n    else:\n        print(f\"{order['customer']}: 通常注文\")\n```\n\n## 関数の定義\n\n同じ処理を何度も使う場合は、関数として切り出します。\n\n```python\ndef classify_order(amount):\n    if amount >= 10000:\n        return \"大口\"\n    elif amount >= 3000:\n        return \"中口\"\n    else:\n        return \"小口\"\n```\n\n関数化しておくと、ETL処理の中で同じロジックを何度も再利用でき、テストもしやすくなります。",
+        exampleContent:
+          "```python\nfor order in orders:\n    size = classify_order(order[\"amount\"])\n    print(f\"{order['customer']}: {size}\")\n```\n\n`classify_order` 関数を使うことで、分類ロジックを1か所にまとめられ、後から閾値を変更する際も1箇所を直せば済みます。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. 前のレッスンで作った `orders`（辞書のリスト）を再利用します。\n2. `for` ループで各注文を1件ずつ表示するコードを書いてください。\n3. `if`/`elif`/`else` を使い、金額に応じて「大口」「中口」「小口」を判定するコードをループ内に追加してください。\n4. 上記の判定ロジックを `classify_order(amount)` という関数として切り出してください（`def` を使う）。\n5. 切り出した関数を使って、`orders` の各注文の分類結果を一覧表示するコードに書き換えてください。\n6. 関数の閾値（10000, 3000）を変更し、分類結果がどう変わるか確認しましょう。",
+        outcomes: [
+          "if/for を組み合わせて条件付きの繰り返し処理が書ける",
+          "処理を関数として切り出し、再利用できる",
+        ],
+        relatedJobs: ["Data Engineer Intern", "Junior Data Engineer"],
+        referenceLinks: [
+          { label: "Python公式チュートリアル: 制御構造", url: "https://docs.python.org/ja/3/tutorial/controlflow.html" },
+        ],
+        quizzes: [
+          {
+            question: "Pythonで関数を定義するために使うキーワードはどれですか？",
+            options: [
+              { label: "func", isCorrect: false },
+              { label: "def", isCorrect: true },
+              { label: "function", isCorrect: false },
             ],
           },
         ],
@@ -196,9 +314,13 @@ const courses: CourseSeed[] = [
         exampleContent:
           "```python\n# PySparkの例\ndf.filter(df.amount > 3000).select(\"customer_name\", \"amount\").show()\n```\n\nSQLの `WHERE` や `SELECT` に近い操作を、コードで表現できます。",
         handsOnContent:
-          "**ハンズオン課題**\n\n1. Databricks Free Editionでサンプルデータを読み込み、DataFrameとして表示してください。\n2. `filter` と `select` を使って、条件に合うデータだけを抽出してみましょう。",
+          "**ハンズオン課題**\n\n1. Databricks Free Editionの新しいPythonノートブックで、`df = spark.table(\"samples.tpch.orders\")` を実行し、DataFrameとして読み込みます。\n2. `df.printSchema()` を実行し、列名とデータ型の一覧を確認しましょう。\n3. `df.show(5)` で先頭5件を表示し、SQLで見た内容と同じデータであることを確認してください。\n4. `df.filter(df.o_totalprice > 300000).select(\"o_custkey\", \"o_totalprice\").show(10)` を実行し、条件に合う行を絞り込んで特定の列だけ表示してみましょう。\n5. `.filter()` の条件を自分で変更し（例：`o_orderstatus == 'O'`）、結果がどう変わるか確認しましょう。\n6. 最後に、`df.filter(...).select(...).count()` のように `.count()` を末尾に付け、絞り込み後の件数を取得してみましょう。",
         outcomes: ["DataFrameの基本的な考え方を理解する", "filter/selectでデータを加工できる"],
         relatedJobs: ["Data Engineer Intern", "Analytics Engineer"],
+        referenceLinks: [
+          { label: "Apache Spark DataFrame ガイド", url: "https://spark.apache.org/docs/latest/sql-programming-guide.html" },
+          { label: "Databricks PySpark基礎", url: "https://docs.databricks.com/en/pyspark/basics.html" },
+        ],
         quizzes: [
           {
             question: "DataFrameで条件に合う行を絞り込む操作はどれですか？",
@@ -206,6 +328,38 @@ const courses: CourseSeed[] = [
               { label: "select", isCorrect: false },
               { label: "filter", isCorrect: true },
               { label: "show", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "pandas-data-wrangling",
+        title: "pandasでのデータ加工：欠損値処理と列の変換",
+        type: LessonType.EXERCISE,
+        introText:
+          "pandasはPythonで最も広く使われるデータ操作ライブラリです。Databricks上のDataFrameとの使い分けを理解しつつ、小〜中規模データの前処理でよく使われるpandasの基本操作を身につけましょう。",
+        lectureContent:
+          "## pandasの基本操作\n\n```python\nimport pandas as pd\n\ndf = pd.DataFrame({\n    \"customer\": [\"田中\", \"鈴木\", \"佐藤\"],\n    \"amount\": [3000, None, 5400],\n})\n\n# 欠損値の確認\nprint(df.isnull().sum())\n\n# 欠損値を0で埋める\ndf[\"amount\"] = df[\"amount\"].fillna(0)\n\n# 新しい列を追加\ndf[\"amount_with_tax\"] = df[\"amount\"] * 1.1\n```\n\npandasはSQLの `WHERE` に相当する `df[df[\"amount\"] > 3000]` のような書き方や、`groupby` によるSQLの `GROUP BY` 相当の集計もサポートしています。",
+        exampleContent:
+          "```python\n# customerごとの合計金額を集計（SQLのGROUP BYに相当）\nsummary = df.groupby(\"customer\")[\"amount\"].sum().reset_index()\nprint(summary)\n```\n\nこのように、pandasはSQLで学んだ「集計」の考え方をコードで表現する手段でもあります。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. Databricks Free EditionのPythonノートブックで `import pandas as pd` を実行します。\n2. 上記の例のように、`None`（欠損値）を含む小さなDataFrameを自分で作成してください。\n3. `df.isnull().sum()` を実行し、どの列に何件の欠損があるか確認しましょう。\n4. `fillna()` を使って欠損値を0、または適切な既定値で埋めてください。\n5. 金額に消費税（10%）を加えた新しい列 `amount_with_tax` を追加してください。\n6. `groupby()` を使って、顧客ごとの合計金額を集計してください。\n7. SQLで同じ集計をした場合の書き方（`GROUP BY`）と、pandasでの書き方を見比べて、対応関係をメモしておきましょう。",
+        outcomes: [
+          "pandasで欠損値の確認・補完ができる",
+          "pandasのgroupbyでSQLのGROUP BYに相当する集計ができる",
+        ],
+        relatedJobs: ["Data Engineer Intern", "Data Analyst", "Analytics Engineer"],
+        referenceLinks: [
+          { label: "pandas公式ドキュメント", url: "https://pandas.pydata.org/docs/user_guide/index.html" },
+          { label: "pandas: 欠損値の扱い", url: "https://pandas.pydata.org/docs/user_guide/missing_data.html" },
+        ],
+        quizzes: [
+          {
+            question: "pandasのDataFrameで欠損値を既定値に置き換えるメソッドはどれですか？",
+            options: [
+              { label: "dropna()", isCorrect: false },
+              { label: "fillna()", isCorrect: true },
+              { label: "isnull()", isCorrect: false },
             ],
           },
         ],
@@ -231,9 +385,13 @@ const courses: CourseSeed[] = [
         exampleContent:
           "`fact_sales`（売上ファクト）と `dim_customer`（顧客ディメンション）、`dim_date`（日付ディメンション）を組み合わせることで、「月別」「顧客別」「地域別」など多様な集計が可能になります。",
         handsOnContent:
-          "**ハンズオン課題**\n\n1. あなたが知っているサービス（ECサイトなど）を題材に、ファクトテーブルとディメンションテーブルを1つずつ考えてみましょう。\n2. それぞれにどんな列が必要かを書き出してみましょう。",
+          "**ハンズオン課題**\n\n1. あなたが知っているサービス（ECサイト、動画配信サービスなど）を1つ選びます。\n2. そのサービスで「測定したい数値」を3つ書き出してください（例：注文金額、視聴時間、クリック数）。\n3. その数値を持つファクトテーブルの名前と列構成を設計してください（例：`fact_orders(order_id, customer_id, product_id, date_id, amount)`）。\n4. ファクトテーブルが参照する切り口（ディメンション）を最低3つ挙げ、それぞれのディメンションテーブルの列構成も設計してください（例：`dim_customer`, `dim_product`, `dim_date`）。\n5. 設計した表同士を、どの列（外部キー）で結びつけるかを矢印付きの図やメモで書き出してみましょう（スタースキーマの形になっているか確認）。",
         outcomes: ["ファクト/ディメンションの違いを説明できる", "スタースキーマの基本構造をイメージできる"],
         relatedJobs: ["Analytics Engineer", "Junior Data Engineer"],
+        referenceLinks: [
+          { label: "Wikipedia: スタースキーマ", url: "https://en.wikipedia.org/wiki/Star_schema" },
+          { label: "Databricks: メダリオンアーキテクチャ", url: "https://www.databricks.com/glossary/medallion-architecture" },
+        ],
         quizzes: [
           {
             question: "「売上金額」のような測定値を持つテーブルは何と呼ばれますか？",
@@ -241,6 +399,37 @@ const courses: CourseSeed[] = [
               { label: "ディメンションテーブル", isCorrect: false },
               { label: "ファクトテーブル", isCorrect: true },
               { label: "マスタテーブル", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "slowly-changing-dimension",
+        title: "Slowly Changing Dimension（SCD）：変化する属性の記録方法",
+        type: LessonType.TEXT,
+        introText:
+          "顧客の住所や商品のカテゴリなど、ディメンションの属性は時間とともに変化します。「変化前後をどう記録するか」という設計パターン（SCD）を理解し、実務で通用するデータモデリングの視野を広げましょう。",
+        lectureContent:
+          "## SCDとは何か\n\nSlowly Changing Dimension（緩やかに変化するディメンション）とは、ディメンションテーブルの属性が時間経過とともに変化する現象、およびその扱い方の設計パターンです。代表的なものに以下があります。\n\n- **SCD Type 1（上書き）**: 古い値を新しい値で単純に上書きする。過去の状態は残らない。\n- **SCD Type 2（履歴保持）**: 変更があるたびに新しい行を追加し、`有効開始日` `有効終了日` などの列で有効期間を管理する。過去の状態を後から参照できる。\n\n実務では「過去のレポートを再現できるか」という要件によって、Type 1で十分か、Type 2が必要かが決まります。",
+        exampleContent:
+          "例えば顧客が引っ越して都道府県が変わった場合、SCD Type 1では顧客マスタの都道府県を単純に書き換えます。SCD Type 2では、`customer_id=1, prefecture='東京', valid_from=2025-01-01, valid_to=2026-03-01` という行を残しつつ、`customer_id=1, prefecture='大阪', valid_from=2026-03-01, valid_to=NULL` という新しい行を追加します。こうすることで「2026年1月時点でこの顧客がどこに住んでいたか」を後から再現できます。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. 「顧客の居住都道府県」を例に、SCD Type 1（上書き）で管理した場合の顧客マスタの状態を、引っ越し前・引っ越し後の2時点でそれぞれ書き出してみましょう。\n2. 同じ例を、SCD Type 2（履歴保持、`valid_from`/`valid_to`列を使う）で管理した場合の状態を書き出してみましょう。\n3. 「引っ越し前の売上を、当時の都道府県別に集計し直したい」という要件に対して、Type 1とType 2のどちらの設計が対応できるかを考え、理由を1〜2行で書いてください。\n4. 自分の題材（会員ランク、価格プランなど、時間とともに変わりうる属性）を1つ選び、SCD Type 2で管理する場合のテーブル構成を設計してみましょう。",
+        outcomes: [
+          "SCD Type 1とType 2の違いを説明できる",
+          "履歴を残す必要がある場合の設計パターンをイメージできる",
+        ],
+        relatedJobs: ["Analytics Engineer", "Data Engineer"],
+        referenceLinks: [
+          { label: "Wikipedia: Slowly Changing Dimension", url: "https://en.wikipedia.org/wiki/Slowly_changing_dimension" },
+        ],
+        quizzes: [
+          {
+            question: "変更履歴を残すために新しい行を追加し、有効期間を列で管理する設計は何と呼ばれますか？",
+            options: [
+              { label: "SCD Type 1", isCorrect: false },
+              { label: "SCD Type 2", isCorrect: true },
+              { label: "スタースキーマ", isCorrect: false },
             ],
           },
         ],
@@ -266,9 +455,13 @@ const courses: CourseSeed[] = [
         exampleContent:
           "例えば、生ログデータ（非構造化）をそのまま安価に保存しつつ、そこから整形したテーブルに対してSQLで高速に分析できるのがLakehouseの強みです。",
         handsOnContent:
-          "**ハンズオン課題（Databricks Free Edition）**\n\n1. Databricks Free Editionにサインアップし、Workspaceにログインしてみましょう。\n2. 画面上でCatalog（データ）とWorkspace（ノートブック）の違いを確認しましょう。",
+          "**ハンズオン課題（Databricks Free Edition）**\n\n1. https://www.databricks.com/try-databricks からDatabricks Free Editionにサインアップします（メールアドレスのみで登録可能）。\n2. 初回ログイン後に表示されるWorkspaceのトップ画面をひととおり眺め、左側のサイドメニュー（Workspace, Catalog, Jobs & Pipelines, Compute など）を確認してください。\n3. 左メニューの「Catalog」をクリックし、`samples` というカタログの中に `tpch` などのスキーマ（データベース）があることを確認しましょう。\n4. `samples.tpch.orders` テーブルをクリックし、右側に表示されるスキーマ（列名・型）とサンプル行を確認してください。\n5. 「これはデータレイク的な柔軟性と、ウェアハウス的なスキーマ管理の両方を兼ね備えている」という感覚を、自分の言葉で1〜2行にまとめてみましょう。",
         outcomes: ["Lakehouseの概念を説明できる", "Databricks Workspaceにログインできる"],
         relatedJobs: ["Junior Data Engineer", "Analytics Engineer（初級）"],
+        referenceLinks: [
+          { label: "Databricksとは（公式）", url: "https://www.databricks.com/product/data-lakehouse" },
+          { label: "Databricksドキュメント: Lakehouseの基礎", url: "https://docs.databricks.com/en/lakehouse/index.html" },
+        ],
         quizzes: [
           {
             question: "データレイクとウェアハウスの良さを組み合わせた概念を何と呼びますか？",
@@ -287,13 +480,16 @@ const courses: CourseSeed[] = [
         introText:
           "Workspaceの画面構成を知ることで、迷わず学習・実践を進められるようになります。",
         lectureContent:
-          "## Workspaceの主要な要素\n\n- **Notebook**: SQL/Pythonなどのコードを対話的に実行する場所\n- **Cluster**: コードを実行する計算リソース\n- **Catalog**: テーブルやデータへのアクセスを管理する仕組み（Unity Catalog）\n- **Jobs**: ノートブックなどを定期実行するための機能",
+          "## Workspaceの主要な要素\n\n- **Notebook**: SQL/Pythonなどのコードを対話的に実行する場所\n- **Cluster**: コードを実行する計算リソース\n- **Catalog**: テーブルやデータへのアクセスを管理する仕組み（Unity Catalog）\n- **Jobs / Workflows**: ノートブックなどを定期実行するための機能\n\nこれらは独立した機能ではなく、「Notebookで書いたコードを、Clusterで実行し、Catalog内のデータを読み書きし、その一連の処理をJobsでスケジュール実行する」という一連の流れでつながっています。",
         exampleContent:
-          "毎朝決まった時間にETL処理を実行したい場合は、ノートブックを作成し、それをJobsに登録してスケジュール実行させます。",
+          "毎朝決まった時間にETL処理を実行したい場合は、ノートブックを作成し、それをJobsに登録してスケジュール実行させます。実行にはComputeクラスタが必要で、クラスタのサイズやAuto-terminate設定によってコストが変わります。",
         handsOnContent:
-          "**ハンズオン課題**\n\n1. Databricks Free Editionで新しいNotebookを作成してください。\n2. 簡単なPythonコード（例：`print(\"Hello Databricks\")`）を実行し、動作を確認しましょう。",
+          "**ハンズオン課題**\n\n1. Databricks Free Editionの左メニューから「Workspace」→「Create」→「Notebook」で新しいNotebookを作成してください（言語はPython）。\n2. 1つ目のセルに `print(\"Hello Databricks\")` と入力し、`Shift+Enter` で実行します。\n3. Notebook右上のCompute選択欄で、割り当てられているクラスタ（Serverless Compute等）の名前を確認してください。\n4. 2つ目のセルで `spark.sql(\"SHOW CATALOGS\").show()` を実行し、アクセス可能なカタログの一覧を表示してみましょう。\n5. 左メニューの「Jobs & Pipelines」を開き、まだJobが1つも無いことを確認してください（次のレッスン以降で実際にJobを作成します）。\n6. Notebookに名前を付けて保存し、Workspace上のどこに保存されたか（フォルダ構成）を確認しましょう。",
         outcomes: ["Notebook/Cluster/Catalog/Jobsの役割を説明できる", "Notebookを作成しコードを実行できる"],
         relatedJobs: ["Junior Data Engineer", "Analytics Engineer（初級）"],
+        referenceLinks: [
+          { label: "Databricks Workspaceの概要", url: "https://docs.databricks.com/en/workspace/index.html" },
+        ],
         quizzes: [
           {
             question: "コードを定期的に自動実行するためのDatabricksの機能はどれですか？",
@@ -301,6 +497,100 @@ const courses: CourseSeed[] = [
               { label: "Notebook", isCorrect: false },
               { label: "Jobs", isCorrect: true },
               { label: "Catalog", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "unity-catalog-governance",
+        title: "Unity Catalogとデータガバナンス",
+        type: LessonType.TEXT,
+        introText:
+          "実務でDatabricksを使う上で避けて通れないのが「誰がどのデータにアクセスできるか」を管理するガバナンスです。Unity Catalogの3階層構造とアクセス権限の考え方を学びます。",
+        lectureContent:
+          "## Unity Catalogとは\n\nUnity Catalogは、Databricks上のすべてのデータ資産（テーブル、ビュー、ボリューム、モデルなど）を一元管理する仕組みです。データは以下の3階層で整理されます。\n\n```\nカタログ (Catalog)\n  └ スキーマ (Schema / Database)\n      └ テーブル (Table)\n```\n\n例えば `samples.tpch.orders` は「`samples` カタログの `tpch` スキーマにある `orders` テーブル」を意味します。\n\n## アクセス権限の管理\n\nUnity Catalogでは、SQLの `GRANT` 文でカタログ・スキーマ・テーブル単位に権限を付与できます。\n\n```sql\nGRANT SELECT ON TABLE analytics.sales.orders TO `data-analysts`;\nGRANT ALL PRIVILEGES ON SCHEMA analytics.sales TO `data-engineers`;\n```\n\nこれにより、「分析チームは特定のテーブルを読むだけ」「エンジニアチームはスキーマ全体を管理できる」といった、実務で求められる細かいアクセス制御が可能になります。",
+        exampleContent:
+          "実務では、個人情報を含むテーブルへのアクセスを一部のロールだけに限定し、それ以外のテーブルは分析チーム全体に公開する、といった使い分けがよく行われます。Unity Catalogの権限管理により、こうした「最小権限の原則」をデータ基盤レベルで実現できます。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. Databricks Free Editionの左メニューから「Catalog」を開き、カタログ一覧の階層構造（カタログ→スキーマ→テーブル）を確認してください。\n2. `samples` カタログを展開し、複数のスキーマ（`tpch`, `nyctaxi` など）が存在することを確認しましょう。\n3. 任意のテーブルをクリックし、「Permissions」タブ（権限表示、Free Editionでは一部表示のみの場合があります）を確認してください。\n4. SQL Editorで `SHOW GRANTS ON TABLE samples.tpch.orders;` を実行し、結果を確認してみましょう（権限が無い/表示されない場合もありますが、コマンドの存在自体を確認することが目的です）。\n5. もし自分でスキーマを作成できる権限がある場合は、`CREATE SCHEMA IF NOT EXISTS main.my_practice;` を実行し、独自のスキーマを作成してみましょう。",
+        outcomes: [
+          "カタログ・スキーマ・テーブルの3階層構造を説明できる",
+          "GRANT文による権限管理の考え方を理解している",
+        ],
+        relatedJobs: ["Junior Data Engineer", "Data Engineer", "Analytics Engineer"],
+        referenceLinks: [
+          { label: "Databricks: Unity Catalogとは", url: "https://docs.databricks.com/en/data-governance/unity-catalog/index.html" },
+        ],
+        quizzes: [
+          {
+            question: "Unity Catalogにおけるデータの3階層構造として正しいものはどれですか？",
+            options: [
+              { label: "カタログ → スキーマ → テーブル", isCorrect: true },
+              { label: "テーブル → カタログ → スキーマ", isCorrect: false },
+              { label: "スキーマ → テーブル → カタログ", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "cluster-compute-management",
+        title: "クラスタとコンピュートの管理",
+        type: LessonType.TEXT,
+        introText:
+          "Notebookやジョブを実行するには、必ず「コンピュート（クラスタ）」というリソースが必要です。クラスタの種類とコストに関わる設定を理解し、無駄なコストをかけずに運用できるようになりましょう。",
+        lectureContent:
+          "## クラスタの種類\n\n- **All-Purpose Cluster**: Notebookでの対話的な開発・分析に使う。複数人・複数Notebookで共有可能。\n- **Job Cluster**: Jobの実行時にだけ自動的に起動し、実行後に自動終了するクラスタ。開発用より低コスト。\n- **Serverless Compute**: クラスタのサイジングや起動をDatabricks側が自動管理してくれる方式。設定の手間が少ない。\n\n## コストに関わる設定\n\n- **Auto Termination（自動停止）**: 一定時間操作が無いとクラスタを自動停止し、無駄な課金を防ぐ\n- **ワーカー数（オートスケーリング）**: 処理量に応じて自動的にワーカーノード数を増減させる\n- **インスタンスタイプ**: CPU/メモリ量によって時間あたりのコストが変わる\n\n個人学習や小規模な検証では、Auto Terminationを短め（例：15〜30分）に設定し、使い終わったら明示的に停止することが、無料枠を効率よく使うコツです。",
+        exampleContent:
+          "例えば、開発中は小さめのAll-Purpose Clusterで試行錯誤し、本番のバッチ処理は夜間にJob Clusterとして起動・実行・自動終了させる、という使い分けが一般的です。こうすることで、開発の柔軟性と本番運用のコスト効率を両立できます。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. Databricks Free Editionの左メニューから「Compute」を開き、利用可能なコンピュート（Serverless Compute等）の一覧を確認してください。\n2. コンピュートの詳細画面で、Auto Termination（自動停止）に関する設定項目があるか確認しましょう。\n3. 現在実行中、または過去に実行したNotebookが、どのコンピュートを使って実行されたかを確認してください。\n4. もしクラスタ作成の権限がある場合は、小さなクラスタ（最小構成）を作成し、Auto Terminationを15分に設定してみましょう（Free Editionでは作成できない場合、設定画面を確認するだけでも構いません）。\n5. 「開発用」と「本番バッチ用」でクラスタ構成をどう使い分けるべきか、自分の言葉で2〜3行にまとめてみましょう。",
+        outcomes: [
+          "All-Purpose ClusterとJob Clusterの違いを説明できる",
+          "Auto Terminationなどコストに関わる設定の重要性を理解している",
+        ],
+        relatedJobs: ["Junior Data Engineer", "Data Engineer"],
+        referenceLinks: [
+          { label: "Databricks Compute（クラスタ）の概要", url: "https://docs.databricks.com/en/compute/index.html" },
+        ],
+        quizzes: [
+          {
+            question: "一定時間操作が無いとクラスタを自動的に停止し、コストを抑える設定は何と呼ばれますか？",
+            options: [
+              { label: "Auto Termination", isCorrect: true },
+              { label: "Auto Scaling", isCorrect: false },
+              { label: "Job Cluster", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "databricks-cli-repos",
+        title: "Databricks CLIとRepos：コードのバージョン管理",
+        type: LessonType.EXERCISE,
+        introText:
+          "実務のデータエンジニアリングでは、NotebookのコードもGitでバージョン管理するのが標準です。Databricks ReposによるGit連携と、Databricks CLIによるコマンドライン操作の基本を学びます。",
+        lectureContent:
+          "## Databricks Repos：Git連携\n\nDatabricks Reposは、GitHubなどのGitリポジトリをWorkspace内に直接クローンし、Notebookをブランチ管理・プルリクエストの対象にできる機能です。これにより、\n\n- 複数人での共同開発時の変更履歴管理\n- レビューを経てから本番用ブランチにマージする運用\n- 誤って上書き・削除してしまった際の復元\n\nが可能になります。\n\n## Databricks CLI\n\nDatabricks CLIは、ターミナルからWorkspace・Job・クラスタなどを操作するためのコマンドラインツールです。CI/CDパイプラインにDatabricksの操作を組み込む際によく使われます。\n\n```bash\n# CLIの認証設定\ndatabricks configure --token\n\n# Workspace内のファイル一覧を確認\ndatabricks workspace list /Users/you@example.com\n\n# Jobの一覧を確認\ndatabricks jobs list\n```",
+        exampleContent:
+          "実務では、「Notebookで書いたETLロジックをGitHubのリポジトリで管理し、mainブランチにマージされたらCI/CDが自動的にDatabricks CLIを使ってJobを更新する」という運用がよく行われます。これにより、手作業でのNotebookコピー&ペーストによるミスを防げます。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. Databricks Free Editionの左メニューから「Repos」（またはWorkspace内のRepos機能）を確認してください。\n2. 可能であれば、ご自身のGitHubアカウントで空のパブリックリポジトリを1つ作成してください。\n3. Databricks上でそのリポジトリをクローン（Add Repo）してみましょう（Free Editionでの利用可否は環境によって異なります。できない場合は画面構成の確認のみで構いません）。\n4. ローカルPCがある場合は、`pip install databricks-cli` でCLIをインストールし、`databricks --version` でインストールを確認してください。\n5. `databricks configure --token` を試し、認証にWorkspace URLとPersonal Access Tokenが必要になることを確認しましょう（トークンの発行はUser Settings画面から行います）。",
+        outcomes: [
+          "Databricks ReposによるGit連携の目的を説明できる",
+          "Databricks CLIの基本的な使い方をイメージできる",
+        ],
+        relatedJobs: ["Data Engineer", "Analytics Engineer"],
+        referenceLinks: [
+          { label: "Databricks Repos（Git連携）", url: "https://docs.databricks.com/en/repos/index.html" },
+          { label: "Databricks CLIドキュメント", url: "https://docs.databricks.com/en/dev-tools/cli/index.html" },
+        ],
+        quizzes: [
+          {
+            question: "GitHubなどのリポジトリをWorkspace内でクローンし、Notebookをバージョン管理する機能はどれですか？",
+            options: [
+              { label: "Databricks Repos", isCorrect: true },
+              { label: "Unity Catalog", isCorrect: false },
+              { label: "Auto Loader", isCorrect: false },
             ],
           },
         ],
@@ -326,9 +616,12 @@ const courses: CourseSeed[] = [
         exampleContent:
           "```sql\n-- 1時間前のテーブルの状態を確認する（タイムトラベル）\nSELECT * FROM orders VERSION AS OF 3;\n```",
         handsOnContent:
-          "**ハンズオン課題**\n\n1. Databricks Free Editionで簡単なDeltaテーブルを作成してください。\n2. データを1件追加・更新し、`DESCRIBE HISTORY` コマンドで変更履歴を確認してみましょう。",
+          "**ハンズオン課題**\n\n1. Databricks Free Editionの新しいNotebookで、以下を実行しDeltaテーブルを作成します。\n   ```sql\n   CREATE TABLE IF NOT EXISTS main.default.practice_orders (\n     order_id INT, customer_name STRING, amount DOUBLE\n   );\n   INSERT INTO main.default.practice_orders VALUES (1, '田中', 3000);\n   ```\n2. `UPDATE main.default.practice_orders SET amount = 3500 WHERE order_id = 1;` を実行し、データを更新します。\n3. `DESCRIBE HISTORY main.default.practice_orders;` を実行し、バージョン0（作成）、1（INSERT）、2（UPDATE）のような変更履歴が記録されていることを確認しましょう。\n4. `SELECT * FROM main.default.practice_orders VERSION AS OF 1;` を実行し、UPDATE前の状態（amount=3000）が見られることを確認してください。\n5. 最後に自分でもう1件INSERTし、再度 `DESCRIBE HISTORY` を実行して履歴が増えていることを確認しましょう。",
         outcomes: ["Delta Lakeの主要な特徴を説明できる", "Deltaテーブルの変更履歴を確認できる"],
         relatedJobs: ["Junior Data Engineer", "Analytics Engineer（初級）"],
+        referenceLinks: [
+          { label: "Databricks: Delta Lakeとは", url: "https://docs.databricks.com/en/delta/index.html" },
+        ],
         quizzes: [
           {
             question: "Delta Lakeで過去の状態のデータを参照できる機能を何と呼びますか？",
@@ -336,6 +629,132 @@ const courses: CourseSeed[] = [
               { label: "タイムトラベル", isCorrect: true },
               { label: "オートスケール", isCorrect: false },
               { label: "パーティショニング", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "delta-merge-optimize-vacuum",
+        title: "MERGE・OPTIMIZE・VACUUM：Delta Lakeの実務操作",
+        type: LessonType.EXERCISE,
+        introText:
+          "実務のDelta Lake運用では、単純なINSERTだけでなく「差分だけ反映するMERGE」「小さなファイルをまとめるOPTIMIZE」「不要になった古いデータを消すVACUUM」を使いこなす必要があります。",
+        lectureContent:
+          "## MERGE（Upsert）\n\nMERGEは、既存の行があれば更新し、無ければ挿入する「Upsert」処理です。日次バッチで最新データを反映する際の定番パターンです。\n\n```sql\nMERGE INTO customers AS target\nUSING staging_customers AS source\nON target.customer_id = source.customer_id\nWHEN MATCHED THEN UPDATE SET target.email = source.email\nWHEN NOT MATCHED THEN INSERT (customer_id, email) VALUES (source.customer_id, source.email);\n```\n\n## OPTIMIZEとZ-Ordering\n\n小さなファイルが大量にできると読み取り性能が落ちます。`OPTIMIZE` はファイルを最適なサイズに統合します。\n\n```sql\nOPTIMIZE sales.orders ZORDER BY (customer_id);\n```\n\n## VACUUM\n\nDelta Lakeはタイムトラベルのために古いファイルを残しますが、`VACUUM` で一定期間より古い不要ファイルを物理削除し、ストレージコストを抑えます。\n\n```sql\nVACUUM sales.orders RETAIN 168 HOURS; -- 7日間より古いファイルを削除\n```",
+        exampleContent:
+          "日次バッチで顧客マスタを更新する場合、全件洗い替えではなく `MERGE` を使うことで、変更があった顧客だけを効率的に反映できます。その後、週次で `OPTIMIZE` と `VACUUM` を実行し、パフォーマンスとストレージコストを維持します。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. 前のレッスンで作った `practice_orders` に加え、`practice_orders_staging` という一時テーブルを作り、既存customer_idの更新データと新規customer_idの行を1件ずつ用意します。\n2. `MERGE INTO` 文を書き、staging側のデータをpractice_ordersに反映させてください（既存分は更新、新規分は挿入）。\n3. 実行後に `SELECT * FROM practice_orders;` で結果を確認し、意図通りUpsertされているか確認しましょう。\n4. `OPTIMIZE main.default.practice_orders;` を実行してみましょう（データ量が少ないため効果は体感できませんが、コマンドがエラーなく実行できることを確認してください）。\n5. `DESCRIBE HISTORY` で `VACUUM` や `OPTIMIZE` の実行がバージョン履歴に記録されるか確認しましょう。",
+        outcomes: [
+          "MERGE文でUpsert処理を実装できる",
+          "OPTIMIZEとVACUUMの目的の違いを説明できる",
+        ],
+        relatedJobs: ["Data Engineer", "Analytics Engineer"],
+        referenceLinks: [
+          { label: "Databricks: DeltaテーブルのMERGE操作", url: "https://docs.databricks.com/en/delta/merge.html" },
+          { label: "Databricks: OPTIMIZEとZ-Ordering", url: "https://docs.databricks.com/en/delta/optimize.html" },
+        ],
+        quizzes: [
+          {
+            question: "既存の行があれば更新し、無ければ挿入する処理を何と呼びますか？",
+            options: [
+              { label: "MERGE（Upsert）", isCorrect: true },
+              { label: "VACUUM", isCorrect: false },
+              { label: "ZORDER", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "auto-loader-streaming-ingestion",
+        title: "Auto Loaderによる継続的なデータ取り込み",
+        type: LessonType.TEXT,
+        introText:
+          "クラウドストレージに次々と届く新しいファイルを、手動で1つずつ取り込むのは非現実的です。Auto Loaderを使い、新規ファイルを自動的・効率的に検知して取り込む方法を学びます。",
+        lectureContent:
+          "## Auto Loaderとは\n\nAuto Loaderは、クラウドストレージ（S3, ADLS, GCSなど）に新しいファイルが到着するたびに、それを自動的に検知してDelta Lakeに取り込むDatabricksの機能です。ファイル一覧を毎回スキャンするのではなく、通知の仕組みを使って効率的に新規ファイルだけを検知します。\n\n```python\ndf = (spark.readStream\n      .format(\"cloudFiles\")\n      .option(\"cloudFiles.format\", \"json\")\n      .schema(my_schema)\n      .load(\"/mnt/raw/events/\"))\n\n(df.writeStream\n   .format(\"delta\")\n   .option(\"checkpointLocation\", \"/mnt/checkpoints/events/\")\n   .table(\"bronze.events\"))\n```\n\n## チェックポイントによる「続きから」処理\n\nAuto Loaderは `checkpointLocation` に処理済みファイルの情報を記録するため、途中で処理が止まっても、再開時に「まだ処理していないファイルだけ」を自動的に処理します。これはETLにおける冪等性（同じ処理を繰り返しても結果が変わらないこと）を実現する重要な仕組みです。",
+        exampleContent:
+          "例えば、IoTセンサーやWebサイトのアクセスログが1分ごとにクラウドストレージへ書き出される場合、Auto Loaderを使うことで「新しいファイルが来たら自動的にDeltaテーブルに追記される」パイプラインを構築でき、バッチジョブを頻繁に手動実行する必要がなくなります。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. Databricksの公式ドキュメント（参考リンク）で、Auto Loaderのサンプルコードを読み、`cloudFiles` フォーマットの指定方法を確認してください。\n2. Databricks Free Editionのノートブックで、`samples` カタログ内にあるサンプルファイル群（利用可能な場合）を対象に、通常の `spark.read` と `spark.readStream.format(\"cloudFiles\")` の書き方の違いをコードとして書き出し比較してみましょう（Free Editionでは実行できる外部ストレージが限られるため、コードの構造理解が目的です）。\n3. `checkpointLocation` オプションが無いとどのようなエラーになるか、ドキュメントで確認してみましょう。\n4. 「バッチ処理」と「Auto Loaderによるストリーム的な取り込み」のメリット・デメリットを、それぞれ2つずつ書き出してみましょう。",
+        outcomes: [
+          "Auto Loaderの目的と仕組みを説明できる",
+          "チェックポイントによる冪等な取り込みの重要性を理解している",
+        ],
+        relatedJobs: ["Data Engineer", "Analytics Engineer"],
+        referenceLinks: [
+          { label: "Databricks: Auto Loaderとは", url: "https://docs.databricks.com/en/ingestion/auto-loader/index.html" },
+        ],
+        quizzes: [
+          {
+            question: "Auto Loaderが「途中から処理を再開」できる理由となる仕組みはどれですか？",
+            options: [
+              { label: "チェックポイント（checkpointLocation）", isCorrect: true },
+              { label: "Unity Catalog", isCorrect: false },
+              { label: "クラスタのオートスケーリング", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "delta-live-tables-pipelines",
+        title: "Delta Live Tables（DLT）による宣言的パイプライン",
+        type: LessonType.TEXT,
+        introText:
+          "これまで学んだExtract/Transform/Loadの各ステップを、手続き的なコードで1つずつ書くのではなく、「最終的にどんなテーブルが欲しいか」を宣言するだけで構築できるDelta Live Tables（DLT）の考え方を学びます。",
+        lectureContent:
+          "## 宣言的パイプラインという考え方\n\n通常のETLコードは「まずこれを読み込み、次にこう変換し、最後にここへ書き込む」という手続きを1つずつ記述します。Delta Live Tablesでは、代わりに「このテーブルはこのクエリの結果である」という定義を宣言するだけで、依存関係の解決・実行順序の最適化・エラー処理をDatabricks側が自動的に行います。\n\n```python\nimport dlt\n\n@dlt.table\ndef bronze_orders():\n    return spark.readStream.format(\"cloudFiles\").option(\"cloudFiles.format\", \"json\").load(\"/mnt/raw/orders/\")\n\n@dlt.table\ndef silver_orders():\n    return dlt.read(\"bronze_orders\").filter(\"amount IS NOT NULL\")\n```\n\n## データ品質の組み込み\n\nDLTでは `@dlt.expect` を使い、データ品質のルールをパイプライン定義に直接組み込めます。\n\n```python\n@dlt.table\n@dlt.expect(\"valid_amount\", \"amount > 0\")\ndef silver_orders_checked():\n    return dlt.read(\"bronze_orders\")\n```",
+        exampleContent:
+          "Bronze（生データ）→ Silver（整形済み）→ Gold（集計済み）という「メダリオンアーキテクチャ」の各層をDLTのテーブル定義として書くことで、パイプライン全体の見通しが良くなり、どのテーブルがどのテーブルに依存しているかが自動的に可視化されます。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. 参考リンクのDatabricks公式ドキュメントで、DLTのサンプルコード（`@dlt.table` の使い方）を読んでください。\n2. Bronze/Silver/Goldの3層構成を、これまで学んだ「Extract/Transform/Load」の用語と対応付けてメモしてみましょう（Bronze=Extract直後の生データ、など）。\n3. `@dlt.expect` を使ったデータ品質チェックの例を1つ、自分で考えて擬似コードとして書いてみましょう（例：「金額が0以上であること」）。\n4. 通常のNotebookで手続き的に書いたETLコードと、DLTで宣言的に書いたコードを見比べ、「どちらが変更に強そうか」を自分の言葉で説明してみましょう。",
+        outcomes: [
+          "宣言的パイプライン（DLT）の考え方を説明できる",
+          "Bronze/Silver/Goldのメダリオンアーキテクチャを理解している",
+        ],
+        relatedJobs: ["Data Engineer", "Analytics Engineer"],
+        referenceLinks: [
+          { label: "Databricks: Delta Live Tablesとは", url: "https://docs.databricks.com/en/delta-live-tables/index.html" },
+          { label: "Databricks: メダリオンアーキテクチャ", url: "https://www.databricks.com/glossary/medallion-architecture" },
+        ],
+        quizzes: [
+          {
+            question: "Delta Live Tablesの最大の特徴として最も適切なものはどれですか？",
+            options: [
+              { label: "「欲しいテーブル」を宣言するだけで依存関係やエラー処理が自動化される", isCorrect: true },
+              { label: "SQLが一切使えず、Pythonのみで記述する", isCorrect: false },
+              { label: "クラスタを使わずに実行できる", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "workflows-jobs-cost-management",
+        title: "Workflowsによるジョブオーケストレーションとコスト管理",
+        type: LessonType.EXERCISE,
+        introText:
+          "複数のNotebookやDLTパイプラインを、決まった順序・スケジュールで実行するには「Workflows（Jobs）」を使います。あわせて、クラスタポリシーによるコスト管理の考え方も押さえましょう。",
+        lectureContent:
+          "## Workflowsによる複数タスクのオーケストレーション\n\nDatabricks Workflowsでは、1つのJobの中に複数のタスク（Notebook、DLTパイプライン、Pythonスクリプトなど）を定義し、タスク間の依存関係（「Aが成功したらBを実行する」）や条件分岐、リトライ回数、通知設定（失敗時にメール通知するなど）を設定できます。\n\n```\nTask A（Extract） → Task B（Transform） → Task C（Load）\n                              ↘\n                               Task D（品質チェック、Bと並行実行）\n```\n\n## クラスタポリシーによるコスト管理\n\nクラスタポリシーは、「誰がどんなスペックのクラスタを作成できるか」を制限する仕組みです。例えば「学習用ユーザーは最大2ノードまで」「本番用Job Clusterは特定のインスタンスタイプのみ」といった制約をかけ、意図しない高額なクラスタが作成されるのを防ぎます。",
+        exampleContent:
+          "実務では、「深夜2時にExtractタスクを開始し、成功したらTransform、その後Loadを実行し、いずれかのタスクが失敗したら担当者にSlack通知する」といったWorkflowが組まれます。あわせて、開発環境のクラスタポリシーで最大ノード数を制限し、コストの暴走を防ぎます。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. Databricks Free Editionの左メニューから「Jobs & Pipelines」→「Create Job」を開きます。\n2. これまでのレッスンで作成したNotebookのいずれかを、1つ目のタスクとして登録してください。\n3. 可能であれば2つ目のタスクを追加し、「1つ目のタスクが成功したら実行する」という依存関係を設定してみましょう。\n4. Jobのスケジュール設定画面を開き、「毎日午前6時に実行」のようなCron形式のスケジュールを設定できることを確認してください（実際に有効化するかは任意です）。\n5. Job設定の中に、失敗時の通知（メールなど）を設定できる項目があるか確認しましょう。\n6. 左メニューの「Compute」→「Policies」（利用可能な場合）を確認し、クラスタポリシーがどのような項目を制限できるかを確認してください。",
+        outcomes: [
+          "Workflowsで複数タスクの依存関係を管理できることを理解している",
+          "クラスタポリシーによるコスト管理の考え方を説明できる",
+        ],
+        relatedJobs: ["Data Engineer", "Analytics Engineer"],
+        referenceLinks: [
+          { label: "Databricks Workflows（Jobs）の概要", url: "https://docs.databricks.com/en/jobs/index.html" },
+        ],
+        quizzes: [
+          {
+            question: "複数のタスクの依存関係やスケジュール実行を管理するDatabricksの機能はどれですか？",
+            options: [
+              { label: "Workflows（Jobs）", isCorrect: true },
+              { label: "Unity Catalog", isCorrect: false },
+              { label: "Repos", isCorrect: false },
             ],
           },
         ],
@@ -361,9 +780,12 @@ const courses: CourseSeed[] = [
         exampleContent:
           "```python\nraw_df = spark.read.csv(\"/data/raw/orders.csv\", header=True)\nclean_df = raw_df.dropna().withColumnRenamed(\"amt\", \"amount\")\nclean_df.write.mode(\"overwrite\").saveAsTable(\"analytics.orders_clean\")\n```",
         handsOnContent:
-          "**ハンズオン課題**\n\n1. Databricks Free Editionでサンプルの生データを読み込んでください。\n2. 欠損値の除去・列名の整形を行い、新しいテーブルとして保存しましょう。\n3. 保存したテーブルに対してSQLで集計を行い、正しく変換できているか確認しましょう。",
+          "**ハンズオン課題**\n\n1. Databricks Free Editionのノートブックで `df = spark.table(\"samples.tpch.orders\")` を実行し、Extractに相当するステップを行います。\n2. `df2 = df.dropna()` で欠損値を含む行を除去し、`df.count()` と `df2.count()` を比較して除去された件数を確認しましょう。\n3. `df3 = df2.withColumnRenamed(\"o_totalprice\", \"total_price\")` のように列名を分かりやすく変更してください。\n4. `df3.write.mode(\"overwrite\").saveAsTable(\"main.default.orders_clean\")` を実行し、Loadに相当するステップとして新しいテーブルに保存します。\n5. SQLで `SELECT COUNT(*), AVG(total_price) FROM main.default.orders_clean;` を実行し、正しく変換・保存されたかを確認しましょう。\n6. `mode(\"overwrite\")` を `mode(\"append\")` に変えて再実行するとどうなるか予想してから実行し、結果（件数が増えるか、置き換わるか）を確認してください。",
         outcomes: ["ETLの3ステップを説明できる", "簡単なETL処理をNotebookで実装できる"],
         relatedJobs: ["Data Engineer", "Data Pipeline Assistant"],
+        referenceLinks: [
+          { label: "Databricks: ETLパイプラインの基本パターン", url: "https://docs.databricks.com/en/getting-started/data-pipeline-get-started.html" },
+        ],
         quizzes: [
           {
             question: "ETLにおいて、欠損値処理や型変換を行うステップはどれですか？",
@@ -371,6 +793,68 @@ const courses: CourseSeed[] = [
               { label: "Extract", isCorrect: false },
               { label: "Transform", isCorrect: true },
               { label: "Load", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "data-quality-testing",
+        title: "データ品質とテスト：壊れたパイプラインに気づく仕組み",
+        type: LessonType.EXERCISE,
+        introText:
+          "ETLパイプラインは「動いているように見えて、実は間違ったデータを生成している」状態が最も危険です。データ品質チェックとテストの考え方を学び、問題に早く気づける仕組みを作りましょう。",
+        lectureContent:
+          "## データ品質チェックの観点\n\n実務でよく行われるデータ品質チェックには以下があります。\n\n- **件数チェック**: 前日と比べて極端に件数が増減していないか\n- **NULLチェック**: 必須列にNULLが混入していないか\n- **一意性チェック**: 主キーが重複していないか\n- **範囲チェック**: 金額がマイナスになっていないか、日付が未来すぎないか\n\n```python\nrow_count = clean_df.count()\nassert row_count > 0, \"変換後のデータが0件です\"\n\nnull_count = clean_df.filter(clean_df.customer_id.isNull()).count()\nassert null_count == 0, f\"customer_idにNULLが{null_count}件あります\"\n\nduplicate_count = clean_df.count() - clean_df.dropDuplicates([\"order_id\"]).count()\nassert duplicate_count == 0, f\"order_idの重複が{duplicate_count}件あります\"\n```\n\nこうしたチェックをETL処理の最後に組み込んでおくことで、「気づかないうちにデータが壊れる」事態を防げます。",
+        exampleContent:
+          "実務では、これらのチェックに1つでも失敗した場合はJobを失敗させ、後続の集計・ダッシュボード更新が「間違ったデータのまま」進んでしまわないようにします。これは、データ利用者からの信頼を守る上で非常に重要な設計です。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. 前のレッスンで作成した `orders_clean` テーブルに対して、`SELECT COUNT(*) FROM main.default.orders_clean;` で件数を確認します。\n2. Pythonで、上記のような `assert` を使った件数チェック・NULLチェック・重複チェックのコードを、`orders_clean` に対して実際に書いて実行してください。\n3. 意図的に不正なデータ（例えばNULLを含む行）を1件追加し、NULLチェックの `assert` が失敗する（エラーが出る）ことを確認しましょう。\n4. 不正なデータを削除し、再度チェックを実行してすべて成功することを確認してください。\n5. 「もしこのチェックが無かったら、どんな問題が起きうるか」を1〜2行で書き出してみましょう。",
+        outcomes: [
+          "件数・NULL・一意性・範囲チェックなど代表的な品質チェックを実装できる",
+          "品質チェックをパイプラインに組み込む重要性を説明できる",
+        ],
+        relatedJobs: ["Data Engineer", "Analytics Engineer"],
+        referenceLinks: [
+          { label: "Databricks: Delta Live Tablesのデータ品質（Expectations）", url: "https://docs.databricks.com/en/delta-live-tables/expectations.html" },
+        ],
+        quizzes: [
+          {
+            question: "「主キーが重複していないか」を確認するチェックは何と呼ばれますか？",
+            options: [
+              { label: "一意性チェック", isCorrect: true },
+              { label: "範囲チェック", isCorrect: false },
+              { label: "NULLチェック", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "incremental-load-idempotency",
+        title: "増分ロードと冪等性：安全に「やり直せる」パイプライン",
+        type: LessonType.TEXT,
+        introText:
+          "毎回全件を洗い替えるのは非効率です。差分（増分）だけを処理する設計と、同じ処理を何度実行しても結果が変わらない「冪等性」という考え方を学び、安全に再実行できるパイプラインを設計しましょう。",
+        lectureContent:
+          "## フルロードと増分ロード\n\n- **フルロード**: 毎回すべてのデータを洗い替える。シンプルだがデータ量が増えると遅くコストがかかる。\n- **増分ロード（Incremental Load）**: 前回処理した時点より新しいデータだけを処理する。効率的だが「どこまで処理したか」を管理する必要がある。\n\n```sql\n-- 「最終更新日時」を使った増分抽出の例\nSELECT * FROM raw_orders\nWHERE updated_at > (SELECT MAX(updated_at) FROM orders_clean);\n```\n\n## 冪等性（Idempotency）とは\n\n冪等性とは、「同じ処理を1回実行しても、10回実行しても、最終的な結果が同じになる」という性質です。ジョブが途中で失敗し再実行した際に、データが重複してしまうと大きな問題になります。\n\n```sql\n-- 冪等でない例（再実行すると重複が増える）\nINSERT INTO orders_clean SELECT * FROM staging;\n\n-- 冪等な例（MERGEを使えば再実行しても重複しない）\nMERGE INTO orders_clean t USING staging s\nON t.order_id = s.order_id\nWHEN MATCHED THEN UPDATE SET *\nWHEN NOT MATCHED THEN INSERT *;\n```",
+        exampleContent:
+          "夜間バッチが途中でエラーになり、翌朝同じJobを再実行するケースはよくあります。冪等性のないパイプラインだと再実行のたびにデータが重複しますが、MERGEベースの増分ロードであれば、安心して「とりあえずもう一度実行する」ことができます。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. `orders_clean` に `updated_at` に相当する列がなければ、`ALTER TABLE main.default.orders_clean ADD COLUMN updated_at TIMESTAMP;` のような形で追加し、適当な日時を設定してください。\n2. 「前回処理した最終日時より新しいデータだけを取得する」SELECT文を書いてみましょう（`WHERE updated_at > '適当な日時'`）。\n3. 同じINSERT文を意図的に2回実行し、重複行が発生することを確認してください（冪等でない例の再現）。\n4. 重複した行を削除したうえで、代わりにMERGE文を使って同じデータ反映を2回実行し、2回目も重複が発生しないことを確認しましょう。\n5. 「なぜ夜間バッチの再実行において冪等性が重要か」を自分の言葉で2〜3行にまとめてください。",
+        outcomes: [
+          "フルロードと増分ロードの違いを説明できる",
+          "冪等性の重要性と、MERGEによる実現方法を理解している",
+        ],
+        relatedJobs: ["Data Engineer", "Analytics Engineer"],
+        referenceLinks: [
+          { label: "Databricks: MERGE操作リファレンス", url: "https://docs.databricks.com/en/delta/merge.html" },
+        ],
+        quizzes: [
+          {
+            question: "「同じ処理を何度実行しても結果が変わらない」性質を何と呼びますか？",
+            options: [
+              { label: "冪等性（Idempotency）", isCorrect: true },
+              { label: "正規化", isCorrect: false },
+              { label: "パーティショニング", isCorrect: false },
             ],
           },
         ],
@@ -396,9 +880,12 @@ const courses: CourseSeed[] = [
         exampleContent:
           "例えば、日付でパーティショニングされたテーブルに対して、特定の日付範囲だけを読み込むクエリは、全件スキャンより大幅に高速化されます。",
         handsOnContent:
-          "**ハンズオン課題**\n\n1. これまでのハンズオンで作成したテーブルのクエリ実行時間を確認してみましょう。\n2. `WHERE` 句で日付範囲を絞った場合と絞らない場合の実行時間を比較してみましょう。",
+          "**ハンズオン課題**\n\n1. Databricks SQL Editorで `samples.tpch.orders` に対して `SELECT COUNT(*) FROM samples.tpch.orders WHERE o_orderdate > '1998-01-01';` を実行し、クエリ実行後に表示される実行時間（Duration）を確認しましょう。\n2. `WHERE` 句を外した `SELECT COUNT(*) FROM samples.tpch.orders;` と実行時間を比較してみましょう。\n3. Databricks SQL Editorのクエリ結果画面から実行計画（Query Profile / Explain）を開けるか確認し、開ける場合はどのステップに時間がかかっているか眺めてみましょう。\n4. 「もしこのテーブルが日付でパーティション分割されていたら、絞り込みクエリはどう有利になるか」を自分の言葉で説明してみましょう。",
         outcomes: ["パフォーマンス改善の基本的な考え方を説明できる", "パーティショニングの効果をイメージできる"],
         relatedJobs: ["Data Engineer", "Analytics Engineer"],
+        referenceLinks: [
+          { label: "Databricks: パフォーマンスチューニングの概要", url: "https://docs.databricks.com/en/optimizations/index.html" },
+        ],
         quizzes: [
           {
             question: "データを適切な単位に分割し、処理範囲を絞る手法を何と呼びますか？",
@@ -406,6 +893,68 @@ const courses: CourseSeed[] = [
               { label: "パーティショニング", isCorrect: true },
               { label: "正規化", isCorrect: false },
               { label: "レプリケーション", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "z-ordering-cluster-sizing",
+        title: "Z-Orderingとクラスタサイジングの実践",
+        type: LessonType.TEXT,
+        introText:
+          "パーティショニングだけでは解決できない性能課題に対応するZ-Orderingという技術と、コストと速度のバランスを取るクラスタサイジングの考え方を学びます。",
+        lectureContent:
+          "## Z-Orderingとは\n\nZ-Orderingは、複数の列（よく `WHERE` や `JOIN` で使われる列）に基づいてデータを並び替え、関連するデータを同じファイルに近接配置する最適化技術です。パーティショニングが「1つの列で大きくフォルダ分けする」のに対し、Z-Orderingは「複数の列で細かく並び替える」イメージです。\n\n```sql\nOPTIMIZE sales.orders ZORDER BY (customer_id, order_date);\n```\n\n## クラスタサイジングの考え方\n\n- **ワーカー数を増やす（スケールアウト）**: 並列処理できるデータ量が増える。データ量が非常に大きい場合に有効。\n- **インスタンスサイズを上げる（スケールアップ）**: 1台あたりのメモリ・CPUが増える。複雑な集計やシャッフルが多い処理で有効。\n- **オーバースペック**: 必要以上に大きなクラスタを使うと、性能向上が頭打ちになり、コストだけが増える「宝の持ち腐れ」になりやすい。\n\n実務では、まず小さいクラスタで試し、処理時間とコストのバランスを見ながら段階的に調整するのが定石です。",
+        exampleContent:
+          "「顧客ごとの売上」を頻繁に集計するテーブルであれば、`customer_id` でZ-Orderingしておくことで、特定顧客のデータへのアクセスが高速化されます。一方、クラスタサイズを2倍にしても処理時間が半分にならない場合は、ボトルネックが計算リソースではなく別の要因（データの偏り、非効率なクエリなど）にある可能性が高いです。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. `OPTIMIZE main.default.orders_clean ZORDER BY (customer_id);` のようなSQL文を、これまでのハンズオンで作成したテーブルに対して実行してみましょう（列名は実際のテーブル構成に合わせて調整してください）。\n2. Databricks Free Editionの「Compute」画面で、現在のコンピュートのワーカー数・インスタンスタイプの設定項目を確認しましょう。\n3. 「もしデータ量が今の100倍になったら、スケールアウトとスケールアップのどちらを検討すべきか」を、理由とともに書き出してみましょう。\n4. 過去に実行したクエリの実行時間を見直し、「これ以上速くする必要があるか」「コストに見合っているか」を評価する視点で1つコメントを書いてみましょう。",
+        outcomes: [
+          "Z-Orderingの目的とパーティショニングとの違いを説明できる",
+          "スケールアウトとスケールアップの使い分けを理解している",
+        ],
+        relatedJobs: ["Data Engineer", "Analytics Engineer"],
+        referenceLinks: [
+          { label: "Databricks: OPTIMIZEとZ-Ordering", url: "https://docs.databricks.com/en/delta/optimize.html" },
+        ],
+        quizzes: [
+          {
+            question: "複数の列に基づいて関連データを近接配置し、クエリを高速化する技術は何ですか？",
+            options: [
+              { label: "Z-Ordering", isCorrect: true },
+              { label: "VACUUM", isCorrect: false },
+              { label: "Auto Termination", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "monitoring-alerting-cost-optimization",
+        title: "監視・アラートとコスト最適化",
+        type: LessonType.TEXT,
+        introText:
+          "パイプラインは「作って終わり」ではありません。実務では、障害に気づく仕組みと、無駄なコストを継続的に削減する運用が求められます。監視・アラートとコスト最適化の基本を学びます。",
+        lectureContent:
+          "## 監視すべき代表的な指標\n\n- **Job成功/失敗の履歴**: 失敗が続いていないか\n- **実行時間の推移**: 徐々に遅くなっていないか（データ量増加やスキュー〈偏り〉の兆候）\n- **データ品質チェックの結果**: 品質チェックに失敗した回数\n- **クラスタの起動時間・コスト**: 想定より高額になっていないか\n\n## アラートの設計\n\nDatabricks Workflowsでは、Jobが失敗した際にメールやSlack通知を送るよう設定できます。「誰が」「どんな条件で」「どのチャンネルに」通知を受け取るかを事前に設計しておくことで、障害対応の初動が大きく変わります。\n\n## コスト最適化の継続的な取り組み\n\n- 使われなくなったJob・クラスタ・テーブルの棚卸し\n- Auto Terminationの見直し\n- Job ClusterとAll-Purpose Clusterの使い分けの徹底\n- 過剰にスケジュールされたJob（例：不要に頻繁な実行）の見直し",
+        exampleContent:
+          "実務では、月次でクラウドのコストレポートを確認し、「想定外にコストがかかっているJobやクラスタが無いか」を棚卸しするのが一般的です。小さな見直しの積み重ねが、年間で大きなコスト差になります。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. Databricks Free Editionの「Jobs & Pipelines」画面で、過去に作成・実行したJobの実行履歴（成功/失敗、実行時間）を確認してください。\n2. Job設定の中に、失敗時の通知先（メールアドレスなど）を設定する項目があるか確認しましょう。\n3. これまでのレッスンで作成したテーブル・Job・Notebookを一覧にし、「本当に必要なものはどれか」を棚卸しする表を作ってみましょう（学習用の練習ですが、実務の棚卸し作業を疑似体験する目的です）。\n4. 「監視すべき指標」を自分の言葉で3つ挙げ、それぞれなぜ重要かを1行で説明してください。",
+        outcomes: [
+          "パイプライン運用で監視すべき代表的な指標を説明できる",
+          "継続的なコスト最適化の取り組み方をイメージできる",
+        ],
+        relatedJobs: ["Data Engineer", "Analytics Engineer"],
+        referenceLinks: [
+          { label: "Databricks: Jobの監視とアラート設定", url: "https://docs.databricks.com/en/jobs/index.html" },
+        ],
+        quizzes: [
+          {
+            question: "パイプライン運用において継続的に見直すべきこととして最も適切なものはどれですか？",
+            options: [
+              { label: "使われなくなったJobやクラスタの棚卸し、Auto Terminationの見直し", isCorrect: true },
+              { label: "一度設定したクラスタサイズは変更しないこと", isCorrect: false },
+              { label: "アラートは設定せず、手動で毎回確認すること", isCorrect: false },
             ],
           },
         ],
@@ -438,6 +987,10 @@ const courses: CourseSeed[] = [
           "取得した生データをまず保存する（Extract）ことの意味を説明できる",
         ],
         relatedJobs: ["Data Engineer", "Data Analyst", "Analytics Engineer"],
+        referenceLinks: [
+          { label: "Open-Meteo API公式ドキュメント", url: "https://open-meteo.com/en/docs" },
+          { label: "Python requestsライブラリ", url: "https://requests.readthedocs.io/en/latest/" },
+        ],
         quizzes: [
           {
             question: "Open-Meteo APIを利用する際に必要なものはどれですか？",
@@ -466,6 +1019,9 @@ const courses: CourseSeed[] = [
           "クレンジング・列追加を行いDeltaテーブルとして格納できる",
         ],
         relatedJobs: ["Data Engineer", "Analytics Engineer", "Data Pipeline Assistant"],
+        referenceLinks: [
+          { label: "Databricks: Delta Lakeとは", url: "https://docs.databricks.com/en/delta/index.html" },
+        ],
         quizzes: [
           {
             question:
@@ -495,6 +1051,9 @@ const courses: CourseSeed[] = [
           "集計結果をグラフ化し、ダッシュボードとしてまとめられる",
         ],
         relatedJobs: ["BI Engineer", "Analytics Engineer", "Data Analyst"],
+        referenceLinks: [
+          { label: "Databricks SQLダッシュボード", url: "https://docs.databricks.com/en/dashboards/index.html" },
+        ],
         quizzes: [
           {
             question: "集計・可視化の目的として、このレッスンで最も強調されていることは何ですか？",
@@ -523,6 +1082,7 @@ const courses: CourseSeed[] = [
           "この経験が実務のどのポジションで活きるかを説明できる",
         ],
         relatedJobs: ["Data Engineer", "Analytics Engineer", "BI Engineer", "Data Analyst"],
+        referenceLinks: [],
         quizzes: [
           {
             question:
@@ -601,6 +1161,7 @@ export async function seedDatabase(prisma: PrismaClient) {
           handsOnContent: lessonSeed.handsOnContent,
           outcomesJson: JSON.stringify(lessonSeed.outcomes),
           relatedJobs: lessonSeed.relatedJobs.join(","),
+          referenceLinksJson: JSON.stringify(lessonSeed.referenceLinks),
         },
         update: {
           title: lessonSeed.title,
@@ -612,6 +1173,7 @@ export async function seedDatabase(prisma: PrismaClient) {
           handsOnContent: lessonSeed.handsOnContent,
           outcomesJson: JSON.stringify(lessonSeed.outcomes),
           relatedJobs: lessonSeed.relatedJobs.join(","),
+          referenceLinksJson: JSON.stringify(lessonSeed.referenceLinks),
         },
       });
 

@@ -7,10 +7,12 @@ export function CompleteLessonButton({
   lessonId,
   isCompleted,
   nextHref,
+  disabled = false,
 }: {
   lessonId: string;
   isCompleted: boolean;
   nextHref: string;
+  disabled?: boolean;
 }) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -22,7 +24,8 @@ export function CompleteLessonButton({
     try {
       const response = await fetch(`/api/lessons/${lessonId}/complete`, { method: "POST" });
       if (!response.ok) {
-        setError("完了の記録に失敗しました。もう一度お試しください。");
+        const data = await response.json().catch(() => null);
+        setError(data?.error ?? "完了の記録に失敗しました。もう一度お試しください。");
         return;
       }
       router.push(nextHref);
@@ -37,7 +40,7 @@ export function CompleteLessonButton({
       <button
         type="button"
         onClick={handleComplete}
-        disabled={isSubmitting}
+        disabled={isSubmitting || disabled}
         className="rounded-md bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-60"
       >
         {isCompleted

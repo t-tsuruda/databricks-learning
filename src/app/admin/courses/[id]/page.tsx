@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { prisma } from "@/lib/prisma";
 import { CourseForm } from "@/components/admin/course-form";
-import { ConfirmSubmitButton } from "@/components/confirm-submit-button";
+import { AdminActionForm, AdminSubmitButton } from "@/components/admin/action-form";
 
 import { updateCourse, deleteLesson } from "../actions";
 
@@ -84,15 +84,14 @@ export default async function AdminCourseEditPage({
                   </td>
                   <td className="px-4 py-2 text-foreground/60">{TYPE_LABEL[lesson.type]}</td>
                   <td className="px-4 py-2">
-                    <form action={deleteLessonWithCourse}>
-                      <input type="hidden" name="lessonId" value={lesson.id} />
-                      <ConfirmSubmitButton
+                    <AdminActionForm action={deleteLessonWithCourse} hidden={{ lessonId: lesson.id }}>
+                      <AdminSubmitButton
                         confirmMessage={`「${lesson.title}」を削除します。よろしいですか？`}
                         className="rounded-md border border-red-300 px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-50"
                       >
                         削除
-                      </ConfirmSubmitButton>
-                    </form>
+                      </AdminSubmitButton>
+                    </AdminActionForm>
                   </td>
                 </tr>
               ))}

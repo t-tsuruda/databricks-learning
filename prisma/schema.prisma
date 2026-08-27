@@ -78,6 +78,7 @@ model Lesson {
   handsOnContent String // ハンズオン手順 (Databricks操作)
   outcomesJson   String // これでできるようになったこと（JSON配列, 1-3件）
   relatedJobs    String // このスキルが使われる仕事 (カンマ区切りキーワード)
+  referenceLinksJson String @default("[]") // 参考リンク（JSON配列, {label,url}[]）
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -3,8 +3,7 @@ import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { MarkdownContent } from "@/components/markdown-content";
-import { LessonQuiz } from "@/components/lesson-quiz";
-import { CompleteLessonButton } from "@/components/complete-lesson-button";
+import { LessonQuizzesAndComplete } from "@/components/lesson-quizzes-and-complete";
 
 export default async function LessonDetailPage({
   params,
@@ -41,6 +40,7 @@ export default async function LessonDetailPage({
   const answerByQuizId = new Map(quizAnswers.map((answer) => [answer.quizId, answer]));
   const isCompleted = Boolean(lessonProgress?.isCompleted);
   const outcomes = safeParseOutcomes(lesson.outcomesJson);
+  const referenceLinks = safeParseReferenceLinks(lesson.referenceLinksJson);
   const relatedJobs = lesson.relatedJobs
     .split(",")
     .map((job) => job.trim())
@@ -72,6 +72,25 @@ export default async function LessonDetailPage({
           <MarkdownContent content={lesson.lectureContent} />
           <h3 className="mt-4 mb-2 text-sm font-semibold text-brand">具体例</h3>
           <MarkdownContent content={lesson.exampleContent} />
+          {referenceLinks.length > 0 ? (
+            <div className="mt-4 border-t border-border pt-4">
+              <h3 className="mb-2 text-sm font-semibold text-brand">参考リンク</h3>
+              <ul className="space-y-1 text-sm">
+                {referenceLinks.map((link) => (
+                  <li key={link.url}>
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-brand underline hover:no-underline"
+                    >
+                      {link.label} ↗
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
         </div>
       </section>
 
@@ -87,51 +106,35 @@ export default async function LessonDetailPage({
         </div>
       </section>
 
-      {quizzes.length > 0 ? (
-        <section className="mt-8">
-          <h2 className="flex items-center gap-2 text-lg font-bold">
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand text-sm text-white">
-              3
-            </span>
-            確認する
-          </h2>
-          <div className="mt-3 space-y-4">
-            {quizzes.map((quiz) => {
-              const answer = answerByQuizId.get(quiz.id);
-              return (
-                <LessonQuiz
-                  key={quiz.id}
-                  quiz={{
-                    id: quiz.id,
-                    question: quiz.question,
-                    options: quiz.options.map((option) => ({ id: option.id, label: option.label })),
-                    answeredOptionId: answer?.selectedOptionId ?? null,
-                    wasCorrect: answer?.isCorrect ?? null,
-                  }}
-                />
-              );
-            })}
-          </div>
+      <LessonQuizzesAndComplete
+        quizzes={quizzes.map((quiz) => {
+          const answer = answerByQuizId.get(quiz.id);
+          return {
+            id: quiz.id,
+            question: quiz.question,
+            options: quiz.options.map((option) => ({ id: option.id, label: option.label })),
+            answeredOptionId: answer?.selectedOptionId ?? null,
+            wasCorrect: answer?.isCorrect ?? null,
+          };
+        })}
+        lessonId={lesson.id}
+        isCompleted={isCompleted}
+        nextHref={nextHref}
+      >
+        <section className="mt-8 rounded-xl border border-emerald-300 bg-emerald-50 p-5">
+          <h2 className="text-sm font-semibold text-emerald-900">これでできるようになったこと</h2>
+          <ul className="mt-2 space-y-1 text-sm text-emerald-800">
+            {outcomes.map((outcome) => (
+              <li key={outcome}>・{outcome}</li>
+            ))}
+          </ul>
+          {relatedJobs.length > 0 ? (
+            <p className="mt-3 text-xs text-emerald-700">
+              このスキルが使われる仕事：{relatedJobs.join(" / ")}
+            </p>
+          ) : null}
         </section>
-      ) : null}
-
-      <section className="mt-8 rounded-xl border border-emerald-300 bg-emerald-50 p-5">
-        <h2 className="text-sm font-semibold text-emerald-900">これでできるようになったこと</h2>
-        <ul className="mt-2 space-y-1 text-sm text-emerald-800">
-          {outcomes.map((outcome) => (
-            <li key={outcome}>・{outcome}</li>
-          ))}
-        </ul>
-        {relatedJobs.length > 0 ? (
-          <p className="mt-3 text-xs text-emerald-700">
-            このスキルが使われる仕事：{relatedJobs.join(" / ")}
-          </p>
-        ) : null}
-      </section>
-
-      <div className="mt-8">
-        <CompleteLessonButton lessonId={lesson.id} isCompleted={isCompleted} nextHref={nextHref} />
-      </div>
+      </LessonQuizzesAndComplete>
     </div>
   );
 }
@@ -140,6 +143,22 @@ function safeParseOutcomes(json: string): string[] {
   try {
     const parsed = JSON.parse(json) as unknown;
     return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
+function safeParseReferenceLinks(json: string): { label: string; url: string }[] {
+  try {
+    const parsed = JSON.parse(json) as unknown;
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (item): item is { label: string; url: string } =>
+        typeof item === "object" &&
+        item !== null &&
+        typeof (item as { label?: unknown }).label === "string" &&
+        typeof (item as { url?: unknown }).url === "string",
+    );
   } catch {
     return [];
   }
