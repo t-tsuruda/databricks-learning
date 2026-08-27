@@ -36,6 +36,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     lesson.lectureContent,
     lesson.exampleContent,
     lesson.handsOnContent,
+    lesson.modelAnswerContent,
     safeParseOutcomesForCsv(lesson.outcomesJson).join("\n"),
     lesson.relatedJobs,
     lesson.referenceLinksJson,

@@ -29,18 +29,6 @@ const FALLBACK_JOB_SITES: { name: string; buildUrl: (keyword: string) => string 
     name: "Indeed",
     buildUrl: (keyword) => `https://jp.indeed.com/jobs?q=${encodeURIComponent(keyword)}`,
   },
-  {
-    name: "Wantedly",
-    buildUrl: (keyword) => `https://www.wantedly.com/search?q=${encodeURIComponent(keyword)}&type=projects`,
-  },
-  {
-    name: "Green",
-    buildUrl: (keyword) => `https://www.green-japan.com/search_lp?keyword=${encodeURIComponent(keyword)}`,
-  },
-  {
-    name: "Google検索",
-    buildUrl: (keyword) => `https://www.google.com/search?q=${encodeURIComponent(`${keyword} 求人`)}`,
-  },
 ];
 
 export async function fetchJobListings(keywords: string[]): Promise<JobListingsResult> {

@@ -104,6 +104,7 @@ const lessonSchema = z.object({
   lectureContent: z.string().trim().min(1),
   exampleContent: z.string().trim().min(1),
   handsOnContent: z.string().trim().min(1),
+  modelAnswerContent: z.string().trim().optional(),
   outcomes: z.string().trim().min(1),
   relatedJobs: z.string().trim().min(1),
   referenceLinksJson: z.string().trim().optional(),
@@ -119,6 +120,7 @@ function buildLessonValues(raw: {
   lectureContent: unknown;
   exampleContent: unknown;
   handsOnContent: unknown;
+  modelAnswerContent?: unknown;
   outcomes: unknown;
   relatedJobs: unknown;
   referenceLinksJson?: unknown;
@@ -147,6 +149,7 @@ function buildLessonValues(raw: {
     lectureContent: parsed.lectureContent,
     exampleContent: parsed.exampleContent,
     handsOnContent: parsed.handsOnContent,
+    modelAnswerContent: parsed.modelAnswerContent || "",
     outcomesJson,
     relatedJobs,
     referenceLinksJson: parsed.referenceLinksJson || "[]",
@@ -164,6 +167,7 @@ function lessonValuesFromForm(formData: FormData) {
     lectureContent: formData.get("lectureContent"),
     exampleContent: formData.get("exampleContent"),
     handsOnContent: formData.get("handsOnContent"),
+    modelAnswerContent: formData.get("modelAnswerContent") ?? undefined,
     outcomes: formData.get("outcomes"),
     relatedJobs: formData.get("relatedJobs"),
     referenceLinksJson: formData.get("referenceLinksJson") ?? undefined,
@@ -304,6 +308,7 @@ export async function importLessonsFromCsv(courseId: string, formData: FormData)
         lectureContent: raw.lectureContent,
         exampleContent: raw.exampleContent,
         handsOnContent: raw.handsOnContent,
+        modelAnswerContent: raw.modelAnswerContent || undefined,
         outcomes: raw.outcomes,
         relatedJobs: raw.relatedJobs,
         referenceLinksJson: raw.referenceLinksJson || undefined,

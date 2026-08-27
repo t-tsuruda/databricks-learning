@@ -47,6 +47,7 @@ export default async function EditLessonPage({
               lectureContent: lesson.lectureContent,
               exampleContent: lesson.exampleContent,
               handsOnContent: lesson.handsOnContent,
+              modelAnswerContent: lesson.modelAnswerContent,
               outcomes,
               relatedJobs: lesson.relatedJobs,
               referenceLinks,

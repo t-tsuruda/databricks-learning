@@ -12,6 +12,7 @@ type LessonFormValues = {
   lectureContent: string;
   exampleContent: string;
   handsOnContent: string;
+  modelAnswerContent: string;
   outcomes: string;
   relatedJobs: string;
   referenceLinks: { label: string; url: string }[];
@@ -82,6 +83,13 @@ export function LessonForm({
       />
       <HandsOnEditor defaultValue={defaultValues?.handsOnContent} />
       <TextAreaField
+        label="模範解答(Markdown・レッスンページでは折りたたみ表示)"
+        name="modelAnswerContent"
+        defaultValue={defaultValues?.modelAnswerContent}
+        rows={6}
+        required={false}
+      />
+      <TextAreaField
         label="これでできるようになったこと(1行1項目)"
         name="outcomes"
         defaultValue={defaultValues?.outcomes}
@@ -133,11 +141,13 @@ function TextAreaField({
   name,
   defaultValue,
   rows = 4,
+  required = true,
 }: {
   label: string;
   name: string;
   defaultValue?: string;
   rows?: number;
+  required?: boolean;
 }) {
   return (
     <div>
@@ -147,7 +157,7 @@ function TextAreaField({
       <textarea
         id={name}
         name={name}
-        required
+        required={required}
         rows={rows}
         defaultValue={defaultValue}
         className="mt-1 w-full rounded-md border border-border px-3 py-2 text-sm font-mono"

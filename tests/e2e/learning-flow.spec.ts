@@ -37,7 +37,7 @@ test("signup, complete a lesson, and see progress update", async ({ page }) => {
 
   await page.getByRole("link", { name: "進捗" }).click();
   await page.waitForURL("**/progress");
-  await expect(page.getByText("1 / 32")).toBeVisible();
+  await expect(page.getByText("1 / 37")).toBeVisible();
 });
 
 test("signup requires matching validation and login rejects wrong password", async ({ page }) => {

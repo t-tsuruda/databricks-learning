@@ -77,6 +77,7 @@ model Lesson {
   lectureContent String // 座学：概念説明 (markdown)
   exampleContent String // 具体例
   handsOnContent String // ハンズオン手順 (Databricks操作)
+  modelAnswerContent String @default("") // ハンズオンの模範解答（折りたたみ表示, 20-2）
   outcomesJson   String // これでできるようになったこと（JSON配列, 1-3件）
   relatedJobs    String // このスキルが使われる仕事 (カンマ区切りキーワード)
   referenceLinksJson String @default("[]") // 参考リンク（JSON配列, {label,url}[]）

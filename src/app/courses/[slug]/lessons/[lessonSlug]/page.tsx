@@ -108,6 +108,16 @@ export default async function LessonDetailPage({
         </h2>
         <div className="mt-3 rounded-xl border border-border bg-surface p-5">
           <MarkdownContent content={lesson.handsOnContent} />
+          {lesson.modelAnswerContent.trim() ? (
+            <details className="mt-4 border-t border-border pt-4">
+              <summary className="cursor-pointer text-sm font-semibold text-brand hover:underline">
+                模範解答を見る
+              </summary>
+              <div className="mt-3">
+                <MarkdownContent content={lesson.modelAnswerContent} />
+              </div>
+            </details>
+          ) : null}
         </div>
       </section>
 

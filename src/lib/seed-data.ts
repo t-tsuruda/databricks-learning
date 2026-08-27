@@ -17,6 +17,7 @@ type LessonSeed = {
   lectureContent: string;
   exampleContent: string;
   handsOnContent: string;
+  modelAnswerContent: string;
   outcomes: string[];
   relatedJobs: string[];
   referenceLinks: ReferenceLink[];
@@ -56,6 +57,8 @@ const courses: CourseSeed[] = [
           "例えば、以下のような `orders`（注文）テーブルを考えます。\n\n| order_id | customer_name | amount | order_date |\n|---|---|---|---|\n| 1 | 田中 | 3000 | 2026-01-05 |\n| 2 | 鈴木 | 5400 | 2026-01-06 |\n\nこの表から「合計売上はいくらか」「一番多く買っている顧客は誰か」を求めるのがデータ分析の第一歩です。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. 手元の紙・スプレッドシート・メモアプリのいずれかを用意してください。\n2. あなたの好きな題材（本棚、家計簿、好きな曲リストなど）を選び、表のタイトルを1行目に書きます。\n3. 2行目に列名（ヘッダー）を書き出します。最低4つの列を用意してください（例：家計簿なら「日付・項目・金額・カテゴリ」）。\n4. 3行目以降に、実際のデータを最低5行入力してください。\n5. どの列が「主キー」に使えそうか（他の行と重複しない値を持つ列、または連番のID列を追加する）を検討し、メモに書き加えてください。\n6. 完成した表を見直し、「行が何を表しているか」「列が何を表しているか」を、それぞれ1文で説明してみましょう。\n7. できたら「確認する」に進み、理解度チェックに答えましょう。",
+        modelAnswerContent:
+          "**模範解答例（家計簿を題材にした場合）**\n\n| record_id | date | item | amount | category |\n|---|---|---|---|---|\n| 1 | 2026-01-05 | スーパーで食材 | 3200 | 食費 |\n| 2 | 2026-01-06 | 電車代 | 420 | 交通費 |\n| 3 | 2026-01-07 | 書籍 | 1500 | 娯楽 |\n| 4 | 2026-01-08 | 家賃 | 65000 | 住居費 |\n| 5 | 2026-01-10 | カフェ | 550 | 食費 |\n\n- **行**：1件の支出（1回の買い物や支払い）\n- **列**：支出の属性（日付・項目・金額・カテゴリ）\n- **主キー**：`record_id`（連番のID列。他の行と重複しない値であれば、日付や項目だけでは重複しうるためIDを別途用意するのが安全）",
         outcomes: [
           "表形式データの行・列・主キーの意味を説明できる",
           "身の回りの情報を表形式データとして捉え直せる",
@@ -90,6 +93,8 @@ const courses: CourseSeed[] = [
           "```sql\n-- 3000円より高い注文だけを取得する\nSELECT customer_name, amount\nFROM orders\nWHERE amount > 3000;\n```\n\nこのクエリは `orders` テーブルから、`amount` が3000より大きい行の `customer_name` と `amount` を取り出します。",
         handsOnContent:
           "**ハンズオン課題（Databricks Free Edition推奨）**\n\n1. Databricks Free Editionにサインアップ（無料）し、Workspaceにログインします。\n2. 左メニューから「SQL Editor」を開きます。\n3. まず `SELECT * FROM samples.tpch.orders LIMIT 10;` を実行し、テーブル全体の雰囲気（列名・データ型）を確認しましょう。\n4. 次に `SELECT o_custkey, o_totalprice, o_orderdate FROM samples.tpch.orders LIMIT 10;` を実行し、特定の列だけを取り出してみましょう。\n5. `WHERE o_totalprice > 300000` を追加し、高額注文だけに絞り込んでみましょう。実行結果の件数が減ることを確認してください。\n6. さらに `WHERE o_totalprice > 300000 AND o_orderstatus = 'O'` のように条件を `AND` で組み合わせ、結果がどう変化するか比較してみましょう。\n7. 最後に、自分で条件を1つ考えて（例：特定の日付以降の注文）SQLを書き、実行結果をスクリーンショットで残しておきましょう。",
+        modelAnswerContent:
+          "**模範解答**\n\n```sql\n-- 手順3: 全体の雰囲気を確認\nSELECT * FROM samples.tpch.orders LIMIT 10;\n\n-- 手順4: 特定の列だけ取得\nSELECT o_custkey, o_totalprice, o_orderdate FROM samples.tpch.orders LIMIT 10;\n\n-- 手順5: 高額注文だけに絞り込む\nSELECT o_custkey, o_totalprice, o_orderdate\nFROM samples.tpch.orders\nWHERE o_totalprice > 300000;\n\n-- 手順6: ANDで条件を組み合わせる\nSELECT o_custkey, o_totalprice, o_orderdate\nFROM samples.tpch.orders\nWHERE o_totalprice > 300000 AND o_orderstatus = 'O';\n```\n\n手順6ではANDにより両方の条件を満たす行だけが残るため、手順5より件数がさらに減ることを確認できていればOKです。",
         outcomes: [
           "SELECT / FROM / WHERE の役割を説明できる",
           "簡単な条件でデータを絞り込むSQLを書ける",
@@ -124,6 +129,8 @@ const courses: CourseSeed[] = [
           "上記のクエリを実行すると、顧客ごとの合計購入金額が一覧で得られます。これは「優良顧客はだれか」を把握する際によく使われる分析パターンです。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. Databricks SQL Editorで `samples.tpch.orders` を対象に、`SELECT o_orderstatus, COUNT(*) AS cnt FROM samples.tpch.orders GROUP BY o_orderstatus;` を実行し、注文ステータスごとの件数を確認しましょう。\n2. 次に `SELECT o_custkey, SUM(o_totalprice) AS total_amount FROM samples.tpch.orders GROUP BY o_custkey;` を実行し、顧客ごとの合計金額を集計しましょう。\n3. `ORDER BY total_amount DESC` を末尾に追加し、合計金額が多い顧客から順に並び替えてみましょう。\n4. `LIMIT 5` を追加し、上位5顧客だけに絞り込みましょう。\n5. さらに `AVG(o_totalprice)` に置き換えて実行し、SUMとAVGで結果の意味がどう変わるかを比較してください。\n6. 結果を見て、「最も貢献している顧客」と「平均注文額が高い顧客」が同じかどうかをメモしましょう。",
+        modelAnswerContent:
+          "**模範解答**\n\n```sql\n-- 手順1: ステータス別件数\nSELECT o_orderstatus, COUNT(*) AS cnt\nFROM samples.tpch.orders\nGROUP BY o_orderstatus;\n\n-- 手順2〜4: 顧客ごとの合計金額を多い順に上位5件\nSELECT o_custkey, SUM(o_totalprice) AS total_amount\nFROM samples.tpch.orders\nGROUP BY o_custkey\nORDER BY total_amount DESC\nLIMIT 5;\n\n-- 手順5: AVGに置き換え\nSELECT o_custkey, AVG(o_totalprice) AS avg_amount\nFROM samples.tpch.orders\nGROUP BY o_custkey\nORDER BY avg_amount DESC\nLIMIT 5;\n```\n\nSUMの上位とAVGの上位では、注文回数が少なくても単価が高い顧客がAVG側にだけ現れることがあります。両者が一致するとは限らない、という点に気づけていれば理解できています。",
         outcomes: [
           "COUNT/SUM/AVGなど集計関数を使える",
           "GROUP BYでデータをグループ単位に集計できる",
@@ -158,6 +165,8 @@ const courses: CourseSeed[] = [
           "```sql\nSELECT o.order_id, c.customer_name, o.amount\nFROM orders o\nJOIN customers c ON o.customer_id = c.customer_id;\n```\n\nJOINを使うことで、分割されたテーブルを結合し、必要な情報を1つの結果として取得できます。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. スプレッドシートに「顧客マスタ」シートを作り、`customer_id`（連番）・`customer_name`・`region` の3列を用意し、3件のダミー顧客を入力します。\n2. 別のシートに「注文」を作り、`order_id`・`customer_id`・`amount`・`order_date` の4列を用意し、先ほどの顧客IDを使って5件のダミー注文を入力します（同じ顧客が複数回注文しても構いません）。\n3. Databricks SQL Editorで、上記に似た構造の `samples.tpch.customer` と `samples.tpch.orders` を使い、`SELECT c.c_name, o.o_orderkey, o.o_totalprice FROM samples.tpch.orders o JOIN samples.tpch.customer c ON o.o_custkey = c.c_custkey LIMIT 10;` を実行してみましょう。\n4. 結合キー（`o_custkey` と `c_custkey`）が一致する行だけが結合されていることを、結果を見て確認してください。\n5. `JOIN` を `LEFT JOIN` に変えて実行し、結果の件数や内容がどう変わるかを比較してみましょう。",
+        modelAnswerContent:
+          "**模範解答**\n\n```sql\nSELECT c.c_name, o.o_orderkey, o.o_totalprice\nFROM samples.tpch.orders o\nJOIN samples.tpch.customer c ON o.o_custkey = c.c_custkey\nLIMIT 10;\n\n-- LEFT JOINに変更\nSELECT c.c_name, o.o_orderkey, o.o_totalprice\nFROM samples.tpch.customer c\nLEFT JOIN samples.tpch.orders o ON o.o_custkey = c.c_custkey\nLIMIT 10;\n```\n\n`JOIN`（内部結合）では両方のテーブルにキーが存在する行だけが残りますが、`LEFT JOIN`にすると、注文が1件も無い顧客も`customer`側を起点に表示され、`orders`側の列がNULLになる行が現れます。この違いに気づけていればOKです。",
         outcomes: [
           "テーブルを分割する理由（正規化）を説明できる",
           "JOINを使って複数テーブルを結合できる",
@@ -192,6 +201,8 @@ const courses: CourseSeed[] = [
           "サブクエリとCASE式を組み合わせると、「平均注文額より高い注文だけを対象に、金額帯ごとにラベル付けする」といった、実務でよくある複合的な分析が可能になります。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. Databricks SQL Editorで `SELECT AVG(o_totalprice) FROM samples.tpch.orders;` を実行し、平均注文額を確認します。\n2. その値を使って `SELECT * FROM samples.tpch.orders WHERE o_totalprice > (SELECT AVG(o_totalprice) FROM samples.tpch.orders) LIMIT 10;` を実行し、平均より高い注文だけを抽出しましょう（サブクエリを使うことで、平均値を手打ちせずに済むことを確認してください）。\n3. 次に `CASE` 式を使い、`SELECT o_orderkey, o_totalprice, CASE WHEN o_totalprice >= 300000 THEN '大口' WHEN o_totalprice >= 100000 THEN '中口' ELSE '小口' END AS order_size FROM samples.tpch.orders LIMIT 20;` を実行してみましょう。\n4. 閾値（300000, 100000）を自分で変えて再実行し、分類結果がどう変わるか確認しましょう。\n5. 最後に、サブクエリとCASE式を1つのSQLに組み合わせて、「平均より高い注文だけを大口/中口に分類する」クエリを自分で書いてみましょう。",
+        modelAnswerContent:
+          "**模範解答**\n\n```sql\nSELECT\n  o_orderkey,\n  o_totalprice,\n  CASE\n    WHEN o_totalprice >= 300000 THEN '大口'\n    WHEN o_totalprice >= 100000 THEN '中口'\n    ELSE '小口'\n  END AS order_size\nFROM samples.tpch.orders\nWHERE o_totalprice > (SELECT AVG(o_totalprice) FROM samples.tpch.orders)\nLIMIT 20;\n```\n\nサブクエリで平均値を動的に求め、その平均より高い注文だけをCASE式で大口/中口に分類しています（平均を上回っているため「小口」に分類される行は基本的に現れません）。",
         outcomes: [
           "サブクエリを使って動的な条件で絞り込みができる",
           "CASE式で条件に応じたラベル付けができる",
@@ -226,6 +237,8 @@ const courses: CourseSeed[] = [
           "例えば、`discount`（割引額）列にNULLが混ざっている状態で `AVG(discount)` を計算すると、NULLの行は計算から除外されるため、「全顧客の平均」ではなく「割引が設定されている顧客だけの平均」になってしまいます。`COALESCE(discount, 0)` で0埋めしてから平均を取ると、意図した「全顧客の平均」に近づきます。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. Databricks SQL Editorで `SELECT COUNT(*) AS all_rows, COUNT(o_comment) AS non_null_comment FROM samples.tpch.orders;` を実行し、`COUNT(*)` と `COUNT(列名)` の結果が異なるかどうか確認しましょう。\n2. `SELECT * FROM samples.tpch.orders WHERE o_comment IS NULL LIMIT 5;` を実行し、NULLを含む行を確認しましょう（`samples.tpch.orders`にNULLが無い場合は、他のサンプルテーブルやご自身で作成したテーブルで試してください）。\n3. `COALESCE()` を使って、NULLの場合に別の文字列（例:'コメントなし'）に置き換えるSELECT文を書いて実行しましょう。\n4. `AVG()` や `SUM()` にNULLが混ざるとどう影響するか、実際に小さなテーブルを自分で作って（`VALUES` 句を使うと簡単です）試してみましょう:\n   ```sql\n   SELECT AVG(amount) FROM (VALUES (100), (200), (NULL)) AS t(amount);\n   ```\n5. 上記の結果が「150」になる（NULLを除いた2件の平均）ことを確認し、なぜそうなるかを自分の言葉で説明してみましょう。",
+        modelAnswerContent:
+          "**模範解答**\n\n```sql\nSELECT COUNT(*) AS all_rows, COUNT(o_comment) AS non_null_comment\nFROM samples.tpch.orders;\n\nSELECT COALESCE(o_comment, 'コメントなし') AS comment\nFROM samples.tpch.orders\nLIMIT 10;\n\nSELECT AVG(amount) FROM (VALUES (100), (200), (NULL)) AS t(amount);\n-- 結果: 150 （NULLの行は計算対象から除外され、100と200の平均になる）\n```\n\n`COUNT(*)`は全行、`COUNT(列名)`はその列がNULLでない行だけを数えるため、両者の差がNULLの件数に相当します。",
         outcomes: [
           "NULLは比較演算子ではなくIS NULLで判定することを理解している",
           "COALESCEを使ってNULLに既定値を設定できる",
@@ -270,6 +283,8 @@ const courses: CourseSeed[] = [
           "```python\norders = [\n    {\"customer\": \"田中\", \"amount\": 3000},\n    {\"customer\": \"鈴木\", \"amount\": 5400},\n]\ntotal = sum(o[\"amount\"] for o in orders)\nprint(total)  # 8300\n```",
         handsOnContent:
           "**ハンズオン課題**\n\n1. Databricks Free Editionにログインし、左メニューから新しいNotebookを作成してください（言語はPythonを選択）。\n2. 最初のセルに `sales = [3000, 5400, 1200]` と入力して実行し、`Shift+Enter` でセルを実行する操作に慣れましょう。\n3. 次のセルで `total = sum(sales)` と `print(total)` を実行し、合計が8500になることを確認してください。\n4. 上記の例のような辞書のリスト（`orders = [{\"customer\": ..., \"amount\": ...}, ...]`）を、自分で3件以上作成してください。\n5. `for` を使わずにリスト内包表記（`sum(o[\"amount\"] for o in orders)`）で合計金額を計算し、結果を表示してください。\n6. 最後に、合計金額を件数で割って平均を求めるコードを追加し、実行結果をメモしておきましょう。",
+        modelAnswerContent:
+          "**模範解答**\n\n```python\nsales = [3000, 5400, 1200]\ntotal = sum(sales)\nprint(total)  # 8500\n\norders = [\n    {\"customer\": \"田中\", \"amount\": 3000},\n    {\"customer\": \"鈴木\", \"amount\": 5400},\n    {\"customer\": \"佐藤\", \"amount\": 1200},\n]\ntotal = sum(o[\"amount\"] for o in orders)\nprint(total)  # 9500\nprint(total / len(orders))  # 3166.67\n```",
         outcomes: ["Pythonの基本文法（変数・リスト・辞書）を使える", "簡単な集計処理をコードで書ける"],
         relatedJobs: ["Data Engineer Intern", "Junior Data Engineer"],
         referenceLinks: [
@@ -301,6 +316,8 @@ const courses: CourseSeed[] = [
           "```python\nfor order in orders:\n    size = classify_order(order[\"amount\"])\n    print(f\"{order['customer']}: {size}\")\n```\n\n`classify_order` 関数を使うことで、分類ロジックを1か所にまとめられ、後から閾値を変更する際も1箇所を直せば済みます。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. 前のレッスンで作った `orders`（辞書のリスト）を再利用します。\n2. `for` ループで各注文を1件ずつ表示するコードを書いてください。\n3. `if`/`elif`/`else` を使い、金額に応じて「大口」「中口」「小口」を判定するコードをループ内に追加してください。\n4. 上記の判定ロジックを `classify_order(amount)` という関数として切り出してください（`def` を使う）。\n5. 切り出した関数を使って、`orders` の各注文の分類結果を一覧表示するコードに書き換えてください。\n6. 関数の閾値（10000, 3000）を変更し、分類結果がどう変わるか確認しましょう。",
+        modelAnswerContent:
+          "**模範解答**\n\n```python\ndef classify_order(amount):\n    if amount >= 10000:\n        return \"大口\"\n    elif amount >= 3000:\n        return \"中口\"\n    else:\n        return \"小口\"\n\nfor order in orders:\n    size = classify_order(order[\"amount\"])\n    print(f\"{order['customer']}: {size}\")\n```\n\n閾値（10000, 3000）を変えると、同じ注文でも分類結果が変わることを確認できていればOKです。関数化しておくことで、閾値の変更が1箇所で済みます。",
         outcomes: [
           "if/for を組み合わせて条件付きの繰り返し処理が書ける",
           "処理を関数として切り出し、再利用できる",
@@ -334,6 +351,8 @@ const courses: CourseSeed[] = [
           "```python\n# PySparkの例\ndf.filter(df.amount > 3000).select(\"customer_name\", \"amount\").show()\n```\n\nSQLの `WHERE` や `SELECT` に近い操作を、コードで表現できます。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. Databricks Free Editionの新しいPythonノートブックで、`df = spark.table(\"samples.tpch.orders\")` を実行し、DataFrameとして読み込みます。\n2. `df.printSchema()` を実行し、列名とデータ型の一覧を確認しましょう。\n3. `df.show(5)` で先頭5件を表示し、SQLで見た内容と同じデータであることを確認してください。\n4. `df.filter(df.o_totalprice > 300000).select(\"o_custkey\", \"o_totalprice\").show(10)` を実行し、条件に合う行を絞り込んで特定の列だけ表示してみましょう。\n5. `.filter()` の条件を自分で変更し（例：`o_orderstatus == 'O'`）、結果がどう変わるか確認しましょう。\n6. 最後に、`df.filter(...).select(...).count()` のように `.count()` を末尾に付け、絞り込み後の件数を取得してみましょう。",
+        modelAnswerContent:
+          "**模範解答**\n\n```python\ndf = spark.table(\"samples.tpch.orders\")\ndf.printSchema()\ndf.show(5)\n\ndf.filter(df.o_totalprice > 300000).select(\"o_custkey\", \"o_totalprice\").show(10)\n\ndf.filter(df.o_orderstatus == \"O\").select(\"o_custkey\", \"o_totalprice\").count()\n```\n\nSQLの`WHERE`が`.filter()`に、`SELECT 列名`が`.select()`に対応していることを確認できていればOKです。",
         outcomes: ["DataFrameの基本的な考え方を理解する", "filter/selectでデータを加工できる"],
         relatedJobs: ["Data Engineer Intern", "Analytics Engineer"],
         referenceLinks: [
@@ -365,6 +384,8 @@ const courses: CourseSeed[] = [
           "```python\n# customerごとの合計金額を集計（SQLのGROUP BYに相当）\nsummary = df.groupby(\"customer\")[\"amount\"].sum().reset_index()\nprint(summary)\n```\n\nこのように、pandasはSQLで学んだ「集計」の考え方をコードで表現する手段でもあります。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. Databricks Free EditionのPythonノートブックで `import pandas as pd` を実行します。\n2. 上記の例のように、`None`（欠損値）を含む小さなDataFrameを自分で作成してください。\n3. `df.isnull().sum()` を実行し、どの列に何件の欠損があるか確認しましょう。\n4. `fillna()` を使って欠損値を0、または適切な既定値で埋めてください。\n5. 金額に消費税（10%）を加えた新しい列 `amount_with_tax` を追加してください。\n6. `groupby()` を使って、顧客ごとの合計金額を集計してください。\n7. SQLで同じ集計をした場合の書き方（`GROUP BY`）と、pandasでの書き方を見比べて、対応関係をメモしておきましょう。",
+        modelAnswerContent:
+          "**模範解答**\n\n```python\nimport pandas as pd\n\ndf = pd.DataFrame({\n    \"customer\": [\"田中\", \"鈴木\", \"佐藤\"],\n    \"amount\": [3000, None, 5400],\n})\nprint(df.isnull().sum())\n\ndf[\"amount\"] = df[\"amount\"].fillna(0)\ndf[\"amount_with_tax\"] = df[\"amount\"] * 1.1\n\nsummary = df.groupby(\"customer\")[\"amount\"].sum().reset_index()\nprint(summary)\n```\n\nSQLの`GROUP BY 列名`が、pandasでは`.groupby(\"列名\")`に対応します。",
         outcomes: [
           "pandasで欠損値の確認・補完ができる",
           "pandasのgroupbyでSQLのGROUP BYに相当する集計ができる",
@@ -409,6 +430,8 @@ const courses: CourseSeed[] = [
           "`fact_sales`（売上ファクト）と `dim_customer`（顧客ディメンション）、`dim_date`（日付ディメンション）を組み合わせることで、「月別」「顧客別」「地域別」など多様な集計が可能になります。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. あなたが知っているサービス（ECサイト、動画配信サービスなど）を1つ選びます。\n2. そのサービスで「測定したい数値」を3つ書き出してください（例：注文金額、視聴時間、クリック数）。\n3. その数値を持つファクトテーブルの名前と列構成を設計してください（例：`fact_orders(order_id, customer_id, product_id, date_id, amount)`）。\n4. ファクトテーブルが参照する切り口（ディメンション）を最低3つ挙げ、それぞれのディメンションテーブルの列構成も設計してください（例：`dim_customer`, `dim_product`, `dim_date`）。\n5. 設計した表同士を、どの列（外部キー）で結びつけるかを矢印付きの図やメモで書き出してみましょう（スタースキーマの形になっているか確認）。",
+        modelAnswerContent:
+          "**模範解答例（動画配信サービスの場合）**\n\n- 測定したい数値：視聴時間、視聴回数、評価スコア\n- ファクトテーブル：`fact_playback(playback_id, user_id, content_id, date_id, watch_seconds)`\n- ディメンション：`dim_user(user_id, plan_type, region)`、`dim_content(content_id, genre, release_year)`、`dim_date(date_id, year, month, day_of_week)`\n\n`fact_playback`が3つのディメンションテーブルとそれぞれの主キー（`user_id`, `content_id`, `date_id`）で結びつく、中心にファクトを置いた星形（スタースキーマ）の構造になっていればOKです。",
         outcomes: ["ファクト/ディメンションの違いを説明できる", "スタースキーマの基本構造をイメージできる"],
         relatedJobs: ["Analytics Engineer", "Junior Data Engineer"],
         referenceLinks: [
@@ -440,6 +463,8 @@ const courses: CourseSeed[] = [
           "例えば顧客が引っ越して都道府県が変わった場合、SCD Type 1では顧客マスタの都道府県を単純に書き換えます。SCD Type 2では、`customer_id=1, prefecture='東京', valid_from=2025-01-01, valid_to=2026-03-01` という行を残しつつ、`customer_id=1, prefecture='大阪', valid_from=2026-03-01, valid_to=NULL` という新しい行を追加します。こうすることで「2026年1月時点でこの顧客がどこに住んでいたか」を後から再現できます。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. 「顧客の居住都道府県」を例に、SCD Type 1（上書き）で管理した場合の顧客マスタの状態を、引っ越し前・引っ越し後の2時点でそれぞれ書き出してみましょう。\n2. 同じ例を、SCD Type 2（履歴保持、`valid_from`/`valid_to`列を使う）で管理した場合の状態を書き出してみましょう。\n3. 「引っ越し前の売上を、当時の都道府県別に集計し直したい」という要件に対して、Type 1とType 2のどちらの設計が対応できるかを考え、理由を1〜2行で書いてください。\n4. 自分の題材（会員ランク、価格プランなど、時間とともに変わりうる属性）を1つ選び、SCD Type 2で管理する場合のテーブル構成を設計してみましょう。",
+        modelAnswerContent:
+          "**模範解答**\n\n- Type 1（上書き）：`customer_id=1, prefecture='大阪'`のみが残り、引っ越し前の「東京」だった記録は失われる\n- Type 2（履歴保持）：\n  - `customer_id=1, prefecture='東京', valid_from=2025-01-01, valid_to=2026-03-01`\n  - `customer_id=1, prefecture='大阪', valid_from=2026-03-01, valid_to=NULL`\n- 「引っ越し前の売上を当時の都道府県別に再集計したい」という要件には、当時の値を保持しているType 2でなければ対応できません（Type 1では過去の状態が上書きで消えてしまうため）。",
         outcomes: [
           "SCD Type 1とType 2の違いを説明できる",
           "履歴を残す必要がある場合の設計パターンをイメージできる",
@@ -483,6 +508,8 @@ const courses: CourseSeed[] = [
           "例えば、生ログデータ（非構造化）をそのまま安価に保存しつつ、そこから整形したテーブルに対してSQLで高速に分析できるのがLakehouseの強みです。",
         handsOnContent:
           "**ハンズオン課題（Databricks Free Edition）**\n\n1. https://www.databricks.com/try-databricks からDatabricks Free Editionにサインアップします（メールアドレスのみで登録可能）。\n2. 初回ログイン後に表示されるWorkspaceのトップ画面をひととおり眺め、左側のサイドメニュー（Workspace, Catalog, Jobs & Pipelines, Compute など）を確認してください。\n3. 左メニューの「Catalog」をクリックし、`samples` というカタログの中に `tpch` などのスキーマ（データベース）があることを確認しましょう。\n4. `samples.tpch.orders` テーブルをクリックし、右側に表示されるスキーマ（列名・型）とサンプル行を確認してください。\n5. 「これはデータレイク的な柔軟性と、ウェアハウス的なスキーマ管理の両方を兼ね備えている」という感覚を、自分の言葉で1〜2行にまとめてみましょう。",
+        modelAnswerContent:
+          "**模範解答例**\n\nLakehouseは、データレイクの「あらゆる形式のデータを安価に貯められる柔軟性」と、データウェアハウスの「スキーマ管理やSQLでの高速分析といった信頼性」を両立させたアーキテクチャです。`samples.tpch.orders`のようにスキーマが管理されたテーブルとしてSQLで即座に分析できる一方、生ログのような非構造化データも同じ基盤に安価に貯められる点が、この2つを兼ね備えている感覚に当たります。",
         outcomes: ["Lakehouseの概念を説明できる", "Databricks Workspaceにログインできる"],
         relatedJobs: ["Junior Data Engineer", "Analytics Engineer（初級）"],
         referenceLinks: [
@@ -514,6 +541,8 @@ const courses: CourseSeed[] = [
           "毎朝決まった時間にETL処理を実行したい場合は、ノートブックを作成し、それをJobsに登録してスケジュール実行させます。実行にはComputeクラスタが必要で、クラスタのサイズやAuto-terminate設定によってコストが変わります。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. Databricks Free Editionの左メニューから「Workspace」→「Create」→「Notebook」で新しいNotebookを作成してください（言語はPython）。\n2. 1つ目のセルに `print(\"Hello Databricks\")` と入力し、`Shift+Enter` で実行します。\n3. Notebook右上のCompute選択欄で、割り当てられているクラスタ（Serverless Compute等）の名前を確認してください。\n4. 2つ目のセルで `spark.sql(\"SHOW CATALOGS\").show()` を実行し、アクセス可能なカタログの一覧を表示してみましょう。\n5. 左メニューの「Jobs & Pipelines」を開き、まだJobが1つも無いことを確認してください（次のレッスン以降で実際にJobを作成します）。\n6. Notebookに名前を付けて保存し、Workspace上のどこに保存されたか（フォルダ構成）を確認しましょう。",
+        modelAnswerContent:
+          "**模範解答**\n\n```python\nprint(\"Hello Databricks\")\n```\n```sql\nSHOW CATALOGS;\n```\n\nNotebookは右上のCompute欄で割り当てられたクラスタ（Serverless Computeなど）上で実行され、`SHOW CATALOGS`で`samples`や`main`といったアクセス可能なカタログ一覧が確認できます。",
         outcomes: ["Notebook/Cluster/Catalog/Jobsの役割を説明できる", "Notebookを作成しコードを実行できる"],
         relatedJobs: ["Junior Data Engineer", "Analytics Engineer（初級）"],
         referenceLinks: [
@@ -544,6 +573,8 @@ const courses: CourseSeed[] = [
           "実務では、個人情報を含むテーブルへのアクセスを一部のロールだけに限定し、それ以外のテーブルは分析チーム全体に公開する、といった使い分けがよく行われます。Unity Catalogの権限管理により、こうした「最小権限の原則」をデータ基盤レベルで実現できます。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. Databricks Free Editionの左メニューから「Catalog」を開き、カタログ一覧の階層構造（カタログ→スキーマ→テーブル）を確認してください。\n2. `samples` カタログを展開し、複数のスキーマ（`tpch`, `nyctaxi` など）が存在することを確認しましょう。\n3. 任意のテーブルをクリックし、「Permissions」タブ（権限表示、Free Editionでは一部表示のみの場合があります）を確認してください。\n4. SQL Editorで `SHOW GRANTS ON TABLE samples.tpch.orders;` を実行し、結果を確認してみましょう（権限が無い/表示されない場合もありますが、コマンドの存在自体を確認することが目的です）。\n5. もし自分でスキーマを作成できる権限がある場合は、`CREATE SCHEMA IF NOT EXISTS main.my_practice;` を実行し、独自のスキーマを作成してみましょう。",
+        modelAnswerContent:
+          "**模範解答**\n\n```sql\nSHOW GRANTS ON TABLE samples.tpch.orders;\n\nCREATE SCHEMA IF NOT EXISTS main.my_practice;\n\nGRANT SELECT ON TABLE analytics.sales.orders TO `data-analysts`;\nGRANT ALL PRIVILEGES ON SCHEMA analytics.sales TO `data-engineers`;\n```\n\n`samples`カタログの中に`tpch`や`nyctaxi`など複数のスキーマがあり、その中にテーブルが並ぶ「カタログ→スキーマ→テーブル」の3階層になっていることを確認できていればOKです。",
         outcomes: [
           "カタログ・スキーマ・テーブルの3階層構造を説明できる",
           "GRANT文による権限管理の考え方を理解している",
@@ -577,6 +608,8 @@ const courses: CourseSeed[] = [
           "例えば、開発中は小さめのAll-Purpose Clusterで試行錯誤し、本番のバッチ処理は夜間にJob Clusterとして起動・実行・自動終了させる、という使い分けが一般的です。こうすることで、開発の柔軟性と本番運用のコスト効率を両立できます。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. Databricks Free Editionの左メニューから「Compute」を開き、利用可能なコンピュート（Serverless Compute等）の一覧を確認してください。\n2. コンピュートの詳細画面で、Auto Termination（自動停止）に関する設定項目があるか確認しましょう。\n3. 現在実行中、または過去に実行したNotebookが、どのコンピュートを使って実行されたかを確認してください。\n4. もしクラスタ作成の権限がある場合は、小さなクラスタ（最小構成）を作成し、Auto Terminationを15分に設定してみましょう（Free Editionでは作成できない場合、設定画面を確認するだけでも構いません）。\n5. 「開発用」と「本番バッチ用」でクラスタ構成をどう使い分けるべきか、自分の言葉で2〜3行にまとめてみましょう。",
+        modelAnswerContent:
+          "**模範解答**\n\n- All-Purpose Cluster：開発中の対話的な試行錯誤に使う。人が起動・停止する前提のため、Auto Terminationを15〜30分程度に短く設定しておくと無駄なコストを防げる\n- Job Cluster：Job実行時にのみ自動起動し、実行後は自動終了するため開発用より低コスト\n- 使い分け：開発は小さめのAll-Purpose Clusterで試行錯誤し、本番のバッチ処理は夜間にJob Clusterとして起動・実行・自動終了させることで、開発の柔軟性と本番のコスト効率を両立させる。",
         outcomes: [
           "All-Purpose ClusterとJob Clusterの違いを説明できる",
           "Auto Terminationなどコストに関わる設定の重要性を理解している",
@@ -610,6 +643,8 @@ const courses: CourseSeed[] = [
           "実務では、「Notebookで書いたETLロジックをGitHubのリポジトリで管理し、mainブランチにマージされたらCI/CDが自動的にDatabricks CLIを使ってJobを更新する」という運用がよく行われます。これにより、手作業でのNotebookコピー&ペーストによるミスを防げます。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. Databricks Free Editionの左メニューから「Repos」（またはWorkspace内のRepos機能）を確認してください。\n2. 可能であれば、ご自身のGitHubアカウントで空のパブリックリポジトリを1つ作成してください。\n3. Databricks上でそのリポジトリをクローン（Add Repo）してみましょう（Free Editionでの利用可否は環境によって異なります。できない場合は画面構成の確認のみで構いません）。\n4. ローカルPCがある場合は、`pip install databricks-cli` でCLIをインストールし、`databricks --version` でインストールを確認してください。\n5. `databricks configure --token` を試し、認証にWorkspace URLとPersonal Access Tokenが必要になることを確認しましょう（トークンの発行はUser Settings画面から行います）。",
+        modelAnswerContent:
+          "**模範解答**\n\n```bash\npip install databricks-cli\ndatabricks --version\ndatabricks configure --token\n\ndatabricks workspace list /Users/you@example.com\ndatabricks jobs list\n```\n\nReposはNotebookをGitでブランチ管理・レビュー・復元できるようにする機能、CLIはターミナルからWorkspace/Job/クラスタを操作する手段であり、`configure --token`にはWorkspace URLとPersonal Access Tokenの認証情報が必要になる点を確認できていればOKです。",
         outcomes: [
           "Databricks ReposによるGit連携の目的を説明できる",
           "Databricks CLIの基本的な使い方をイメージできる",
@@ -654,6 +689,8 @@ const courses: CourseSeed[] = [
           "```sql\n-- 1時間前のテーブルの状態を確認する（タイムトラベル）\nSELECT * FROM orders VERSION AS OF 3;\n```",
         handsOnContent:
           "**ハンズオン課題**\n\n1. Databricks Free Editionの新しいNotebookで、以下を実行しDeltaテーブルを作成します。\n   ```sql\n   CREATE TABLE IF NOT EXISTS main.default.practice_orders (\n     order_id INT, customer_name STRING, amount DOUBLE\n   );\n   INSERT INTO main.default.practice_orders VALUES (1, '田中', 3000);\n   ```\n2. `UPDATE main.default.practice_orders SET amount = 3500 WHERE order_id = 1;` を実行し、データを更新します。\n3. `DESCRIBE HISTORY main.default.practice_orders;` を実行し、バージョン0（作成）、1（INSERT）、2（UPDATE）のような変更履歴が記録されていることを確認しましょう。\n4. `SELECT * FROM main.default.practice_orders VERSION AS OF 1;` を実行し、UPDATE前の状態（amount=3000）が見られることを確認してください。\n5. 最後に自分でもう1件INSERTし、再度 `DESCRIBE HISTORY` を実行して履歴が増えていることを確認しましょう。",
+        modelAnswerContent:
+          "**模範解答**\n\n```sql\nCREATE TABLE IF NOT EXISTS main.default.practice_orders (\n  order_id INT, customer_name STRING, amount DOUBLE\n);\nINSERT INTO main.default.practice_orders VALUES (1, '田中', 3000);\nUPDATE main.default.practice_orders SET amount = 3500 WHERE order_id = 1;\n\nDESCRIBE HISTORY main.default.practice_orders;\n-- version 0: CREATE TABLE, version 1: INSERT, version 2: UPDATE\n\nSELECT * FROM main.default.practice_orders VERSION AS OF 1;\n-- amount = 3000（UPDATE前の状態）\n```",
         outcomes: ["Delta Lakeの主要な特徴を説明できる", "Deltaテーブルの変更履歴を確認できる"],
         relatedJobs: ["Junior Data Engineer", "Analytics Engineer（初級）"],
         referenceLinks: [
@@ -684,6 +721,8 @@ const courses: CourseSeed[] = [
           "日次バッチで顧客マスタを更新する場合、全件洗い替えではなく `MERGE` を使うことで、変更があった顧客だけを効率的に反映できます。その後、週次で `OPTIMIZE` と `VACUUM` を実行し、パフォーマンスとストレージコストを維持します。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. 前のレッスンで作った `practice_orders` に加え、`practice_orders_staging` という一時テーブルを作り、既存customer_idの更新データと新規customer_idの行を1件ずつ用意します。\n2. `MERGE INTO` 文を書き、staging側のデータをpractice_ordersに反映させてください（既存分は更新、新規分は挿入）。\n3. 実行後に `SELECT * FROM practice_orders;` で結果を確認し、意図通りUpsertされているか確認しましょう。\n4. `OPTIMIZE main.default.practice_orders;` を実行してみましょう（データ量が少ないため効果は体感できませんが、コマンドがエラーなく実行できることを確認してください）。\n5. `DESCRIBE HISTORY` で `VACUUM` や `OPTIMIZE` の実行がバージョン履歴に記録されるか確認しましょう。",
+        modelAnswerContent:
+          "**模範解答**\n\n```sql\nMERGE INTO practice_orders AS target\nUSING practice_orders_staging AS source\nON target.customer_id = source.customer_id\nWHEN MATCHED THEN UPDATE SET target.amount = source.amount\nWHEN NOT MATCHED THEN INSERT (customer_id, amount) VALUES (source.customer_id, source.amount);\n\nOPTIMIZE main.default.practice_orders;\n\nDESCRIBE HISTORY main.default.practice_orders;\n```\n\nMERGE実行後、既存customer_idの行は更新され、新規customer_idの行は追加（Upsert）されていること、`DESCRIBE HISTORY`にMERGEやOPTIMIZEの操作が記録されていることを確認できていればOKです。",
         outcomes: [
           "MERGE文でUpsert処理を実装できる",
           "OPTIMIZEとVACUUMの目的の違いを説明できる",
@@ -718,6 +757,8 @@ const courses: CourseSeed[] = [
           "例えば、IoTセンサーやWebサイトのアクセスログが1分ごとにクラウドストレージへ書き出される場合、Auto Loaderを使うことで「新しいファイルが来たら自動的にDeltaテーブルに追記される」パイプラインを構築でき、バッチジョブを頻繁に手動実行する必要がなくなります。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. Databricksの公式ドキュメント（参考リンク）で、Auto Loaderのサンプルコードを読み、`cloudFiles` フォーマットの指定方法を確認してください。\n2. Databricks Free Editionのノートブックで、`samples` カタログ内にあるサンプルファイル群（利用可能な場合）を対象に、通常の `spark.read` と `spark.readStream.format(\"cloudFiles\")` の書き方の違いをコードとして書き出し比較してみましょう（Free Editionでは実行できる外部ストレージが限られるため、コードの構造理解が目的です）。\n3. `checkpointLocation` オプションが無いとどのようなエラーになるか、ドキュメントで確認してみましょう。\n4. 「バッチ処理」と「Auto Loaderによるストリーム的な取り込み」のメリット・デメリットを、それぞれ2つずつ書き出してみましょう。",
+        modelAnswerContent:
+          "**模範解答**\n\n```python\ndf = (spark.readStream\n      .format(\"cloudFiles\")\n      .option(\"cloudFiles.format\", \"json\")\n      .schema(my_schema)\n      .load(\"/mnt/raw/events/\"))\n\n(df.writeStream\n   .format(\"delta\")\n   .option(\"checkpointLocation\", \"/mnt/checkpoints/events/\")\n   .table(\"bronze.events\"))\n```\n\n通常の`spark.read`は一括読み込みなのに対し、`spark.readStream.format(\"cloudFiles\")`は新規ファイルの到着を検知し続ける点が異なります。`checkpointLocation`が無いと「どこまで処理したか」を記録できず、途中から再開する冪等な取り込みができません。\n\n- バッチ処理：定時実行・実装がシンプル／リアルタイム性が低い\n- Auto Loader：新規ファイルに即座に反応・冪等な再開が可能／常時起動が前提でリソースを使い続ける",
         outcomes: [
           "Auto Loaderの目的と仕組みを説明できる",
           "チェックポイントによる冪等な取り込みの重要性を理解している",
@@ -751,6 +792,8 @@ const courses: CourseSeed[] = [
           "Bronze（生データ）→ Silver（整形済み）→ Gold（集計済み）という「メダリオンアーキテクチャ」の各層をDLTのテーブル定義として書くことで、パイプライン全体の見通しが良くなり、どのテーブルがどのテーブルに依存しているかが自動的に可視化されます。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. 参考リンクのDatabricks公式ドキュメントで、DLTのサンプルコード（`@dlt.table` の使い方）を読んでください。\n2. Bronze/Silver/Goldの3層構成を、これまで学んだ「Extract/Transform/Load」の用語と対応付けてメモしてみましょう（Bronze=Extract直後の生データ、など）。\n3. `@dlt.expect` を使ったデータ品質チェックの例を1つ、自分で考えて擬似コードとして書いてみましょう（例：「金額が0以上であること」）。\n4. 通常のNotebookで手続き的に書いたETLコードと、DLTで宣言的に書いたコードを見比べ、「どちらが変更に強そうか」を自分の言葉で説明してみましょう。",
+        modelAnswerContent:
+          "**模範解答**\n\n```python\nimport dlt\n\n@dlt.table\ndef bronze_orders():\n    return spark.readStream.format(\"cloudFiles\").option(\"cloudFiles.format\", \"json\").load(\"/mnt/raw/orders/\")\n\n@dlt.table\n@dlt.expect(\"valid_amount\", \"amount > 0\")\ndef silver_orders():\n    return dlt.read(\"bronze_orders\").filter(\"amount IS NOT NULL\")\n```\n\n- Bronze＝Extract直後の生データ、Silver＝Transform後の整形済みデータ、Gold＝集計済みの分析用データ\n- `@dlt.expect(\"valid_amount\", \"amount > 0\")`は「金額が0以上であること」を宣言するデータ品質チェックの例\n- 手続き的なNotebookコードは実行順序を自分で管理する必要がありますが、DLTでは依存関係が自動解決されるため、テーブル定義を追加・変更してもパイプライン全体の実行順序を書き直す必要がなく、変更に強い構成になります。",
         outcomes: [
           "宣言的パイプライン（DLT）の考え方を説明できる",
           "Bronze/Silver/Goldのメダリオンアーキテクチャを理解している",
@@ -785,6 +828,8 @@ const courses: CourseSeed[] = [
           "実務では、「深夜2時にExtractタスクを開始し、成功したらTransform、その後Loadを実行し、いずれかのタスクが失敗したら担当者にSlack通知する」といったWorkflowが組まれます。あわせて、開発環境のクラスタポリシーで最大ノード数を制限し、コストの暴走を防ぎます。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. Databricks Free Editionの左メニューから「Jobs & Pipelines」→「Create Job」を開きます。\n2. これまでのレッスンで作成したNotebookのいずれかを、1つ目のタスクとして登録してください。\n3. 可能であれば2つ目のタスクを追加し、「1つ目のタスクが成功したら実行する」という依存関係を設定してみましょう。\n4. Jobのスケジュール設定画面を開き、「毎日午前6時に実行」のようなCron形式のスケジュールを設定できることを確認してください（実際に有効化するかは任意です）。\n5. Job設定の中に、失敗時の通知（メールなど）を設定できる項目があるか確認しましょう。\n6. 左メニューの「Compute」→「Policies」（利用可能な場合）を確認し、クラスタポリシーがどのような項目を制限できるかを確認してください。",
+        modelAnswerContent:
+          "**模範解答例**\n\n- Job設定：タスクA（Extract用Notebook）→タスクAが成功したらタスクB（Transform用Notebook）を実行、という依存関係を設定\n- スケジュール：Cron形式で「毎日午前6時に実行」を設定\n- 通知：タスク失敗時にメールアドレス宛に通知が飛ぶよう設定\n- クラスタポリシー：「学習用ユーザーは最大2ノードまで」のように、作成できるクラスタの上限を制限し、意図しない高額なクラスタ作成を防ぐ役割を持つ。",
         outcomes: [
           "Workflowsで複数タスクの依存関係を管理できることを理解している",
           "クラスタポリシーによるコスト管理の考え方を説明できる",
@@ -828,6 +873,8 @@ const courses: CourseSeed[] = [
           "```python\nraw_df = spark.read.csv(\"/data/raw/orders.csv\", header=True)\nclean_df = raw_df.dropna().withColumnRenamed(\"amt\", \"amount\")\nclean_df.write.mode(\"overwrite\").saveAsTable(\"analytics.orders_clean\")\n```",
         handsOnContent:
           "**ハンズオン課題**\n\n1. Databricks Free Editionのノートブックで `df = spark.table(\"samples.tpch.orders\")` を実行し、Extractに相当するステップを行います。\n2. `df2 = df.dropna()` で欠損値を含む行を除去し、`df.count()` と `df2.count()` を比較して除去された件数を確認しましょう。\n3. `df3 = df2.withColumnRenamed(\"o_totalprice\", \"total_price\")` のように列名を分かりやすく変更してください。\n4. `df3.write.mode(\"overwrite\").saveAsTable(\"main.default.orders_clean\")` を実行し、Loadに相当するステップとして新しいテーブルに保存します。\n5. SQLで `SELECT COUNT(*), AVG(total_price) FROM main.default.orders_clean;` を実行し、正しく変換・保存されたかを確認しましょう。\n6. `mode(\"overwrite\")` を `mode(\"append\")` に変えて再実行するとどうなるか予想してから実行し、結果（件数が増えるか、置き換わるか）を確認してください。",
+        modelAnswerContent:
+          "**模範解答**\n\n```python\ndf = spark.table(\"samples.tpch.orders\")\ndf2 = df.dropna()\nprint(df.count(), df2.count())\n\ndf3 = df2.withColumnRenamed(\"o_totalprice\", \"total_price\")\ndf3.write.mode(\"overwrite\").saveAsTable(\"main.default.orders_clean\")\n```\n```sql\nSELECT COUNT(*), AVG(total_price) FROM main.default.orders_clean;\n```\n\n`mode(\"append\")`に変えて再実行すると、既存データはそのままに新しい行が追記されるため件数が増え、`overwrite`のようにテーブル全体が置き換わることはありません。",
         outcomes: ["ETLの3ステップを説明できる", "簡単なETL処理をNotebookで実装できる"],
         relatedJobs: ["Data Engineer", "Data Pipeline Assistant"],
         referenceLinks: [
@@ -858,6 +905,8 @@ const courses: CourseSeed[] = [
           "実務では、これらのチェックに1つでも失敗した場合はJobを失敗させ、後続の集計・ダッシュボード更新が「間違ったデータのまま」進んでしまわないようにします。これは、データ利用者からの信頼を守る上で非常に重要な設計です。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. 前のレッスンで作成した `orders_clean` テーブルに対して、`SELECT COUNT(*) FROM main.default.orders_clean;` で件数を確認します。\n2. Pythonで、上記のような `assert` を使った件数チェック・NULLチェック・重複チェックのコードを、`orders_clean` に対して実際に書いて実行してください。\n3. 意図的に不正なデータ（例えばNULLを含む行）を1件追加し、NULLチェックの `assert` が失敗する（エラーが出る）ことを確認しましょう。\n4. 不正なデータを削除し、再度チェックを実行してすべて成功することを確認してください。\n5. 「もしこのチェックが無かったら、どんな問題が起きうるか」を1〜2行で書き出してみましょう。",
+        modelAnswerContent:
+          "**模範解答**\n\n```python\nrow_count = clean_df.count()\nassert row_count > 0, \"変換後のデータが0件です\"\n\nnull_count = clean_df.filter(clean_df.customer_id.isNull()).count()\nassert null_count == 0, f\"customer_idにNULLが{null_count}件あります\"\n\nduplicate_count = clean_df.count() - clean_df.dropDuplicates([\"order_id\"]).count()\nassert duplicate_count == 0, f\"order_idの重複が{duplicate_count}件あります\"\n```\n\nNULLを含む行を1件追加した状態でこのコードを実行すると`AssertionError`が発生し、削除して再実行するとすべて成功します。このチェックが無いと、集計結果に気づかないままNULLや重複が混入した誤った数値を報告してしまうリスクがあります。",
         outcomes: [
           "件数・NULL・一意性・範囲チェックなど代表的な品質チェックを実装できる",
           "品質チェックをパイプラインに組み込む重要性を説明できる",
@@ -891,6 +940,8 @@ const courses: CourseSeed[] = [
           "夜間バッチが途中でエラーになり、翌朝同じJobを再実行するケースはよくあります。冪等性のないパイプラインだと再実行のたびにデータが重複しますが、MERGEベースの増分ロードであれば、安心して「とりあえずもう一度実行する」ことができます。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. `orders_clean` に `updated_at` に相当する列がなければ、`ALTER TABLE main.default.orders_clean ADD COLUMN updated_at TIMESTAMP;` のような形で追加し、適当な日時を設定してください。\n2. 「前回処理した最終日時より新しいデータだけを取得する」SELECT文を書いてみましょう（`WHERE updated_at > '適当な日時'`）。\n3. 同じINSERT文を意図的に2回実行し、重複行が発生することを確認してください（冪等でない例の再現）。\n4. 重複した行を削除したうえで、代わりにMERGE文を使って同じデータ反映を2回実行し、2回目も重複が発生しないことを確認しましょう。\n5. 「なぜ夜間バッチの再実行において冪等性が重要か」を自分の言葉で2〜3行にまとめてください。",
+        modelAnswerContent:
+          "**模範解答**\n\n```sql\nALTER TABLE main.default.orders_clean ADD COLUMN updated_at TIMESTAMP;\n\nSELECT * FROM raw_orders WHERE updated_at > '2026-01-01T00:00:00';\n\n-- 冪等でない例（2回実行すると重複が発生）\nINSERT INTO orders_clean SELECT * FROM staging;\n\n-- 冪等な例（MERGEなら2回実行しても重複しない）\nMERGE INTO orders_clean t USING staging s\nON t.order_id = s.order_id\nWHEN MATCHED THEN UPDATE SET *\nWHEN NOT MATCHED THEN INSERT *;\n```\n\n夜間バッチは途中で失敗し再実行されることがあるため、冪等性が無いと再実行のたびにデータが重複し、集計結果が不正確になってしまいます。MERGEベースであれば、失敗して何度再実行しても最終的な結果が変わらないため安心して再実行できます。",
         outcomes: [
           "フルロードと増分ロードの違いを説明できる",
           "冪等性の重要性と、MERGEによる実現方法を理解している",
@@ -934,6 +985,8 @@ const courses: CourseSeed[] = [
           "例えば、日付でパーティショニングされたテーブルに対して、特定の日付範囲だけを読み込むクエリは、全件スキャンより大幅に高速化されます。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. Databricks SQL Editorで `samples.tpch.orders` に対して `SELECT COUNT(*) FROM samples.tpch.orders WHERE o_orderdate > '1998-01-01';` を実行し、クエリ実行後に表示される実行時間（Duration）を確認しましょう。\n2. `WHERE` 句を外した `SELECT COUNT(*) FROM samples.tpch.orders;` と実行時間を比較してみましょう。\n3. Databricks SQL Editorのクエリ結果画面から実行計画（Query Profile / Explain）を開けるか確認し、開ける場合はどのステップに時間がかかっているか眺めてみましょう。\n4. 「もしこのテーブルが日付でパーティション分割されていたら、絞り込みクエリはどう有利になるか」を自分の言葉で説明してみましょう。",
+        modelAnswerContent:
+          "**模範解答**\n\n```sql\nSELECT COUNT(*) FROM samples.tpch.orders WHERE o_orderdate > '1998-01-01';\nSELECT COUNT(*) FROM samples.tpch.orders;\n```\n\nもしテーブルが日付でパーティション分割されていれば、`WHERE o_orderdate > '1998-01-01'`のような絞り込みクエリは、該当する日付範囲のパーティションだけを読み込めばよく、テーブル全体をスキャンする必要がなくなるため、全件スキャンより大幅に高速化されます。",
         outcomes: ["パフォーマンス改善の基本的な考え方を説明できる", "パーティショニングの効果をイメージできる"],
         relatedJobs: ["Data Engineer", "Analytics Engineer"],
         referenceLinks: [
@@ -964,6 +1017,8 @@ const courses: CourseSeed[] = [
           "「顧客ごとの売上」を頻繁に集計するテーブルであれば、`customer_id` でZ-Orderingしておくことで、特定顧客のデータへのアクセスが高速化されます。一方、クラスタサイズを2倍にしても処理時間が半分にならない場合は、ボトルネックが計算リソースではなく別の要因（データの偏り、非効率なクエリなど）にある可能性が高いです。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. `OPTIMIZE main.default.orders_clean ZORDER BY (customer_id);` のようなSQL文を、これまでのハンズオンで作成したテーブルに対して実行してみましょう（列名は実際のテーブル構成に合わせて調整してください）。\n2. Databricks Free Editionの「Compute」画面で、現在のコンピュートのワーカー数・インスタンスタイプの設定項目を確認しましょう。\n3. 「もしデータ量が今の100倍になったら、スケールアウトとスケールアップのどちらを検討すべきか」を、理由とともに書き出してみましょう。\n4. 過去に実行したクエリの実行時間を見直し、「これ以上速くする必要があるか」「コストに見合っているか」を評価する視点で1つコメントを書いてみましょう。",
+        modelAnswerContent:
+          "**模範解答**\n\n```sql\nOPTIMIZE main.default.orders_clean ZORDER BY (customer_id);\n```\n\nデータ量が今の100倍になった場合、まずは並列処理できるワーカー数を増やす**スケールアウト**を検討します（大規模データの分散処理はワーカー数の恩恵を受けやすいため）。ただしボトルネックがデータの偏り（スキュー）や非効率なクエリにある場合は、クラスタを大きくしても処理時間は比例して縮まらないため、クエリの見直しやZ-Orderingを先に検討すべきです。",
         outcomes: [
           "Z-Orderingの目的とパーティショニングとの違いを説明できる",
           "スケールアウトとスケールアップの使い分けを理解している",
@@ -997,6 +1052,8 @@ const courses: CourseSeed[] = [
           "実務では、月次でクラウドのコストレポートを確認し、「想定外にコストがかかっているJobやクラスタが無いか」を棚卸しするのが一般的です。小さな見直しの積み重ねが、年間で大きなコスト差になります。",
         handsOnContent:
           "**ハンズオン課題**\n\n1. Databricks Free Editionの「Jobs & Pipelines」画面で、過去に作成・実行したJobの実行履歴（成功/失敗、実行時間）を確認してください。\n2. Job設定の中に、失敗時の通知先（メールアドレスなど）を設定する項目があるか確認しましょう。\n3. これまでのレッスンで作成したテーブル・Job・Notebookを一覧にし、「本当に必要なものはどれか」を棚卸しする表を作ってみましょう（学習用の練習ですが、実務の棚卸し作業を疑似体験する目的です）。\n4. 「監視すべき指標」を自分の言葉で3つ挙げ、それぞれなぜ重要かを1行で説明してください。",
+        modelAnswerContent:
+          "**模範解答**\n\n監視すべき代表的な指標：\n\n1. **Job成功/失敗の履歴** — 失敗が続くと障害が放置されている兆候だから\n2. **実行時間の推移** — 徐々に遅くなっているなら、データ量増加や偏り（スキュー）の兆候だから\n3. **クラスタの起動時間・コスト** — 想定より高額になっていないか継続的に確認しないと、コストが静かに膨らむため\n\n棚卸しでは「今も使われているか」「削除・統合できないか」の観点で、テーブル・Job・Notebookを一覧化し、Auto Terminationの見直しやJob Cluster/All-Purpose Clusterの使い分け徹底とあわせて整理します。",
         outcomes: [
           "パイプライン運用で監視すべき代表的な指標を説明できる",
           "継続的なコスト最適化の取り組み方をイメージできる",
@@ -1032,15 +1089,17 @@ const courses: CourseSeed[] = [
         title: "お題設定とデータ取得（Extract）：気象オープンデータAPIを叩く",
         type: LessonType.EXERCISE,
         attentionText:
-          "あなたは小売企業のデータ担当としてアサインされました。ある日、店長からこんな依頼が届きます——「天気と来店・売上の関係を分析したい」。",
+          "あなたは小売企業のデータ基盤担当としてアサインされました。ある日、店長からこんな依頼が届きます——「天気と来店・売上の関係を分析したい」。",
         relevanceText:
           "ここまでLevel 1〜4で学んだ知識を総動員する、実務そのものの疑似体験がここから始まります。実務のETLは、この「外部データの取得」から始まることがほとんどです。",
         lectureContent:
-          "## 今回のお題\n\n架空の小売企業で、次のような依頼を受けたとします。\n\n> 「雨の日と晴れの日で来店数に違いがあるか知りたい。まずは天気データを集めてほしい」\n\nこうした依頼に応えるには、まず信頼できる外部データソースからデータを取得（Extract）する必要があります。今回は、**Open-Meteo**という無料・登録不要の気象オープンデータAPIを使います。\n\n## Open-Meteo APIの概要\n\n- エンドポイント例: `https://api.open-meteo.com/v1/forecast`\n- クエリパラメータで緯度・経度、取得したい項目（最高気温、最低気温、降水量など）、期間を指定します\n- APIキーの登録が不要なため、学習用途に適しています\n\n```\nGET https://api.open-meteo.com/v1/forecast?latitude=35.6895&longitude=139.6917&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=Asia%2FTokyo\n```\n\nこのURLは、東京（緯度35.6895、経度139.6917）の日別の最高気温・最低気温・降水量を、直近の予報期間分まとめて返します。",
+          "## 今回のお題\n\n架空の小売企業で、次のような依頼を受けたとします。\n\n> 「雨の日と晴れの日で来店数に違いがあるか知りたい。まずは天気データを集めてほしい」\n\nこうした依頼に応えるには、まず信頼できる外部データソースからデータを取得（Extract）する必要があります。今回は、**Open-Meteo**という無料・登録不要の気象オープンデータAPIを使います。\n\n## Open-Meteo APIの概要\n\n- エンドポイント例: `https://api.open-meteo.com/v1/forecast`\n- クエリパラメータで緯度・経度、取得したい項目（最高気温、最低気温、降水量など）、期間を指定します\n- APIキーの登録が不要なため、学習用途に適しています\n\n```\nGET https://api.open-meteo.com/v1/forecast?latitude=35.6895&longitude=139.6917&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=Asia%2FTokyo\n```\n\nこのURLは、東京（緯度35.6895、経度139.6917）の日別の最高気温・最低気温・降水量を、直近の予報期間分まとめて返します。\n\nこのコースでは、この後のレッスンで「メダリオンアーキテクチャ」「権限制御」「コンピュート運用」「Delta Sharing」まで扱います。今回取得する生データは、その最初の入口（Bronze層の材料）になります。",
         exampleContent:
           "```python\nimport requests\n\nurl = \"https://api.open-meteo.com/v1/forecast\"\nparams = {\n    \"latitude\": 35.6895,\n    \"longitude\": 139.6917,\n    \"daily\": \"temperature_2m_max,temperature_2m_min,precipitation_sum\",\n    \"timezone\": \"Asia/Tokyo\",\n}\n\nresponse = requests.get(url, params=params)\ndata = response.json()\nprint(data[\"daily\"].keys())\n# dict_keys(['time', 'temperature_2m_max', 'temperature_2m_min', 'precipitation_sum'])\n```\n\nAPIから返ってくるのは、`time`（日付）・`temperature_2m_max`（最高気温）・`temperature_2m_min`（最低気温）・`precipitation_sum`（降水量合計）がそれぞれ配列になったJSONです。このままでは分析しづらいため、次のレッスンで表形式のデータに変換します。",
         handsOnContent:
           "**ハンズオン課題（Databricks Free Edition推奨）**\n\n1. Databricks Free EditionでPythonノートブックを新規作成してください。\n2. `requests` を使って、上記のOpen-Meteo APIを実際に呼び出し、レスポンスのJSONを表示してみましょう（緯度・経度はお住まいの地域や好きな都市に変えても構いません）。\n3. 取得したJSONを、そのまま（生データとして）Databricksのボリュームまたはワークスペースのファイルとして保存してみましょう。\n4. 「なぜ生データをまず保存するのか」を自分の言葉で1〜2行メモしてください（ヒント：ETLのどのステップに相当するか、Level 3の学習を思い出しましょう）。",
+        modelAnswerContent:
+          "**模範解答**\n\n```python\nimport requests\n\nurl = \"https://api.open-meteo.com/v1/forecast\"\nparams = {\n    \"latitude\": 35.6895,\n    \"longitude\": 139.6917,\n    \"daily\": \"temperature_2m_max,temperature_2m_min,precipitation_sum\",\n    \"timezone\": \"Asia/Tokyo\",\n}\nresponse = requests.get(url, params=params)\ndata = response.json()\n\nimport json\nwith open(\"/Volumes/main/default/raw/weather_raw.json\", \"w\") as f:\n    json.dump(data, f)\n```\n\n生データをまず無加工で保存しておくのは、後工程（Transform）でバグがあった場合に、APIを再度叩き直すことなく「生データからやり直せる」ようにするためです（これが次のレッスンで扱うBronze層の役割です）。",
         outcomes: [
           "外部の公開APIからHTTP経由でデータを取得できる",
           "取得した生データをまず保存する（Extract）ことの意味を説明できる",
@@ -1062,22 +1121,60 @@ const courses: CourseSeed[] = [
         ],
       },
       {
-        slug: "capstone-transform-load",
-        title: "データの加工とDelta Lakeへの格納（Transform/Load）",
+        slug: "capstone-medallion-design",
+        title: "データ基盤の設計図を描く：メダリオンアーキテクチャの設計",
+        type: LessonType.TEXT,
+        attentionText:
+          "「とりあえずデータを取得して、とりあえずテーブルに保存する」——それで一度は動くかもしれません。しかし、半年後にチームメンバーが増えたとき、そのテーブルの意味を説明できますか？",
+        relevanceText:
+          "思いつきでテーブルを作るだけの実装者と、設計してから作るデータ基盤担当者の違いは、まさにここに現れます。ここから先のレッスンは、すべてこの設計に基づいて進みます。",
+        lectureContent:
+          "## なぜ「設計してから作る」のか\n\nこれまでのレッスンでは`analytics.weather_daily`のような単一のテーブルにすべてを詰め込んでいました。実務でこれをやると、「生データが欲しい」「整形済みが欲しい」「集計済みが欲しい」という異なるニーズがすべて1つのテーブルに混ざり、次第に誰も安心して触れないテーブルになっていきます。\n\n## メダリオンアーキテクチャの3層\n\n- **Bronze（生データ層）**：APIやファイルから取得した生データを、ほぼ無加工のまま保存する層。「何が起きたか」の記録そのものであり、後から何度でも作り直せる出発点\n- **Silver（整形済み層）**：欠損値処理・型変換・重複排除など、Level 3で学んだクレンジングを経た、信頼できる粒度のデータ\n- **Gold（集計済み層）**：BIやダッシュボードがそのまま読みにいく、ビジネスの問いに答えるための集計済みテーブル\n\n## この演習での設計\n\n今回構築するデータ基盤は、以下の3層構成とします。\n\n```\nbronze.weather_raw      -- Open-Meteo APIの生JSONをほぼそのまま格納\nsilver.weather_daily    -- 型変換・欠損値処理・is_rainy列を追加した日次データ\ngold.weather_daily_summary -- is_rainyごとの集計済みサマリー（ダッシュボードが読む先）\n```\n\nテーブルをどこに置くかも設計のうちです。カタログ名は`capstone`、スキーマ名を`bronze`/`silver`/`gold`とし、`capstone.bronze.weather_raw`のように命名します。",
+        exampleContent:
+          "例えば「Silverのテーブルにバグがあった」と分かった場合、Bronzeの生データさえ無事なら、Silverの変換ロジックを直してBronzeから作り直すだけで復旧できます。逆にBronze層自体を都度上書きしてしまう設計だと、過去の生データが失われ、やり直しがきかなくなります。",
+        handsOnContent:
+          "**設計課題（コードを書く前に、まず設計する）**\n\n1. `capstone`という名前のカタログを作る想定で、`bronze`・`silver`・`gold`の3つのスキーマ名を決めてください（本レッスンの案をそのまま使っても構いません）。\n2. 各層に置くテーブルを1つずつ、テーブル名と主な列構成を紙またはメモに書き出してください（`bronze.weather_raw`, `silver.weather_daily`, `gold.weather_daily_summary`）。\n3. 「Silver層でどんな変換（欠損値処理・型変換・列追加）を行うか」を箇条書きで3つ挙げてください。\n4. 「もしSilver層に誤りが見つかったら、どこから作り直せば良いか」を自分の言葉で説明してください。",
+        modelAnswerContent:
+          "**模範解答**\n\n```\ncapstone.bronze.weather_raw\n  - raw_json STRING, ingested_at TIMESTAMP\ncapstone.silver.weather_daily\n  - date DATE, temp_max DOUBLE, temp_min DOUBLE, precipitation DOUBLE, is_rainy BOOLEAN\ncapstone.gold.weather_daily_summary\n  - is_rainy BOOLEAN, day_count INT, avg_temp_max DOUBLE, avg_precipitation DOUBLE\n```\n\nSilver層で行う変換：①JSONの配列を1日1行の表形式に変換、②気温・降水量を数値型に変換、③`is_rainy`列を追加。\n\nSilver層に誤りが見つかった場合は、Bronze層の生データ（`weather_raw`）は無加工のまま残っているため、Silverへの変換ロジックだけを修正し、Bronzeから再実行すればSilverを正しい状態に作り直せます。",
+        outcomes: [
+          "Bronze/Silver/Goldそれぞれの役割を説明できる",
+          "コードを書く前にテーブル構成を設計する視点を持てる",
+        ],
+        relatedJobs: ["Data Engineer", "Data Platform Engineer", "Analytics Engineer"],
+        referenceLinks: [
+          { label: "Databricks: メダリオンアーキテクチャ", url: "https://www.databricks.com/glossary/medallion-architecture" },
+          { label: "Databricks: Lakehouseの基礎", url: "https://docs.databricks.com/en/lakehouse/index.html" },
+        ],
+        quizzes: [
+          {
+            question: "メダリオンアーキテクチャにおいて、BIやダッシュボードが直接読みにいく層はどれですか？",
+            options: [
+              { label: "Bronze", isCorrect: false },
+              { label: "Silver", isCorrect: false },
+              { label: "Gold", isCorrect: true },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "capstone-bronze-silver-transform",
+        title: "Bronze→Silver：生データの取り込みと整形",
         type: LessonType.EXERCISE,
         attentionText:
-          "APIから取得したJSONをそのまま眺めていても、「雨の日と晴れの日の違い」は見えてきません。データを使える形に変える一手間が必要です。",
+          "APIから取得したJSONをそのまま眺めていても、「雨の日と晴れの日の違い」は見えてきません。設計した層構成に沿って、実際にデータを流し込んでいきましょう。",
         relevanceText:
-          "Level 1〜3で学んだSQL・DataFrame・Delta Lakeの知識がここで一気につながり、「バラバラに学んだ知識が実務でどうつながるか」を体感できる、この演習コースの核心部分です。",
+          "Level 1〜3で学んだSQL・DataFrame・Delta Lakeの知識と、前レッスンで決めた設計がここで一気につながり、「設計を実装に落とし込む」実務そのものの工程を体験します。",
         lectureContent:
-          "## JSON配列を表形式に変換する\n\nAPIから返るJSONは「列ごとの配列」になっていました。これを「1日1行」の表形式に変換するには、同じインデックス同士を組み合わせます。\n\n```python\nimport pandas as pd\n\ndaily = data[\"daily\"]\ndf = pd.DataFrame({\n    \"date\": daily[\"time\"],\n    \"temp_max\": daily[\"temperature_2m_max\"],\n    \"temp_min\": daily[\"temperature_2m_min\"],\n    \"precipitation\": daily[\"precipitation_sum\"],\n})\n```\n\n## クレンジングとDelta Lakeへの格納\n\n- 欠損値（`null`）がないか確認する\n- 列の型（日付は日付型、気温は数値型）を確認・変換する\n- 「雨が降ったかどうか」のようなビジネス上便利な列（`is_rainy`）を追加しておくと、後の集計が楽になります\n\n```python\nspark_df = spark.createDataFrame(df)\nspark_df = spark_df.withColumn(\"is_rainy\", spark_df.precipitation > 0)\nspark_df.write.mode(\"overwrite\").saveAsTable(\"analytics.weather_daily\")\n```",
+          "## Bronze層：生データをそのまま格納する\n\n前レッスンで取得したJSONを、加工せずにそのまま1つの列（例：`raw_json STRING`）として保存するのがBronze層です。\n\n```python\nimport json\n\nraw_text = json.dumps(data)\nbronze_df = spark.createDataFrame([(raw_text,)], [\"raw_json\"])\nbronze_df = bronze_df.withColumn(\"ingested_at\", current_timestamp())\nbronze_df.write.mode(\"append\").saveAsTable(\"capstone.bronze.weather_raw\")\n```\n\n`mode(\"append\")`にしておくことで、APIを日々呼び出すたびにBronzeへ蓄積されていき、過去の生データが失われません。\n\n## Silver層：クレンジングと変換\n\n```python\nimport pandas as pd\n\ndaily = data[\"daily\"]\npdf = pd.DataFrame({\n    \"date\": daily[\"time\"],\n    \"temp_max\": daily[\"temperature_2m_max\"],\n    \"temp_min\": daily[\"temperature_2m_min\"],\n    \"precipitation\": daily[\"precipitation_sum\"],\n})\n\nsilver_df = spark.createDataFrame(pdf)\nsilver_df = silver_df.withColumn(\"is_rainy\", silver_df.precipitation > 0)\nsilver_df.write.mode(\"overwrite\").saveAsTable(\"capstone.silver.weather_daily\")\n```\n\nSilverは「洗い替え（overwrite）」でも構いませんが、実務では前レッスンで学んだMERGEによる増分更新にすることが多く、次のレッスンで扱うオーケストレーションと合わせて考えます。",
         exampleContent:
-          "```sql\n-- 格納したテーブルを確認する\nSELECT date, temp_max, temp_min, precipitation, is_rainy\nFROM analytics.weather_daily\nORDER BY date;\n```\n\nこのように、PythonでExtract・Transformしたデータを、最終的にSQLでも自由に扱えるDeltaテーブルとして格納するのがDatabricksらしいパイプラインの形です。",
+          "```sql\nSELECT date, temp_max, temp_min, precipitation, is_rainy\nFROM capstone.silver.weather_daily\nORDER BY date;\n```\n\nBronzeに生データを蓄積しつつ、Silverには「今の最新の正しい状態」を持たせる、という役割分担がポイントです。",
         handsOnContent:
-          "**ハンズオン課題**\n\n1. 前のレッスンで取得したJSONを、`date`・`temp_max`・`temp_min`・`precipitation`の列を持つDataFrameに変換してください。\n2. `is_rainy`（降水量が0より大きいか）のような追加列を1つ以上作ってみましょう。\n3. `analytics.weather_daily` のようなテーブル名でDeltaテーブルとして保存してください。\n4. SQLで `SELECT *` を実行し、正しく格納されているか確認しましょう。",
+          "**ハンズオン課題**\n\n1. `capstone`カタログと`bronze`/`silver`/`gold`スキーマを作成してください（`CREATE CATALOG`・`CREATE SCHEMA`。Free Editionでカタログ作成権限が無い場合は、既存の`main`カタログの中にスキーマとして`bronze`/`silver`/`gold`を作る形で代用してください）。\n2. 取得したJSONを`raw_json`列と`ingested_at`列を持つDataFrameにして、`capstone.bronze.weather_raw`にappendで保存してください。\n3. JSONを`date`・`temp_max`・`temp_min`・`precipitation`・`is_rainy`列に変換し、`capstone.silver.weather_daily`にoverwriteで保存してください。\n4. Bronzeに対して同じAPI呼び出しをもう一度実行し、appendで2回分のデータが蓄積されていることを`SELECT COUNT(*)`で確認してください。",
+        modelAnswerContent:
+          "**模範解答**\n\n```python\nimport json\nfrom pyspark.sql.functions import current_timestamp\n\nraw_text = json.dumps(data)\nbronze_df = spark.createDataFrame([(raw_text,)], [\"raw_json\"])\nbronze_df = bronze_df.withColumn(\"ingested_at\", current_timestamp())\nbronze_df.write.mode(\"append\").saveAsTable(\"capstone.bronze.weather_raw\")\n\nimport pandas as pd\ndaily = data[\"daily\"]\npdf = pd.DataFrame({\n    \"date\": daily[\"time\"],\n    \"temp_max\": daily[\"temperature_2m_max\"],\n    \"temp_min\": daily[\"temperature_2m_min\"],\n    \"precipitation\": daily[\"precipitation_sum\"],\n})\nsilver_df = spark.createDataFrame(pdf).withColumn(\"is_rainy\", pdf[\"precipitation\"] > 0)\nsilver_df.write.mode(\"overwrite\").saveAsTable(\"capstone.silver.weather_daily\")\n```\n```sql\nSELECT COUNT(*) FROM capstone.bronze.weather_raw; -- 2回実行後は2件\n```",
         outcomes: [
-          "JSON形式のデータをDataFrameに変換できる",
-          "クレンジング・列追加を行いDeltaテーブルとして格納できる",
+          "設計したBronze/Silver層の構成を実際にテーブルとして実装できる",
+          "appendとoverwriteの使い分けを踏まえてデータを格納できる",
         ],
         relatedJobs: ["Data Engineer", "Analytics Engineer", "Data Pipeline Assistant"],
         referenceLinks: [
@@ -1085,33 +1182,175 @@ const courses: CourseSeed[] = [
         ],
         quizzes: [
           {
-            question:
-              "PythonでETLしたデータを最終的にDelta LakeのテーブルとしてSaveすることの利点として最も適切なものはどれですか？",
+            question: "Bronze層のテーブルへのデータ書き込みで、過去の生データを失わないために適した書き込みモードはどれですか？",
             options: [
-              { label: "SQLからもPythonからも同じデータに一貫してアクセスできる", isCorrect: true },
-              { label: "APIキーが不要になる", isCorrect: false },
-              { label: "インターネット接続が不要になる", isCorrect: false },
+              { label: "append", isCorrect: true },
+              { label: "overwrite", isCorrect: false },
+              { label: "ignore", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "capstone-gold-aggregation",
+        title: "Gold層の構築：ダッシュボードが読みにいく集計テーブル",
+        type: LessonType.EXERCISE,
+        attentionText:
+          "ダッシュボードのたびに同じ集計クエリをBIツールから毎回実行していたら、データ量が増えるほど表示は遅くなり、コストもかさみます。",
+        relevanceText:
+          "「集計はGoldテーブルとして事前に用意しておく」という発想を持てるかどうかが、その場しのぎの実装者と、運用まで見据えたデータ基盤担当者の分かれ目です。",
+        lectureContent:
+          "## なぜ集計をテーブルとして持つのか\n\nBIツールがSilverの生に近いデータに対して毎回集計クエリを投げると、データ量が増えるにつれてダッシュボードの表示が遅くなり、同じ集計が何度も繰り返し実行されることになります。Gold層に集計済みテーブルとして持たせておけば、ダッシュボードは軽いテーブルを読むだけで済みます。\n\n## Goldテーブルの作成\n\n```sql\nCREATE OR REPLACE TABLE capstone.gold.weather_daily_summary AS\nSELECT\n  is_rainy,\n  COUNT(*) AS day_count,\n  ROUND(AVG(temp_max), 1) AS avg_temp_max,\n  ROUND(AVG(precipitation), 1) AS avg_precipitation\nFROM capstone.silver.weather_daily\nGROUP BY is_rainy;\n```\n\n`CREATE OR REPLACE TABLE ... AS SELECT`（CTAS）は、Silverの最新状態からGoldを作り直すシンプルな方法です。Silverが更新されるたびにこのSQLを再実行すれば、Goldも最新の集計に保たれます（この「再実行のタイミング」を自動化するのが次のレッスンで扱うWorkflowsです）。",
+        exampleContent:
+          "実務では、「日次サマリー」「月次サマリー」のように粒度の異なる複数のGoldテーブルを用意することがよくあります。ダッシュボードの用途に応じて適切な粒度のGoldテーブルを参照させることで、BI側のクエリをシンプルかつ高速に保てます。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. `CREATE OR REPLACE TABLE ... AS SELECT`を使い、`capstone.silver.weather_daily`から`capstone.gold.weather_daily_summary`を作成してください。\n2. 作成したGoldテーブルの中身を`SELECT *`で確認してください。\n3. Silver側のデータが増えた想定で、同じCTAS文をもう一度実行し、Goldテーブルが最新の状態に置き換わることを確認してください。\n4. 「BIツールがSilverではなくGoldを読みにいくべき理由」を自分の言葉で1〜2行にまとめてください。",
+        modelAnswerContent:
+          "**模範解答**\n\n```sql\nCREATE OR REPLACE TABLE capstone.gold.weather_daily_summary AS\nSELECT\n  is_rainy,\n  COUNT(*) AS day_count,\n  ROUND(AVG(temp_max), 1) AS avg_temp_max,\n  ROUND(AVG(precipitation), 1) AS avg_precipitation\nFROM capstone.silver.weather_daily\nGROUP BY is_rainy;\n\nSELECT * FROM capstone.gold.weather_daily_summary;\n```\n\nBIツールがSilverではなくGoldを読むべき理由は、Silverは生に近い粒度でデータ量が多く、集計のたびに毎回計算し直すのは非効率だからです。Goldに事前集計しておくことで、ダッシュボードは軽い読み取りだけで済み、表示速度とコストの両面で有利になります。",
+        outcomes: [
+          "CTAS（CREATE TABLE AS SELECT）でGoldテーブルを構築できる",
+          "BIがGold層を読みにいく設計の意図を説明できる",
+        ],
+        relatedJobs: ["Analytics Engineer", "BI Engineer", "Data Engineer"],
+        referenceLinks: [
+          { label: "Databricks SQL言語マニュアル", url: "https://docs.databricks.com/en/sql/language-manual/index.html" },
+        ],
+        quizzes: [
+          {
+            question: "BIツールがSilverではなくGold層のテーブルを読みにいく主な理由はどれですか？",
+            options: [
+              { label: "Silverにはアクセス権限が無いから", isCorrect: false },
+              { label: "事前に集計済みのため軽く高速に読み取れるから", isCorrect: true },
+              { label: "Goldにしかデータが存在しないから", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "capstone-governance-permissions",
+        title: "権限制御とガバナンス：Unity Catalogでこの基盤を守る",
+        type: LessonType.TEXT,
+        attentionText:
+          "自分一人で作っている間は気にならなくても、チームが増えたとき「誰でもGoldを書き換えられる」「分析担当がBronzeの生データまで見えてしまう」状態は、事故のもとになります。",
+        relevanceText:
+          "権限設計は、単なる実装者には求められないが、データ基盤を任される担当者には必ず求められる仕事です。ここができて初めて「トータルで基盤を任せられる人材」に一歩近づきます。",
+        lectureContent:
+          "## この演習における役割設計\n\n架空の組織として、以下の2つの役割を想定します。\n\n- **data-engineers**：Bronze/Silver/Goldすべてのテーブルを作成・更新できる（このパイプラインを実装・運用する担当）\n- **data-analysts**：Goldのみ参照できる（ダッシュボードを作る担当。生データや中間データには触れさせない）\n\n## Unity Catalogでの権限付与\n\n```sql\nGRANT USE CATALOG ON CATALOG capstone TO `data-analysts`;\nGRANT USE SCHEMA ON SCHEMA capstone.gold TO `data-analysts`;\nGRANT SELECT ON SCHEMA capstone.gold TO `data-analysts`;\n\nGRANT ALL PRIVILEGES ON CATALOG capstone TO `data-engineers`;\n```\n\nポイントは「最小権限の原則」です。data-analystsにはGoldへの参照権限だけを与え、Bronze/Silverには一切アクセスできないようにします。こうしておくことで、生データに含まれるかもしれない機微な情報への意図しないアクセスを防ぎ、集計後の安全なデータだけを分析担当に見せることができます。\n\n## 権限の確認\n\n```sql\nSHOW GRANTS ON CATALOG capstone;\nSHOW GRANTS ON SCHEMA capstone.gold;\n```",
+        exampleContent:
+          "実務では、「全員が管理者権限を持つ」状態は一見便利に見えても、誤操作によるテーブル削除やデータ漏洩のリスクを高めます。役割ごとに権限を分けておくことで、事故の影響範囲を最小限にできます。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. `capstone`カタログと`gold`スキーマに対して、`data-analysts`グループ（Free Editionでグループ作成ができない場合は架空のグループ名のままで構いません）にGoldのみの参照権限を与えるGRANT文を書いてください。\n2. `data-engineers`グループには、カタログ全体への管理権限を与えるGRANT文を書いてください。\n3. `SHOW GRANTS`で、意図した権限が設定されているか（実行できる環境なら）確認してください。\n4. 「なぜdata-analystsにBronze/Silverへのアクセスを与えないのか」を自分の言葉で説明してください。",
+        modelAnswerContent:
+          "**模範解答**\n\n```sql\nGRANT USE CATALOG ON CATALOG capstone TO `data-analysts`;\nGRANT USE SCHEMA ON SCHEMA capstone.gold TO `data-analysts`;\nGRANT SELECT ON SCHEMA capstone.gold TO `data-analysts`;\n\nGRANT ALL PRIVILEGES ON CATALOG capstone TO `data-engineers`;\n\nSHOW GRANTS ON SCHEMA capstone.gold;\n```\n\ndata-analystsにBronze/Silverへのアクセスを与えない理由は、Bronzeが加工前の生データであり誤った解釈をされるリスクがあること、Silverも中間状態でありビジネス上の正式な数値として扱うべきではないためです。最小権限の原則に従い、分析担当には「意思決定に使ってよい」と保証されたGoldだけを見せます。",
+        outcomes: [
+          "役割に応じた最小権限のアクセス制御を設計・付与できる",
+          "Bronze/Silver/Goldそれぞれへのアクセス範囲を意図を持って制限できる",
+        ],
+        relatedJobs: ["Data Platform Engineer", "Data Engineer", "Databricks管理者"],
+        referenceLinks: [
+          { label: "Databricks: Unity Catalogとは", url: "https://docs.databricks.com/en/data-governance/unity-catalog/index.html" },
+        ],
+        quizzes: [
+          {
+            question: "この演習の役割設計で、data-analystsに与えるべき権限として最も適切なものはどれですか？",
+            options: [
+              { label: "Bronze/Silver/Goldすべてへの編集権限", isCorrect: false },
+              { label: "Goldスキーマへの参照（SELECT）権限のみ", isCorrect: true },
+              { label: "カタログ全体の管理者権限", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "capstone-compute-orchestration",
+        title: "コンピュートとWorkflowsによるパイプラインの自動化",
+        type: LessonType.EXERCISE,
+        attentionText:
+          "ここまでの処理を、あなたが毎朝手作業でノートブックを1つずつ実行していくつもりですか？それでは「担当者が休んだ日はデータが更新されない基盤」になってしまいます。",
+        relevanceText:
+          "手作業のパイプラインを、依存関係とスケジュールを持つ自動運用の仕組みに変える力が、単発の実装者と、任せられる基盤担当者の違いを決定づけます。",
+        lectureContent:
+          "## パイプライン全体を1つのWorkflowにする\n\nこれまで個別に実行してきたBronze取り込み・Silver変換・Gold集計を、依存関係を持つ1つのWorkflow（Job）としてまとめます。\n\n```\nTask 1: extract_and_bronze（API取得 → Bronze保存）\n   ↓ 成功したら\nTask 2: silver_transform（Bronze → Silver変換）\n   ↓ 成功したら\nTask 3: gold_aggregate（Silver → Gold集計）\n```\n\n## コンピュートの選び方\n\n- Task 1〜3はいずれも数分で終わる軽量な処理のため、**Job Cluster**または**Serverless Compute**を使い、実行後は自動終了させるのが適切です（Level 2で学んだAuto Terminationの考え方の実践）。\n- 開発中の試行錯誤には別途All-Purpose Clusterを使い、本番相当のWorkflow実行にはJob Clusterを使う、という使い分けを徹底します。\n\n## スケジュールと失敗時の通知\n\nWorkflowsでは「毎日午前6時に実行」のようなCron形式のスケジュールと、いずれかのタスクが失敗した際のメール通知を設定できます。これにより、担当者が気づかないうちにパイプラインが止まり続ける事態を防ぎます。",
+        exampleContent:
+          "例えば、Task 2（Silver変換）が失敗した場合、Task 3（Gold集計）は実行されず、古いGoldデータがそのまま残ります。この「失敗したら後続を止める」という依存関係の設定こそが、誤った集計結果をダッシュボードに表示させない安全装置になります。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. Databricks Free Editionの「Jobs & Pipelines」で新しいJobを作成し、これまでのレッスンで作ったBronze取り込み・Silver変換・Gold集計のノートブック（またはセル）を、それぞれ別タスクとして登録してください。\n2. タスク間に「前のタスクが成功したら次を実行する」という依存関係を設定してください。\n3. コンピュートの設定で、Job Cluster（またはServerless Compute）を選択し、実行後に自動終了する構成になっているか確認してください。\n4. スケジュール設定でCron形式の実行時刻を設定し、失敗時のメール通知先を設定してください（実際に有効化するかは任意です）。",
+        modelAnswerContent:
+          "**模範解答例**\n\n- タスク構成：`extract_and_bronze` → `silver_transform` → `gold_aggregate` の順に依存関係を設定（Databricks UIでは各タスクの「Depends on」に前段タスクを指定）\n- コンピュート：3タスクとも軽量処理のためJob Cluster（最小構成、Auto Termination有効）を選択\n- スケジュール：`0 6 * * *`（毎日午前6時）\n- 通知：失敗時に自分（またはチームのメーリングリスト）宛にメール通知が届くよう設定\n\nこの構成により、silver_transformが失敗した場合はgold_aggregateが実行されず、古い（間違っていない）Goldデータが保たれたまま、担当者に失敗が通知されます。",
+        outcomes: [
+          "複数タスクの依存関係を持つWorkflowを構築できる",
+          "処理内容に応じたコンピュートの選定とAuto Terminationの適用ができる",
+        ],
+        relatedJobs: ["Data Engineer", "Data Platform Engineer", "Analytics Engineer"],
+        referenceLinks: [
+          { label: "Databricks Workflows（Jobs）の概要", url: "https://docs.databricks.com/en/jobs/index.html" },
+          { label: "Databricks Compute（クラスタ）の概要", url: "https://docs.databricks.com/en/compute/index.html" },
+        ],
+        quizzes: [
+          {
+            question: "silver_transformタスクが失敗した場合、依存関係が正しく設定されていればgold_aggregateタスクはどうなりますか？",
+            options: [
+              { label: "実行されず、古いGoldデータがそのまま保たれる", isCorrect: true },
+              { label: "空のデータで強制的に実行される", isCorrect: false },
+              { label: "自動的にBronzeのデータを直接ダッシュボードに表示する", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "capstone-delta-sharing",
+        title: "Delta Sharingで社外の関係者とデータを安全に共有する",
+        type: LessonType.TEXT,
+        attentionText:
+          "本部の企画チームが「このデータを見たい」と言ってきました。ただし、彼らはDatabricksのアカウントを持っていません。CSVをメールで送りますか？",
+        relevanceText:
+          "Databricksアカウントを持たない相手にも、コピーを作らず安全にデータを共有できる技術を知っていることは、単一組織内の実装者を超えた「データ基盤全体の窓口」としての価値になります。",
+        lectureContent:
+          "## Delta Sharingとは\n\nDelta Sharingは、Databricksのオープンなデータ共有プロトコルです。共有元は特定のテーブルを「共有（Share）」として定義し、共有先はDatabricksのアカウントを持っていなくても、Delta Sharingクライアント（Pythonライブラリなど）を使ってそのデータを読み取ることができます。\n\n## メールでのファイル送付との違い\n\n- **ファイル送付**：送った時点のスナップショットがコピーされ、元データが更新されても相手には反映されない。機微なデータが複数の場所に散らばるリスクがある\n- **Delta Sharing**：データ自体はコピーされず、共有元のテーブルを都度参照する形になるため、元データが更新されれば共有先が見る内容も自動的に最新化される。アクセス権限も共有元でいつでも取り消せる\n\n## 共有の作成（イメージ）\n\n```sql\nCREATE SHARE weather_gold_share;\nALTER SHARE weather_gold_share ADD TABLE capstone.gold.weather_daily_summary;\n\nCREATE RECIPIENT hq_planning_team;\n\nGRANT SELECT ON SHARE weather_gold_share TO RECIPIENT hq_planning_team;\n```\n\n共有するのはGold層のテーブルのみとし、Bronze/Silverは共有しない、という判断もガバナンス設計（前レッスン）の延長線上にあります。",
+        exampleContent:
+          "本部企画チームがDatabricksのアカウントを持っていなくても、Delta Sharingクライアント経由で`weather_daily_summary`の最新データをPandas DataFrameとして読み込めます。データがこちらのDelta Lake上に留まったまま「見せる」ことができる点が、コピーを配布する方法との決定的な違いです。",
+        handsOnContent:
+          "**設計・記述課題**\n\n1. `capstone.gold.weather_daily_summary`だけを共有する`Share`を作成するSQL文を書いてください（Bronze/Silverは含めないでください）。\n2. 社外の受信者（Recipient）を1つ想定し、作成するSQL文を書いてください。\n3. その受信者に、作成したShareへの参照権限を与えるGRANT文を書いてください。\n4. 「なぜBronze/Silverではなく、Goldだけを共有対象にするのか」を、前レッスンの権限制御の考え方と関連づけて説明してください。",
+        modelAnswerContent:
+          "**模範解答**\n\n```sql\nCREATE SHARE weather_gold_share;\nALTER SHARE weather_gold_share ADD TABLE capstone.gold.weather_daily_summary;\n\nCREATE RECIPIENT hq_planning_team;\nGRANT SELECT ON SHARE weather_gold_share TO RECIPIENT hq_planning_team;\n```\n\nBronze/Silverではなく Goldだけを共有する理由は、社外の相手には「意思決定に使ってよい」と保証された集計済みデータだけを見せるべきであり、生データや中間データを外部に渡すと、機微な情報の混入や意図しない誤解釈のリスクが生じるためです。これは前レッスンの「最小権限の原則」を、組織の外側に対しても適用した考え方です。",
+        outcomes: [
+          "Delta Sharingの仕組みとファイル送付との違いを説明できる",
+          "共有範囲をGold層に限定する設計判断ができる",
+        ],
+        relatedJobs: ["Data Platform Engineer", "Data Engineer", "Databricks管理者"],
+        referenceLinks: [
+          { label: "Databricks: Delta Sharingとは", url: "https://www.databricks.com/product/delta-sharing" },
+        ],
+        quizzes: [
+          {
+            question: "Delta Sharingがメールでのファイル送付と比べて優れている点として最も適切なものはどれですか？",
+            options: [
+              { label: "元データが更新されると共有先の参照内容も自動的に最新化される", isCorrect: true },
+              { label: "共有先もDatabricksのアカウントを必ず持つ必要がある", isCorrect: false },
+              { label: "共有する前にすべてのデータをファイルに変換する必要がある", isCorrect: false },
             ],
           },
         ],
       },
       {
         slug: "capstone-bi-visualization",
-        title: "集計とBI可視化：ダッシュボードで意思決定を支援する",
+        title: "Gold層からのBI可視化：ダッシュボードで意思決定を支援する",
         type: LessonType.EXERCISE,
         attentionText:
           "どれだけ精緻な分析をしても、店長に「結局どういうこと？」と聞き返されたら、その分析は伝わっていません。",
         relevanceText:
-          "集計結果を分かりやすく可視化し、意思決定に繋げる力は、Data AnalystやBI Engineerとして評価される「伝わる仕事」の総仕上げです。",
+          "集計結果を分かりやすく可視化し、意思決定に繋げる力は、Data AnalystやBI Engineerとして評価される「伝わる仕事」の総仕上げです。data-analysts役割がGold層だけを参照する、という前レッスンの権限設計もここで実際に活きてきます。",
         lectureContent:
-          "## 集計でビジネスの問いに答える\n\n「雨の日と晴れの日で何が違うか」を確認するには、`is_rainy` ごとに気温を集計してみると傾向がつかめます。\n\n```sql\nSELECT\n  is_rainy,\n  COUNT(*) AS day_count,\n  ROUND(AVG(temp_max), 1) AS avg_temp_max,\n  ROUND(AVG(precipitation), 1) AS avg_precipitation\nFROM analytics.weather_daily\nGROUP BY is_rainy;\n```\n\n## ダッシュボードとしての可視化\n\nDatabricksのSQLエディタでは、クエリ結果からそのままグラフ（棒グラフ・折れ線グラフなど）を作成し、ダッシュボードにまとめることができます。「日別の気温推移」「雨の日の日数」などをグラフにすることで、依頼者に一目で伝わる資料になります。",
+          "## Goldテーブルを読むだけで済むダッシュボード\n\n`capstone.gold.weather_daily_summary`はすでに集計済みのため、ダッシュボード側では複雑な集計クエリを書く必要がありません。\n\n```sql\nSELECT is_rainy, day_count, avg_temp_max, avg_precipitation\nFROM capstone.gold.weather_daily_summary;\n```\n\n## ダッシュボードとしての可視化\n\nDatabricksのSQLエディタでは、クエリ結果からそのままグラフ（棒グラフ・折れ線グラフなど）を作成し、ダッシュボードにまとめることができます。「日別の気温推移」「雨の日の日数」などをグラフにすることで、依頼者に一目で伝わる資料になります。",
         exampleContent:
           "例えば、日別の最高気温を折れ線グラフにし、降水量を棒グラフで重ねて表示すると、「気温が下がった日に雨が降っている」といった傾向が視覚的に把握できます。これは、実際のBIツール（Databricks SQLダッシュボードやTableau等）で日常的に行われている可視化パターンです。",
         handsOnContent:
-          "**ハンズオン課題**\n\n1. `analytics.weather_daily` に対して、`is_rainy` ごとの日数・平均最高気温を集計するSQLを書いて実行してください。\n2. Databricks SQLエディタのグラフ機能を使い、日別の気温推移を折れ線グラフとして可視化してみましょう。\n3. 作成したグラフを1つ以上ダッシュボードに追加してみましょう（Databricks SQL Dashboards機能）。\n4. 「この結果から、店舗担当者に何を伝えられるか」を2〜3行の言葉でまとめてください。",
+          "**ハンズオン課題**\n\n1. `capstone.gold.weather_daily_summary`に対してSELECT文を実行し、結果を確認してください。\n2. Databricks SQLエディタのグラフ機能を使い、日別の気温推移を折れ線グラフとして可視化してみましょう（Silver層の`weather_daily`を使っても構いません）。\n3. 作成したグラフを1つ以上ダッシュボードに追加してみましょう（Databricks SQL Dashboards機能）。\n4. 「この結果から、店舗担当者に何を伝えられるか」を2〜3行の言葉でまとめてください。",
+        modelAnswerContent:
+          "**模範解答**\n\n```sql\nSELECT is_rainy, day_count, avg_temp_max, avg_precipitation\nFROM capstone.gold.weather_daily_summary;\n```\n\nダッシュボードには、`is_rainy`ごとの平均最高気温を比較する棒グラフと、日別の気温推移の折れ線グラフを追加します。店舗担当者への報告例：「雨の日は晴れの日より平均気温が低く、来店数が減る傾向が示唆されます。雨予報の日は在庫やシフトを控えめに調整することを検討してください。」",
         outcomes: [
-          "条件別の集計クエリを書ける",
-          "集計結果をグラフ化し、ダッシュボードとしてまとめられる",
+          "集計済みのGoldテーブルを使って軽量にダッシュボードを構築できる",
+          "集計結果をグラフ化し、意思決定に繋がる言葉でまとめられる",
         ],
         relatedJobs: ["BI Engineer", "Analytics Engineer", "Data Analyst"],
         referenceLinks: [
@@ -1130,32 +1369,36 @@ const courses: CourseSeed[] = [
       },
       {
         slug: "capstone-wrap-up",
-        title: "総まとめ：ここまでの経験は、実務でどう活きるか",
+        title: "総まとめ：Databricks担当者としてデータ基盤を任せられる人材へ",
         type: LessonType.TEXT,
         attentionText:
-          "Level 1で「行と列」から始まったあなたの学習が、気づけば実際のAPIからデータを取得し、加工し、可視化するところまで辿り着きました。",
+          "Level 1で「行と列」から始まったあなたの学習が、気づけばメダリオンアーキテクチャの設計、権限制御、パイプラインの自動化、社外へのデータ共有まで辿り着きました。",
         relevanceText:
-          "この経験を「実務でどう語れるか」に変換することが、副業案件への応募や面接で自信を持って一歩を踏み出すための、最後の総仕上げです。",
+          "この経験を「実務でどう語れるか」に変換することが、副業案件への応募や面接で「単なる実装者ではなく、基盤を任せられる人材」として自信を持って一歩を踏み出すための、最後の総仕上げです。",
         lectureContent:
-          "## あなたがこのコースで実際に行ったこと\n\n1. 公開APIから外部データを取得した（Extract）\n2. JSONを表形式に変換し、クレンジングしてDelta Lakeに格納した（Transform/Load）\n3. 集計・可視化を行い、ビジネスの問いに答える資料を作った（BI）\n\nこれは、実務のデータエンジニアリング・データ分析業務の縮図です。企業の現場では、扱うデータの種類や規模が変わるだけで、行っている工程の骨格は今回とほとんど同じです。\n\n## どのポジションで、この経験が使えるか\n\n- **Data Engineer**：ETLパイプラインの設計・実装・運用\n- **Analytics Engineer**：整形済みデータの集計テーブル設計、BIとの橋渡し\n- **BI Engineer / Data Analyst**：ダッシュボード設計、意思決定支援\n\nどのポジションを目指す場合も、「取得→加工→可視化」を自分の手で一通り経験したことは、大きな強みになります。",
+          "## あなたがこのコースで実際に行ったこと\n\n1. 公開APIから外部データを取得した（Extract）\n2. メダリオンアーキテクチャ（Bronze/Silver/Gold）を設計し、実装した\n3. Unity Catalogで役割ごとのアクセス権限を設計・付与した（ガバナンス）\n4. Workflowsで依存関係とスケジュールを持つパイプラインに自動化した（コンピュート運用）\n5. Delta Sharingで社外の関係者にGold層のデータを安全に共有した\n6. 集計・可視化を行い、ビジネスの問いに答える資料を作った（BI）\n\nこれは、実務のデータ基盤運用の縮図です。企業の現場では、扱うデータの種類や規模が変わるだけで、行っている工程の骨格は今回とほとんど同じです。\n\n## 「単なる実装者」と「基盤を任せられる人材」の違い\n\nコードを書いてテーブルを作れるだけでは「実装者」です。今回のように、**設計してから作る**（メダリオン）、**誰が何にアクセスできるかを決める**（ガバナンス）、**止まらない仕組みにする**（オーケストレーション）、**社外との境界を安全に設計する**（Delta Sharing）まで一通りできることが、「Databricks担当者としてデータ基盤全体を任せられる人材」であることの証明になります。\n\n## どのポジションで、この経験が使えるか\n\n- **Data Engineer / Data Platform Engineer**：メダリオンアーキテクチャの設計・実装・運用、パイプラインのオーケストレーション\n- **Analytics Engineer**：Silver/Goldの設計、BIとの橋渡し\n- **Databricks管理者**：Unity Catalogによる権限設計、Delta Sharingを含むガバナンス全体の統括\n- **BI Engineer / Data Analyst**：Goldテーブルを起点にしたダッシュボード設計、意思決定支援",
         exampleContent:
-          "面接や職務経歴書では、「Open-Meteo APIから気象データを取得し、Delta Lakeに整形して格納したうえで、SQLダッシュボードとして可視化するパイプラインを個人で構築した」という経験として説明できます。実務未経験であっても、実際に手を動かした経験として十分にアピールできる内容です。",
+          "面接や職務経歴書では、「Open-Meteo APIから気象データを取得し、メダリオンアーキテクチャで整理したうえで、Unity Catalogによる権限制御とWorkflowsによる自動化、Delta Sharingによる社外共有までを含む小規模データ基盤を個人で構築した」という経験として説明できます。実務未経験であっても、基盤全体を見渡して構築した経験として、単なる「SQLが書ける」を超えたアピールになります。",
         handsOnContent:
-          "**振り返り課題**\n\n1. 今回のコースで作成したパイプライン（取得→加工→格納→可視化）を、図や箇条書きで簡単に書き出してみましょう。\n2. その中で「一番苦労したこと」「一番面白かったこと」をそれぞれ1つ書き出してみましょう。\n3. 次に学んでみたいテーマ（例：別の公開データセット、Snowflakeなど他サービス、より大規模なデータなど）を1つ考えてみましょう。",
+          "**振り返り課題**\n\n1. 今回構築したデータ基盤（Bronze→Silver→Gold、権限設計、Workflows、Delta Sharing）を、図や箇条書きで書き出してみましょう。\n2. その中で「一番苦労したこと」「一番『実務っぽい』と感じたこと」をそれぞれ1つ書き出してみましょう。\n3. 目指すポジション（Data Engineer、Databricks管理者など）を1つ選び、今回の経験のうちどの部分を面接でアピールするか、2〜3行でまとめてください。\n4. 次に学んでみたいテーマ（例：より大規模なデータ、Snowflakeなど他サービス、CI/CDを使ったデータ基盤の自動デプロイなど）を1つ考えてみましょう。",
+        modelAnswerContent:
+          "**模範解答例**\n\n図：`Open-Meteo API → Bronze（生データ蓄積）→ Silver（クレンジング）→ Gold（集計）→ ダッシュボード` に加え、`Unity Catalogによる役割別権限`と`Workflowsによる自動実行`が全体を支え、`Delta Sharing`でGoldの一部が社外にも共有されている構成。\n\nアピール例（Data Platform Engineer志望の場合）：「個人開発ながら、単なるETL実装にとどまらず、メダリオンアーキテクチャによる設計、Unity Catalogでの最小権限アクセス制御、Workflowsによる自動運用、Delta Sharingでの社外共有までを一通り構築した経験があります。」",
         outcomes: [
-          "取得から可視化までの一連のデータパイプラインを自分の言葉で説明できる",
-          "この経験が実務のどのポジションで活きるかを説明できる",
+          "メダリオンアーキテクチャ・ガバナンス・オーケストレーション・Delta Sharingを含む一連のデータ基盤を自分の言葉で説明できる",
+          "この経験が実務のどのポジション（特にデータ基盤全体を任される役割）で活きるかを説明できる",
         ],
-        relatedJobs: ["Data Engineer", "Analytics Engineer", "BI Engineer", "Data Analyst"],
-        referenceLinks: [],
+        relatedJobs: ["Data Engineer", "Data Platform Engineer", "Analytics Engineer", "BI Engineer", "Data Analyst"],
+        referenceLinks: [
+          { label: "Databricks: メダリオンアーキテクチャ", url: "https://www.databricks.com/glossary/medallion-architecture" },
+        ],
         quizzes: [
           {
             question:
-              "このコースを通じて経験した一連の流れとして正しいものはどれですか？",
+              "このコースで構築した内容のうち、「単なる実装者」と「データ基盤を任せられる人材」を分ける要素として最も適切な組み合わせはどれですか？",
             options: [
-              { label: "可視化 → 格納 → 取得 → 加工", isCorrect: false },
-              { label: "取得（Extract） → 加工・格納（Transform/Load） → 可視化（BI）", isCorrect: true },
-              { label: "加工 → 取得 → 可視化 → 格納", isCorrect: false },
+              { label: "SQLを書けることと、グラフを作れること", isCorrect: false },
+              { label: "設計（メダリオン）・権限制御（ガバナンス）・自動化（オーケストレーション）・安全な共有（Delta Sharing）", isCorrect: true },
+              { label: "できるだけ多くのプログラミング言語を使うこと", isCorrect: false },
             ],
           },
         ],
@@ -1225,6 +1468,7 @@ export async function seedDatabase(prisma: PrismaClient) {
           lectureContent: lessonSeed.lectureContent,
           exampleContent: lessonSeed.exampleContent,
           handsOnContent: lessonSeed.handsOnContent,
+          modelAnswerContent: lessonSeed.modelAnswerContent,
           outcomesJson: JSON.stringify(lessonSeed.outcomes),
           relatedJobs: lessonSeed.relatedJobs.join(","),
           referenceLinksJson: JSON.stringify(lessonSeed.referenceLinks),
@@ -1238,6 +1482,7 @@ export async function seedDatabase(prisma: PrismaClient) {
           lectureContent: lessonSeed.lectureContent,
           exampleContent: lessonSeed.exampleContent,
           handsOnContent: lessonSeed.handsOnContent,
+          modelAnswerContent: lessonSeed.modelAnswerContent,
           outcomesJson: JSON.stringify(lessonSeed.outcomes),
           relatedJobs: lessonSeed.relatedJobs.join(","),
           referenceLinksJson: JSON.stringify(lessonSeed.referenceLinks),
