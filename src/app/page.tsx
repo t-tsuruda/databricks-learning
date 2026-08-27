@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { prisma } from "@/lib/prisma";
-import { LEVEL_INFO } from "@/lib/skill-levels";
+import { LEVEL_INFO, MAX_LEVEL } from "@/lib/skill-levels";
 
 export default async function LandingPage() {
   const courses = await prisma.course.findMany({
@@ -79,10 +79,10 @@ export default async function LandingPage() {
         <div className="mx-auto max-w-5xl px-4 py-14">
           <h2 className="text-2xl font-bold">学習ロードマップ</h2>
           <p className="mt-3 max-w-2xl text-foreground/70">
-            データエンジニアリングの基礎から、Databricksの応用までを4つのレベルに分けて、無理なく学べます。
+            データエンジニアリングの基礎から、Databricksの応用・実務総合演習までを{MAX_LEVEL}つのレベルに分けて、無理なく学べます。
           </p>
           <ol className="mt-8 space-y-4">
-            {[1, 2, 3, 4].map((level) => (
+            {Array.from({ length: MAX_LEVEL }, (_, index) => index + 1).map((level) => (
               <li
                 key={level}
                 className="flex flex-col gap-2 rounded-xl border border-border bg-background p-5 sm:flex-row sm:items-start sm:gap-6"

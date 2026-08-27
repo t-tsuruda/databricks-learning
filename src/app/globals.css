@@ -31,3 +31,35 @@ body {
   outline: 2px solid var(--brand);
   outline-offset: 2px;
 }
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-transition {
+  animation: page-fade-in 0.35s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition {
+    animation: none;
+  }
+}
+
+/* react-markdown's `code` renderer can't distinguish inline code from
+   code inside a fenced block (the `inline` prop was removed in v9+), so
+   MarkdownContent styles all `<code>` as a light inline chip. Reset that
+   styling when nested inside `<pre>` so block code shows the intended
+   dark background with light, readable text instead of light-on-light. */
+.prose-content pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}

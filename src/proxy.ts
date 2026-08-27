@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { auth } from "@/auth";
 
-const PROTECTED_PREFIXES = ["/dashboard", "/courses", "/mypage", "/progress"];
+const PROTECTED_PREFIXES = ["/dashboard", "/courses", "/mypage", "/progress", "/admin"];
 
 export default auth((request) => {
   const { pathname } = request.nextUrl;
@@ -14,6 +14,11 @@ export default auth((request) => {
     const loginUrl = new URL("/login", request.nextUrl.origin);
     loginUrl.searchParams.set("callbackUrl", pathname);
     return NextResponse.redirect(loginUrl);
+  }
+
+  const isAdminArea = pathname === "/admin" || pathname.startsWith("/admin/");
+  if (isAdminArea && request.auth && !request.auth.user?.isAdmin) {
+    return NextResponse.redirect(new URL("/dashboard", request.nextUrl.origin));
   }
 
   const isAuthPage = pathname === "/login" || pathname === "/signup";

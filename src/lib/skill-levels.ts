@@ -25,9 +25,14 @@ export const LEVEL_INFO: Record<number, LevelInfo> = {
     name: "Level 4: 応用・発展",
     description: "Databricksを使って簡単なデータパイプラインを運用し、性能改善まで見据えられます。",
   },
+  5: {
+    level: 5,
+    name: "Level 5: 実務総合演習",
+    description: "オープンデータの取得からBI可視化までを一気通貫で行い、実務レベルのパイプラインを1人で組み立てられます。",
+  },
 };
 
-export const MAX_LEVEL = 4;
+export const MAX_LEVEL = 5;
 
 export function getLevelInfo(level: number): LevelInfo {
   return LEVEL_INFO[level] ?? LEVEL_INFO[1];

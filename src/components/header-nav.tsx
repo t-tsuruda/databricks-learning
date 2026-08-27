@@ -15,14 +15,20 @@ const AUTHENTICATED_LINKS = [
 export function HeaderNav({
   isAuthenticated,
   displayName,
+  isAdmin = false,
 }: {
   isAuthenticated: boolean;
   displayName: string | null;
+  isAdmin?: boolean;
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  const links = isAuthenticated ? AUTHENTICATED_LINKS : [];
+  const links = isAuthenticated
+    ? isAdmin
+      ? [...AUTHENTICATED_LINKS, { href: "/admin", label: "管理画面" }]
+      : AUTHENTICATED_LINKS
+    : [];
 
   return (
     <nav aria-label="メインナビゲーション">

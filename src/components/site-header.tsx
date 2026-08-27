@@ -25,6 +25,7 @@ export async function SiteHeader() {
         <HeaderNav
           isAuthenticated={Boolean(session)}
           displayName={session?.user?.name ?? null}
+          isAdmin={Boolean(session?.user?.isAdmin)}
         />
       </div>
     </header>
