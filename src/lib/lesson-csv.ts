@@ -1,0 +1,51 @@
+// Column layout shared by the lesson CSV import action, the template
+// download route, and the export route (see docs/prd.md section 19-1).
+
+export const LESSON_CSV_COLUMNS = [
+  "slug",
+  "title",
+  "type",
+  "orderIndex",
+  "attentionText",
+  "relevanceText",
+  "lectureContent",
+  "exampleContent",
+  "handsOnContent",
+  "outcomes",
+  "relatedJobs",
+  "referenceLinksJson",
+  "quizzesJson",
+] as const;
+
+export const LESSON_CSV_EXAMPLE_ROW = [
+  "example-lesson-slug",
+  "サンプルレッスンのタイトル",
+  "TEXT",
+  "0",
+  "（Attention）学習者の興味を引く問いかけや意外な事実をここに書きます。",
+  "（Relevance）この内容が学習者自身のゴールにどう繋がるかをここに書きます。",
+  "## 見出し\n\nMarkdown形式で座学の内容を書きます。",
+  "具体的なコード例や事例をMarkdown形式で書きます。",
+  "**ハンズオン課題**\n\n1. 手順1\n2. 手順2",
+  "できるようになったこと1\nできるようになったこと2",
+  "Data Engineer,Data Analyst",
+  JSON.stringify([{ label: "参考サイト", url: "https://example.com" }]),
+  JSON.stringify([
+    {
+      question: "確認問題の文章",
+      options: [
+        { label: "選択肢1(正解)", isCorrect: true },
+        { label: "選択肢2", isCorrect: false },
+      ],
+    },
+  ]),
+];
+
+export function safeParseOutcomesForCsv(json: string): string[] {
+  try {
+    const parsed = JSON.parse(json) as unknown;
+    return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === "string") : [];
+  } catch {
+    return [];
+  }
+}

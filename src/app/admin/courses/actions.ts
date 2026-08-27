@@ -7,6 +7,7 @@ import type { LessonType } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
 import { requireAdminSession } from "@/lib/require-admin";
+import { parseCsv } from "@/lib/csv";
 import type { ActionResult } from "@/components/admin/action-form";
 
 const courseSchema = z.object({
@@ -98,7 +99,8 @@ const lessonSchema = z.object({
   title: z.string().trim().min(1),
   type: z.enum(["TEXT", "EXERCISE", "QUIZ"]),
   orderIndex: z.coerce.number().int().min(0),
-  introText: z.string().trim().min(1),
+  attentionText: z.string().trim().min(1),
+  relevanceText: z.string().trim().min(1),
   lectureContent: z.string().trim().min(1),
   exampleContent: z.string().trim().min(1),
   handsOnContent: z.string().trim().min(1),
@@ -107,20 +109,21 @@ const lessonSchema = z.object({
   referenceLinksJson: z.string().trim().optional(),
 });
 
-function lessonValuesFromForm(formData: FormData) {
-  const parsed = lessonSchema.parse({
-    slug: formData.get("slug"),
-    title: formData.get("title"),
-    type: formData.get("type"),
-    orderIndex: formData.get("orderIndex"),
-    introText: formData.get("introText"),
-    lectureContent: formData.get("lectureContent"),
-    exampleContent: formData.get("exampleContent"),
-    handsOnContent: formData.get("handsOnContent"),
-    outcomes: formData.get("outcomes"),
-    relatedJobs: formData.get("relatedJobs"),
-    referenceLinksJson: formData.get("referenceLinksJson") ?? undefined,
-  });
+function buildLessonValues(raw: {
+  slug: unknown;
+  title: unknown;
+  type: unknown;
+  orderIndex: unknown;
+  attentionText: unknown;
+  relevanceText: unknown;
+  lectureContent: unknown;
+  exampleContent: unknown;
+  handsOnContent: unknown;
+  outcomes: unknown;
+  relatedJobs: unknown;
+  referenceLinksJson?: unknown;
+}) {
+  const parsed = lessonSchema.parse(raw);
 
   const outcomesJson = JSON.stringify(
     parsed.outcomes
@@ -139,7 +142,8 @@ function lessonValuesFromForm(formData: FormData) {
     title: parsed.title,
     type: parsed.type as LessonType,
     orderIndex: parsed.orderIndex,
-    introText: parsed.introText,
+    attentionText: parsed.attentionText,
+    relevanceText: parsed.relevanceText,
     lectureContent: parsed.lectureContent,
     exampleContent: parsed.exampleContent,
     handsOnContent: parsed.handsOnContent,
@@ -147,6 +151,23 @@ function lessonValuesFromForm(formData: FormData) {
     relatedJobs,
     referenceLinksJson: parsed.referenceLinksJson || "[]",
   };
+}
+
+function lessonValuesFromForm(formData: FormData) {
+  return buildLessonValues({
+    slug: formData.get("slug"),
+    title: formData.get("title"),
+    type: formData.get("type"),
+    orderIndex: formData.get("orderIndex"),
+    attentionText: formData.get("attentionText"),
+    relevanceText: formData.get("relevanceText"),
+    lectureContent: formData.get("lectureContent"),
+    exampleContent: formData.get("exampleContent"),
+    handsOnContent: formData.get("handsOnContent"),
+    outcomes: formData.get("outcomes"),
+    relatedJobs: formData.get("relatedJobs"),
+    referenceLinksJson: formData.get("referenceLinksJson") ?? undefined,
+  });
 }
 
 export async function createLesson(courseId: string, formData: FormData): Promise<ActionResult> {
@@ -239,4 +260,109 @@ export async function updateLessonQuizzes(
 
   revalidatePath(`/admin/courses/${courseId}/lessons/${lessonId}`);
   return { ok: true, message: "確認問題を保存しました。" };
+}
+
+const referenceLinksSchema = z.array(z.object({ label: z.string().trim().min(1), url: z.string().trim().min(1) }));
+
+export async function importLessonsFromCsv(courseId: string, formData: FormData): Promise<ActionResult> {
+  await requireAdminSession();
+
+  const file = formData.get("csvFile");
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, message: "CSVファイルを選択してください。" };
+  }
+
+  const text = await file.text();
+  const rows = parseCsv(text).filter((row) => row.some((cell) => cell.trim() !== ""));
+  if (rows.length < 2) {
+    return { ok: false, message: "CSVにヘッダー行と1件以上のデータ行が必要です。" };
+  }
+
+  const header = rows[0].map((cell) => cell.trim());
+  const dataRows = rows.slice(1);
+
+  let createdCount = 0;
+  let updatedCount = 0;
+  const errors: string[] = [];
+
+  for (let rowIndex = 0; rowIndex < dataRows.length; rowIndex++) {
+    const rowNumber = rowIndex + 2; // 1-indexed CSV line number, +1 for the header row
+    const cells = dataRows[rowIndex];
+    const raw: Record<string, string> = {};
+    header.forEach((key, columnIndex) => {
+      raw[key] = cells[columnIndex] ?? "";
+    });
+
+    try {
+      const values = buildLessonValues({
+        slug: raw.slug,
+        title: raw.title,
+        type: raw.type,
+        orderIndex: raw.orderIndex || String(rowIndex),
+        attentionText: raw.attentionText,
+        relevanceText: raw.relevanceText,
+        lectureContent: raw.lectureContent,
+        exampleContent: raw.exampleContent,
+        handsOnContent: raw.handsOnContent,
+        outcomes: raw.outcomes,
+        relatedJobs: raw.relatedJobs,
+        referenceLinksJson: raw.referenceLinksJson || undefined,
+      });
+
+      if (raw.referenceLinksJson) {
+        referenceLinksSchema.parse(JSON.parse(raw.referenceLinksJson) as unknown);
+      }
+      const quizzes = raw.quizzesJson ? quizzesSchema.parse(JSON.parse(raw.quizzesJson) as unknown) : null;
+
+      const existing = await prisma.lesson.findUnique({
+        where: { courseId_slug: { courseId, slug: values.slug } },
+        select: { id: true },
+      });
+
+      const lesson = await prisma.lesson.upsert({
+        where: { courseId_slug: { courseId, slug: values.slug } },
+        create: { ...values, courseId },
+        update: values,
+      });
+
+      if (quizzes) {
+        await prisma.$transaction(async (tx) => {
+          await tx.quiz.deleteMany({ where: { lessonId: lesson.id } });
+          for (let quizIndex = 0; quizIndex < quizzes.length; quizIndex++) {
+            const quiz = quizzes[quizIndex];
+            await tx.quiz.create({
+              data: {
+                lessonId: lesson.id,
+                question: quiz.question,
+                orderIndex: quizIndex,
+                options: {
+                  create: quiz.options.map((option, optionIndex) => ({
+                    label: option.label,
+                    isCorrect: option.isCorrect,
+                    orderIndex: optionIndex,
+                  })),
+                },
+              },
+            });
+          }
+        });
+      }
+
+      if (existing) updatedCount++;
+      else createdCount++;
+    } catch (error) {
+      errors.push(`行${rowNumber}: ${errorMessage(error)}`);
+    }
+  }
+
+  revalidatePath(`/admin/courses/${courseId}`);
+
+  const summary = `新規${createdCount}件・更新${updatedCount}件のレッスンを反映しました。`;
+  if (errors.length > 0) {
+    return {
+      ok: createdCount + updatedCount > 0,
+      message: `${summary}\nエラーが${errors.length}件ありました:\n${errors.join("\n")}`,
+    };
+  }
+  return { ok: true, message: summary };
 }

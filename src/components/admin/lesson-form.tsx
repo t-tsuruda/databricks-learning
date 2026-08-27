@@ -7,7 +7,8 @@ type LessonFormValues = {
   title: string;
   type: string;
   orderIndex: number;
-  introText: string;
+  attentionText: string;
+  relevanceText: string;
   lectureContent: string;
   exampleContent: string;
   handsOnContent: string;
@@ -55,9 +56,15 @@ export function LessonForm({
       />
 
       <TextAreaField
-        label="導入文(なぜこの学習が重要か)"
-        name="introText"
-        defaultValue={defaultValues?.introText}
+        label="注意喚起(Attention：学習者の興味を引く導入)"
+        name="attentionText"
+        defaultValue={defaultValues?.attentionText}
+        rows={2}
+      />
+      <TextAreaField
+        label="関連性(Relevance：学習者自身のゴールとの繋がり)"
+        name="relevanceText"
+        defaultValue={defaultValues?.relevanceText}
         rows={2}
       />
       <TextAreaField

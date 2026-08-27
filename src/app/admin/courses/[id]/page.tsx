@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { CourseForm } from "@/components/admin/course-form";
 import { AdminActionForm, AdminSubmitButton } from "@/components/admin/action-form";
 
-import { updateCourse, deleteLesson } from "../actions";
+import { updateCourse, deleteLesson, importLessonsFromCsv } from "../actions";
 
 const TYPE_LABEL: Record<string, string> = {
   TEXT: "座学",
@@ -27,6 +27,7 @@ export default async function AdminCourseEditPage({
   if (!course) notFound();
 
   const deleteLessonWithCourse = deleteLesson.bind(null, course.id);
+  const importLessonsWithCourse = importLessonsFromCsv.bind(null, course.id);
 
   return (
     <div className="space-y-8">
@@ -58,6 +59,42 @@ export default async function AdminCourseEditPage({
           >
             + レッスンを追加
           </Link>
+        </div>
+
+        <div className="mt-4 rounded-xl border border-border bg-surface p-6">
+          <h4 className="text-sm font-semibold">CSV一括インポート/エクスポート</h4>
+          <p className="mt-1 text-xs text-foreground/60">
+            スラッグが一致するレッスンは上書き更新、一致しないレッスンは新規作成されます。生成AIでレッスン内容をまとめて作成する際は、テンプレートの列構成を渡してください。
+          </p>
+          <div className="mt-3 flex flex-wrap gap-4 text-xs">
+            <a
+              href={`/admin/courses/${course.id}/lessons/csv-template`}
+              className="font-medium text-brand hover:underline"
+            >
+              ひな形CSVをダウンロード
+            </a>
+            <a
+              href={`/admin/courses/${course.id}/lessons/csv-export`}
+              className="font-medium text-brand hover:underline"
+            >
+              現在のレッスンをCSVでエクスポート
+            </a>
+          </div>
+          <AdminActionForm action={importLessonsWithCourse} className="mt-4 flex flex-wrap items-center gap-3">
+            <input
+              type="file"
+              name="csvFile"
+              accept=".csv,text/csv"
+              required
+              className="text-sm"
+            />
+            <AdminSubmitButton
+              pendingChildren="インポート中..."
+              className="rounded-md border border-brand px-3 py-1.5 text-xs font-semibold text-brand hover:bg-indigo-50"
+            >
+              CSVをインポート
+            </AdminSubmitButton>
+          </AdminActionForm>
         </div>
 
         <div className="mt-4 overflow-x-auto rounded-xl border border-border bg-surface">

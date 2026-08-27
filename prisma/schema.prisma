@@ -71,8 +71,9 @@ model Lesson {
   type       LessonType @default(TEXT)
   orderIndex Int
 
-  // ARCS-aligned module structure (see docs/prd.md section 4)
-  introText      String // なぜこの学習が重要か (Attention/Relevance)
+  // ARCS-aligned module structure (see docs/prd.md section 4, 19-2)
+  attentionText  String // 注意喚起：学習者の興味を引く導入 (ARCS Attention)
+  relevanceText  String // 関連性：学習者自身のゴールとの繋がり (ARCS Relevance)
   lectureContent String // 座学：概念説明 (markdown)
   exampleContent String // 具体例
   handsOnContent String // ハンズオン手順 (Databricks操作)

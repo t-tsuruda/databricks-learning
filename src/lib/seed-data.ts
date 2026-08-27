@@ -12,7 +12,8 @@ type LessonSeed = {
   slug: string;
   title: string;
   type: LessonTypeT;
-  introText: string;
+  attentionText: string;
+  relevanceText: string;
   lectureContent: string;
   exampleContent: string;
   handsOnContent: string;
@@ -45,8 +46,10 @@ const courses: CourseSeed[] = [
         slug: "what-is-data",
         title: "データとは何か：表形式データの基本",
         type: LessonType.TEXT,
-        introText:
-          "すべてのデータ活用は「データを正しく理解すること」から始まります。この章では、業務で扱う表形式データ（テーブル）の基本構造を理解し、これから学ぶSQLやDatabricksの土台を作ります。",
+        attentionText:
+          "エクセルの表、家計簿、LINEの既読リスト——実はこれらもすべて「データ」です。「データ」と聞くと難しそうに感じるかもしれませんが、正体を知れば拍子抜けするほどシンプルです。",
+        relevanceText:
+          "この章で学ぶ「表形式データの見方」は、これから学ぶSQLやDatabricksすべての土台であるだけでなく、副業でデータエンジニアリング案件を獲得する際の面接でも必ず問われる基礎知識です。",
         lectureContent:
           "## 表形式データの基本\n\nビジネスの現場で扱うデータの多くは「行（レコード）」と「列（カラム）」で構成される表形式データです。\n\n- **行（Row）**: 1件のデータ（例：1人の顧客、1件の注文）\n- **列（Column）**: データの属性（例：顧客名、注文日、金額）\n- **主キー（Primary Key）**: 各行を一意に識別するID\n\nDatabricksやSQLデータベースでは、こうした表を「テーブル」と呼び、複数のテーブルを組み合わせて分析を行います。",
         exampleContent:
@@ -77,8 +80,10 @@ const courses: CourseSeed[] = [
         slug: "sql-select-basics",
         title: "SQLの基本：SELECT文でデータを取り出す",
         type: LessonType.EXERCISE,
-        introText:
-          "SQLはデータ活用の共通言語です。まずは最も基本的な `SELECT` 文をマスターし、テーブルから必要な情報だけを取り出せるようになりましょう。",
+        attentionText:
+          "「このデータの中から、条件に合う情報だけ欲しい」——そう思ったとき、Excelでフィルタをかけるように、何百万行のデータからでも一瞬で答えを出せる方法があります。",
+        relevanceText:
+          "SELECT文は、データ関連の求人票でほぼ必ず「必須スキル」として挙げられるSQLの入り口です。ここを押さえることが、副業案件の応募条件をクリアする第一歩になります。",
         lectureContent:
           "## SELECT文の基本構文\n\n```sql\nSELECT カラム名\nFROM テーブル名\nWHERE 条件;\n```\n\n- `SELECT`: 取得したい列を指定\n- `FROM`: 対象のテーブルを指定\n- `WHERE`: 絞り込み条件を指定\n\nこの3つを組み合わせるだけで、大量のデータから必要な情報だけを抽出できます。",
         exampleContent:
@@ -109,8 +114,10 @@ const courses: CourseSeed[] = [
         slug: "sql-aggregation",
         title: "集計とグルーピング：GROUP BYで傾向をつかむ",
         type: LessonType.EXERCISE,
-        introText:
-          "1件ずつのデータではなく「全体の傾向」を掴めるようになると、データ分析の価値が一気に高まります。集計関数とGROUP BYを学びましょう。",
+        attentionText:
+          "「一番売れている商品は？」「今月の売上合計は？」——上司や取引先から聞かれたとき、1件ずつ手で数えていては日が暮れてしまいます。",
+        relevanceText:
+          "集計とGROUP BYは、Data AnalystやBI担当の求人で頻出する「傾向を掴んで報告する」業務の中核スキルです。ここができると、データを見るだけの人から「データから答えを出せる人」に変わります。",
         lectureContent:
           "## 集計関数とGROUP BY\n\n- `COUNT()`: 件数を数える\n- `SUM()`: 合計を求める\n- `AVG()`: 平均を求める\n- `GROUP BY`: 指定した列の値ごとにグループ化して集計する\n\n```sql\nSELECT customer_name, SUM(amount) AS total_amount\nFROM orders\nGROUP BY customer_name;\n```",
         exampleContent:
@@ -141,8 +148,10 @@ const courses: CourseSeed[] = [
         slug: "data-modeling-intro",
         title: "データモデリング入門：正規化とテーブル設計",
         type: LessonType.TEXT,
-        introText:
-          "実務のデータは1つのテーブルで完結しません。複数テーブルをどう分割し、どう繋げるかという「データモデリング」の考え方を学びます。",
+        attentionText:
+          "1つの巨大な表にあらゆる情報を詰め込んだデータを見たことはありませんか？一見便利そうですが、実は更新漏れやデータの重複という「実務の地雷」が潜んでいます。",
+        relevanceText:
+          "テーブルを適切に分割・結合する設計力は、Data EngineerやAnalytics Engineerの求人で「テーブル設計ができる」として評価される、実務未経験者と経験者を分ける分水嶺の一つです。",
         lectureContent:
           "## テーブルを分割する理由\n\n顧客情報を注文テーブルに毎回書き込むと、同じ情報が重複し、更新漏れが起きやすくなります。そこで、\n\n- `customers`（顧客マスタ）\n- `orders`（注文トランザクション）\n\nのようにテーブルを分割し、`customer_id` で紐づける設計（正規化）を行います。これによりデータの一貫性が保たれ、実務でのETL・分析基盤設計の土台になります。",
         exampleContent:
@@ -173,8 +182,10 @@ const courses: CourseSeed[] = [
         slug: "sql-subquery-case",
         title: "サブクエリとCASE式：条件分岐とネストしたSQL",
         type: LessonType.EXERCISE,
-        introText:
-          "実務のSQLは1本のSELECT文だけで完結しないことがほとんどです。クエリの中にクエリを埋め込む「サブクエリ」と、条件によって値を出し分ける「CASE式」を身につけ、より複雑な問いに答えられるようになりましょう。",
+        attentionText:
+          "「平均より高い注文だけを、金額帯ごとに分類して」——こんな一見複雑な依頼も、実はSQL1本で解決できます。",
+        relevanceText:
+          "サブクエリとCASE式を使いこなせると、単純な抽出だけでなく実務でよくある「条件付きの複雑な集計依頼」に一人で対応できるようになり、任される仕事の幅がぐっと広がります。",
         lectureContent:
           "## サブクエリ（Subquery）\n\nサブクエリとは、SQL文の中に埋め込まれた別のSELECT文のことです。\n\n```sql\nSELECT customer_name\nFROM customers\nWHERE customer_id IN (\n  SELECT customer_id FROM orders WHERE amount > 5000\n);\n```\n\nこの例では、内側の `SELECT` で「5000円より高い注文をした顧客ID」を求め、外側の `SELECT` でその顧客の名前を取得しています。\n\n## CASE式\n\nCASE式は、条件によって出力する値を変える「条件分岐」です。\n\n```sql\nSELECT\n  order_id,\n  amount,\n  CASE\n    WHEN amount >= 10000 THEN '大口'\n    WHEN amount >= 3000 THEN '中口'\n    ELSE '小口'\n  END AS order_size\nFROM orders;\n```",
         exampleContent:
@@ -205,8 +216,10 @@ const courses: CourseSeed[] = [
         slug: "sql-null-handling",
         title: "NULLと欠損値の扱い：実務データの落とし穴",
         type: LessonType.EXERCISE,
-        introText:
-          "実務のデータには「値が入っていない（NULL）」ケースが必ず存在します。NULLを正しく扱えないと、集計結果が誤った印象を与えてしまいます。NULLの性質と対処法を学びましょう。",
+        attentionText:
+          "同じ集計クエリのはずなのに、実行するたびに平均値が微妙に違う……そんな経験はありませんか？犯人は、見落とされがちな「NULL」かもしれません。",
+        relevanceText:
+          "NULLの扱いを誤ると、報告する数値そのものが間違っているという致命的なミスにつながります。正しく扱えることは、データを扱う仕事における「信頼」の土台です。",
         lectureContent:
           "## NULLとは何か\n\nNULLは「値が存在しない」ことを表す特別な状態で、0や空文字とは異なります。NULLの重要な性質は、**比較演算（`=`, `!=`など）では判定できない**ことです。\n\n```sql\n-- 誤り: NULLは = では絶対にヒットしない\nSELECT * FROM orders WHERE discount = NULL;\n\n-- 正しい書き方\nSELECT * FROM orders WHERE discount IS NULL;\n```\n\n## NULLを考慮した集計\n\n`COUNT(列名)` はNULLを除外してカウントしますが、`COUNT(*)` は全行をカウントします。この違いを理解していないと、集計結果を読み違えます。\n\n`COALESCE(列名, デフォルト値)` を使うと、NULLの場合に代わりの値を使えます。\n\n```sql\nSELECT customer_name, COALESCE(discount, 0) AS discount\nFROM orders;\n```",
         exampleContent:
@@ -247,8 +260,10 @@ const courses: CourseSeed[] = [
         slug: "python-basics-for-data",
         title: "データ処理のためのPython基礎",
         type: LessonType.TEXT,
-        introText:
-          "PythonはDatabricksを含む多くのデータ基盤で標準的に使われる言語です。データ処理に必要な最低限の文法を押さえましょう。",
+        attentionText:
+          "SQLだけでは書きにくい「繰り返しの処理」や「複雑な条件分岐」。実務のデータエンジニアはそれをどう解決しているのでしょうか？答えの多くはPythonにあります。",
+        relevanceText:
+          "Pythonは、Data EngineerやAnalytics Engineerの求人でSQLと並んで必須スキルとして挙げられる言語です。ここでの基礎が、この後のETLパイプライン構築に直結します。",
         lectureContent:
           "## 変数・リスト・辞書\n\n```python\nsales = [3000, 5400, 1200]\ntotal = sum(sales)\naverage = total / len(sales)\n```\n\nデータエンジニアリングでは、こうした基本構文の組み合わせでデータの読み込み・変換・書き出しを行います。",
         exampleContent:
@@ -276,8 +291,10 @@ const courses: CourseSeed[] = [
         slug: "python-control-flow-functions",
         title: "制御構文と関数：繰り返しと再利用可能なコード",
         type: LessonType.EXERCISE,
-        introText:
-          "同じ処理を何度も書くのは非効率で、バグの元にもなります。`if`による条件分岐、`for`による繰り返し、そして`def`による関数定義を身につけ、再利用できるコードを書けるようになりましょう。",
+        attentionText:
+          "同じようなコードをコピー＆ペーストして少しずつ書き換えていたら、いつの間にか直し忘れが1箇所だけ残ってしまった——そんな経験はありませんか？",
+        relevanceText:
+          "処理を関数として切り出す力は、実務のETLコードを「保守しやすいコード」にするために欠かせません。コードレビューで評価される、実務未経験者と一歩差がつくポイントです。",
         lectureContent:
           "## 条件分岐と繰り返し\n\n```python\nfor order in orders:\n    if order[\"amount\"] > 3000:\n        print(f\"{order['customer']}: 高額注文\")\n    else:\n        print(f\"{order['customer']}: 通常注文\")\n```\n\n## 関数の定義\n\n同じ処理を何度も使う場合は、関数として切り出します。\n\n```python\ndef classify_order(amount):\n    if amount >= 10000:\n        return \"大口\"\n    elif amount >= 3000:\n        return \"中口\"\n    else:\n        return \"小口\"\n```\n\n関数化しておくと、ETL処理の中で同じロジックを何度も再利用でき、テストもしやすくなります。",
         exampleContent:
@@ -307,8 +324,10 @@ const courses: CourseSeed[] = [
         slug: "dataframe-basics",
         title: "DataFrameでデータを扱う",
         type: LessonType.EXERCISE,
-        introText:
-          "DataFrameは表形式データをコードで扱うための標準的な仕組みです。Databricksの中心的な操作対象でもあります。",
+        attentionText:
+          "SQLで学んだ「絞り込み」や「選択」を、Pythonのコードでも同じように書けるとしたら？Databricksのデータ処理は、まさにこの発想で成り立っています。",
+        relevanceText:
+          "DataFrame操作は、Databricks上でのETL処理の中心的なスキルです。SQLとPythonの両方でデータを扱えることは、Data Engineer求人での大きなアピールポイントになります。",
         lectureContent:
           "## DataFrameの基本操作\n\nDataFrameは行と列を持つ表形式のデータ構造です。Databricksでは主にPySparkのDataFrameを使いますが、考え方はpandasと共通しています。\n\n- フィルタリング:条件で行を絞り込む\n- 選択:必要な列だけ取り出す\n- 集計:グループごとに集計する",
         exampleContent:
@@ -336,8 +355,10 @@ const courses: CourseSeed[] = [
         slug: "pandas-data-wrangling",
         title: "pandasでのデータ加工：欠損値処理と列の変換",
         type: LessonType.EXERCISE,
-        introText:
-          "pandasはPythonで最も広く使われるデータ操作ライブラリです。Databricks上のDataFrameとの使い分けを理解しつつ、小〜中規模データの前処理でよく使われるpandasの基本操作を身につけましょう。",
+        attentionText:
+          "「このCSV、ところどころ値が抜けている……」実務データの多くは、綺麗な状態でやってくることの方が稀です。",
+        relevanceText:
+          "pandasによる前処理力は、求人票の「データクレンジング経験」という言葉の実体そのものです。ここを身につけると、汚いデータを恐れず扱えるようになります。",
         lectureContent:
           "## pandasの基本操作\n\n```python\nimport pandas as pd\n\ndf = pd.DataFrame({\n    \"customer\": [\"田中\", \"鈴木\", \"佐藤\"],\n    \"amount\": [3000, None, 5400],\n})\n\n# 欠損値の確認\nprint(df.isnull().sum())\n\n# 欠損値を0で埋める\ndf[\"amount\"] = df[\"amount\"].fillna(0)\n\n# 新しい列を追加\ndf[\"amount_with_tax\"] = df[\"amount\"] * 1.1\n```\n\npandasはSQLの `WHERE` に相当する `df[df[\"amount\"] > 3000]` のような書き方や、`groupby` によるSQLの `GROUP BY` 相当の集計もサポートしています。",
         exampleContent:
@@ -378,8 +399,10 @@ const courses: CourseSeed[] = [
         slug: "fact-dimension",
         title: "ファクトテーブルとディメンションテーブル",
         type: LessonType.TEXT,
-        introText:
-          "分析基盤の世界では「何を計測するか（ファクト）」と「どう切り口で見るか（ディメンション）」を分けて設計します。",
+        attentionText:
+          "「売上を、月別に見たい」「いや地域別でも見たい」「顧客別も」——分析の切り口は毎回変わるのに、なぜ同じ売上データで対応できるのでしょうか？",
+        relevanceText:
+          "ファクト/ディメンションという設計の型を知ることは、Analytics Engineerとして「分析しやすいデータ基盤を設計できる」という評価に直結する、実務データモデリングの必須知識です。",
         lectureContent:
           "## ファクトとディメンション\n\n- **ファクトテーブル**: 売上金額、注文数など「測定値」を持つテーブル\n- **ディメンションテーブル**: 顧客、商品、日付など「切り口」を持つテーブル\n\nこの分離により、様々な切り口で同じ指標を分析できるようになります（スタースキーマ）。",
         exampleContent:
@@ -407,8 +430,10 @@ const courses: CourseSeed[] = [
         slug: "slowly-changing-dimension",
         title: "Slowly Changing Dimension（SCD）：変化する属性の記録方法",
         type: LessonType.TEXT,
-        introText:
-          "顧客の住所や商品のカテゴリなど、ディメンションの属性は時間とともに変化します。「変化前後をどう記録するか」という設計パターン（SCD）を理解し、実務で通用するデータモデリングの視野を広げましょう。",
+        attentionText:
+          "顧客が引っ越したら、住所データを単純に上書きしていいのでしょうか？もし「引っ越し前の売上データを、当時の地域別に再集計したい」と言われたら？",
+        relevanceText:
+          "SCDのような「変化する現実をどう記録するか」という設計判断ができることは、実務経験者らしいデータモデリング力として評価され、Analytics Engineer/Data Engineer案件での信頼につながります。",
         lectureContent:
           "## SCDとは何か\n\nSlowly Changing Dimension（緩やかに変化するディメンション）とは、ディメンションテーブルの属性が時間経過とともに変化する現象、およびその扱い方の設計パターンです。代表的なものに以下があります。\n\n- **SCD Type 1（上書き）**: 古い値を新しい値で単純に上書きする。過去の状態は残らない。\n- **SCD Type 2（履歴保持）**: 変更があるたびに新しい行を追加し、`有効開始日` `有効終了日` などの列で有効期間を管理する。過去の状態を後から参照できる。\n\n実務では「過去のレポートを再現できるか」という要件によって、Type 1で十分か、Type 2が必要かが決まります。",
         exampleContent:
@@ -448,8 +473,10 @@ const courses: CourseSeed[] = [
         slug: "what-is-lakehouse",
         title: "Lakehouseとは何か",
         type: LessonType.TEXT,
-        introText:
-          "Databricksを理解する第一歩は「Lakehouse」という考え方を知ることです。データウェアハウスとデータレイクの良いところを組み合わせた概念です。",
+        attentionText:
+          "「Databricksって結局何なの？」——求人票でよく見かけるこの単語の正体を、ここでようやく明らかにします。",
+        relevanceText:
+          "Lakehouseの概念を理解することは、この後すべてのDatabricksコンテンツを学ぶ土台になり、面接で「Databricksを使ったことがある」と自信を持って言うための第一歩です。",
         lectureContent:
           "## データウェアハウス・データレイク・Lakehouse\n\n- **データウェアハウス**: 構造化データに強いが、柔軟性やコストに課題\n- **データレイク**: あらゆる形式のデータを安価に貯められるが、品質管理が難しい\n- **Lakehouse**: データレイクの上にウェアハウス的な信頼性・管理機能を載せたアーキテクチャ\n\nDatabricksはこのLakehouseをDelta Lakeという技術で実現しています。",
         exampleContent:
@@ -477,8 +504,10 @@ const courses: CourseSeed[] = [
         slug: "workspace-tour",
         title: "Databricks Workspaceの基本構成",
         type: LessonType.EXERCISE,
-        introText:
-          "Workspaceの画面構成を知ることで、迷わず学習・実践を進められるようになります。",
+        attentionText:
+          "初めて開く管理画面やツールに戸惑った経験はありませんか？Databricksも同じで、最初に全体像を知っておくだけで学習効率が大きく変わります。",
+        relevanceText:
+          "Workspaceの構成（Notebook・Cluster・Catalog・Jobs）を理解することは、この先のすべてのハンズオン課題をスムーズにこなすための実務的な土台になります。",
         lectureContent:
           "## Workspaceの主要な要素\n\n- **Notebook**: SQL/Pythonなどのコードを対話的に実行する場所\n- **Cluster**: コードを実行する計算リソース\n- **Catalog**: テーブルやデータへのアクセスを管理する仕組み（Unity Catalog）\n- **Jobs / Workflows**: ノートブックなどを定期実行するための機能\n\nこれらは独立した機能ではなく、「Notebookで書いたコードを、Clusterで実行し、Catalog内のデータを読み書きし、その一連の処理をJobsでスケジュール実行する」という一連の流れでつながっています。",
         exampleContent:
@@ -505,8 +534,10 @@ const courses: CourseSeed[] = [
         slug: "unity-catalog-governance",
         title: "Unity Catalogとデータガバナンス",
         type: LessonType.TEXT,
-        introText:
-          "実務でDatabricksを使う上で避けて通れないのが「誰がどのデータにアクセスできるか」を管理するガバナンスです。Unity Catalogの3階層構造とアクセス権限の考え方を学びます。",
+        attentionText:
+          "会社の全データに全社員がアクセスできる状態を想像してみてください。便利どころか、個人情報漏洩のリスクだらけです。",
+        relevanceText:
+          "Unity Catalogのようなガバナンスの知識は、実務のDatabricks案件では避けて通れない領域です。ここを理解しているかどうかで、実務未経験でも「現場を分かっている」という印象を与えられます。",
         lectureContent:
           "## Unity Catalogとは\n\nUnity Catalogは、Databricks上のすべてのデータ資産（テーブル、ビュー、ボリューム、モデルなど）を一元管理する仕組みです。データは以下の3階層で整理されます。\n\n```\nカタログ (Catalog)\n  └ スキーマ (Schema / Database)\n      └ テーブル (Table)\n```\n\n例えば `samples.tpch.orders` は「`samples` カタログの `tpch` スキーマにある `orders` テーブル」を意味します。\n\n## アクセス権限の管理\n\nUnity Catalogでは、SQLの `GRANT` 文でカタログ・スキーマ・テーブル単位に権限を付与できます。\n\n```sql\nGRANT SELECT ON TABLE analytics.sales.orders TO `data-analysts`;\nGRANT ALL PRIVILEGES ON SCHEMA analytics.sales TO `data-engineers`;\n```\n\nこれにより、「分析チームは特定のテーブルを読むだけ」「エンジニアチームはスキーマ全体を管理できる」といった、実務で求められる細かいアクセス制御が可能になります。",
         exampleContent:
@@ -536,8 +567,10 @@ const courses: CourseSeed[] = [
         slug: "cluster-compute-management",
         title: "クラスタとコンピュートの管理",
         type: LessonType.TEXT,
-        introText:
-          "Notebookやジョブを実行するには、必ず「コンピュート（クラスタ）」というリソースが必要です。クラスタの種類とコストに関わる設定を理解し、無駄なコストをかけずに運用できるようになりましょう。",
+        attentionText:
+          "「気づいたらクラウドの請求額が跳ね上がっていた」——クラスタを起動しっぱなしにしたことが原因、というのはデータエンジニアあるあるの失敗談です。",
+        relevanceText:
+          "クラスタとコストの関係を理解していることは、実務でいきなり高額請求を出さない「安心して任せられるエンジニア」であることの証明になります。",
         lectureContent:
           "## クラスタの種類\n\n- **All-Purpose Cluster**: Notebookでの対話的な開発・分析に使う。複数人・複数Notebookで共有可能。\n- **Job Cluster**: Jobの実行時にだけ自動的に起動し、実行後に自動終了するクラスタ。開発用より低コスト。\n- **Serverless Compute**: クラスタのサイジングや起動をDatabricks側が自動管理してくれる方式。設定の手間が少ない。\n\n## コストに関わる設定\n\n- **Auto Termination（自動停止）**: 一定時間操作が無いとクラスタを自動停止し、無駄な課金を防ぐ\n- **ワーカー数（オートスケーリング）**: 処理量に応じて自動的にワーカーノード数を増減させる\n- **インスタンスタイプ**: CPU/メモリ量によって時間あたりのコストが変わる\n\n個人学習や小規模な検証では、Auto Terminationを短め（例：15〜30分）に設定し、使い終わったら明示的に停止することが、無料枠を効率よく使うコツです。",
         exampleContent:
@@ -567,8 +600,10 @@ const courses: CourseSeed[] = [
         slug: "databricks-cli-repos",
         title: "Databricks CLIとRepos：コードのバージョン管理",
         type: LessonType.EXERCISE,
-        introText:
-          "実務のデータエンジニアリングでは、NotebookのコードもGitでバージョン管理するのが標準です。Databricks ReposによるGit連携と、Databricks CLIによるコマンドライン操作の基本を学びます。",
+        attentionText:
+          "「あのNotebook、誰がいつ何を変更したんだっけ？」——コードの変更履歴が追えないと、チームでの開発は簡単に破綻します。",
+        relevanceText:
+          "Git連携やCLI操作は、個人学習の延長ではなく「チームで実務を回せる」ことの証明です。副業案件でチーム開発に加わる際に必須となるスキルです。",
         lectureContent:
           "## Databricks Repos：Git連携\n\nDatabricks Reposは、GitHubなどのGitリポジトリをWorkspace内に直接クローンし、Notebookをブランチ管理・プルリクエストの対象にできる機能です。これにより、\n\n- 複数人での共同開発時の変更履歴管理\n- レビューを経てから本番用ブランチにマージする運用\n- 誤って上書き・削除してしまった際の復元\n\nが可能になります。\n\n## Databricks CLI\n\nDatabricks CLIは、ターミナルからWorkspace・Job・クラスタなどを操作するためのコマンドラインツールです。CI/CDパイプラインにDatabricksの操作を組み込む際によく使われます。\n\n```bash\n# CLIの認証設定\ndatabricks configure --token\n\n# Workspace内のファイル一覧を確認\ndatabricks workspace list /Users/you@example.com\n\n# Jobの一覧を確認\ndatabricks jobs list\n```",
         exampleContent:
@@ -609,8 +644,10 @@ const courses: CourseSeed[] = [
         slug: "delta-lake-basics",
         title: "Delta Lakeとは何か",
         type: LessonType.TEXT,
-        introText:
-          "Delta LakeはDatabricksのLakehouseを支える中核技術です。信頼性の高いデータ管理の仕組みを学びましょう。",
+        attentionText:
+          "「昨日までは正しかった集計結果が、今日は違う……」データが知らないうちに壊れていたら、どうやって原因を突き止めますか？",
+        relevanceText:
+          "Delta Lakeのタイムトラベルやトランザクション管理を理解することは、Databricksを名乗る上で避けて通れない中核知識であり、実務のDelta Lake案件に対応できる自信の土台になります。",
         lectureContent:
           "## Delta Lakeの特徴\n\n- **ACIDトランザクション**: データの整合性を保証\n- **タイムトラベル**: 過去の任意の時点のデータを参照可能\n- **スキーマ管理**: テーブル構造の変更を安全に管理\n\nこれらにより、データレイクでも信頼性の高いテーブル管理が可能になります。",
         exampleContent:
@@ -637,8 +674,10 @@ const courses: CourseSeed[] = [
         slug: "delta-merge-optimize-vacuum",
         title: "MERGE・OPTIMIZE・VACUUM：Delta Lakeの実務操作",
         type: LessonType.EXERCISE,
-        introText:
-          "実務のDelta Lake運用では、単純なINSERTだけでなく「差分だけ反映するMERGE」「小さなファイルをまとめるOPTIMIZE」「不要になった古いデータを消すVACUUM」を使いこなす必要があります。",
+        attentionText:
+          "毎日全件を洗い替えていたら、データ量が増えるにつれ処理時間もクラウド代もどんどん膨らんでいく——そんな運用、続けられますか？",
+        relevanceText:
+          "MERGE・OPTIMIZE・VACUUMは、実務のDelta Lake運用で毎日のように使われるコマンドです。ここを扱えることは、求人票の「Delta Lake運用経験」に直結します。",
         lectureContent:
           "## MERGE（Upsert）\n\nMERGEは、既存の行があれば更新し、無ければ挿入する「Upsert」処理です。日次バッチで最新データを反映する際の定番パターンです。\n\n```sql\nMERGE INTO customers AS target\nUSING staging_customers AS source\nON target.customer_id = source.customer_id\nWHEN MATCHED THEN UPDATE SET target.email = source.email\nWHEN NOT MATCHED THEN INSERT (customer_id, email) VALUES (source.customer_id, source.email);\n```\n\n## OPTIMIZEとZ-Ordering\n\n小さなファイルが大量にできると読み取り性能が落ちます。`OPTIMIZE` はファイルを最適なサイズに統合します。\n\n```sql\nOPTIMIZE sales.orders ZORDER BY (customer_id);\n```\n\n## VACUUM\n\nDelta Lakeはタイムトラベルのために古いファイルを残しますが、`VACUUM` で一定期間より古い不要ファイルを物理削除し、ストレージコストを抑えます。\n\n```sql\nVACUUM sales.orders RETAIN 168 HOURS; -- 7日間より古いファイルを削除\n```",
         exampleContent:
@@ -669,8 +708,10 @@ const courses: CourseSeed[] = [
         slug: "auto-loader-streaming-ingestion",
         title: "Auto Loaderによる継続的なデータ取り込み",
         type: LessonType.TEXT,
-        introText:
-          "クラウドストレージに次々と届く新しいファイルを、手動で1つずつ取り込むのは非現実的です。Auto Loaderを使い、新規ファイルを自動的・効率的に検知して取り込む方法を学びます。",
+        attentionText:
+          "毎朝、新しく届いたファイルだけを手作業で確認してデータベースに取り込む——それを365日続けられますか？",
+        relevanceText:
+          "Auto Loaderのような自動取り込みの仕組みを理解していることは、「継続的に安定して動くパイプラインを作れる」というDatabricks実務者としての信頼につながります。",
         lectureContent:
           "## Auto Loaderとは\n\nAuto Loaderは、クラウドストレージ（S3, ADLS, GCSなど）に新しいファイルが到着するたびに、それを自動的に検知してDelta Lakeに取り込むDatabricksの機能です。ファイル一覧を毎回スキャンするのではなく、通知の仕組みを使って効率的に新規ファイルだけを検知します。\n\n```python\ndf = (spark.readStream\n      .format(\"cloudFiles\")\n      .option(\"cloudFiles.format\", \"json\")\n      .schema(my_schema)\n      .load(\"/mnt/raw/events/\"))\n\n(df.writeStream\n   .format(\"delta\")\n   .option(\"checkpointLocation\", \"/mnt/checkpoints/events/\")\n   .table(\"bronze.events\"))\n```\n\n## チェックポイントによる「続きから」処理\n\nAuto Loaderは `checkpointLocation` に処理済みファイルの情報を記録するため、途中で処理が止まっても、再開時に「まだ処理していないファイルだけ」を自動的に処理します。これはETLにおける冪等性（同じ処理を繰り返しても結果が変わらないこと）を実現する重要な仕組みです。",
         exampleContent:
@@ -700,8 +741,10 @@ const courses: CourseSeed[] = [
         slug: "delta-live-tables-pipelines",
         title: "Delta Live Tables（DLT）による宣言的パイプライン",
         type: LessonType.TEXT,
-        introText:
-          "これまで学んだExtract/Transform/Loadの各ステップを、手続き的なコードで1つずつ書くのではなく、「最終的にどんなテーブルが欲しいか」を宣言するだけで構築できるDelta Live Tables（DLT）の考え方を学びます。",
+        attentionText:
+          "パイプラインのどこかでエラーが起きたとき、原因のテーブルを探すのに何時間もかかった——そんな経験、したくありませんよね。",
+        relevanceText:
+          "DLTのような宣言的パイプラインの考え方を知っていることは、モダンなDatabricks案件で「最新の実装方法を理解している」という強みになり、他の学習者と差をつけるポイントです。",
         lectureContent:
           "## 宣言的パイプラインという考え方\n\n通常のETLコードは「まずこれを読み込み、次にこう変換し、最後にここへ書き込む」という手続きを1つずつ記述します。Delta Live Tablesでは、代わりに「このテーブルはこのクエリの結果である」という定義を宣言するだけで、依存関係の解決・実行順序の最適化・エラー処理をDatabricks側が自動的に行います。\n\n```python\nimport dlt\n\n@dlt.table\ndef bronze_orders():\n    return spark.readStream.format(\"cloudFiles\").option(\"cloudFiles.format\", \"json\").load(\"/mnt/raw/orders/\")\n\n@dlt.table\ndef silver_orders():\n    return dlt.read(\"bronze_orders\").filter(\"amount IS NOT NULL\")\n```\n\n## データ品質の組み込み\n\nDLTでは `@dlt.expect` を使い、データ品質のルールをパイプライン定義に直接組み込めます。\n\n```python\n@dlt.table\n@dlt.expect(\"valid_amount\", \"amount > 0\")\ndef silver_orders_checked():\n    return dlt.read(\"bronze_orders\")\n```",
         exampleContent:
@@ -732,8 +775,10 @@ const courses: CourseSeed[] = [
         slug: "workflows-jobs-cost-management",
         title: "Workflowsによるジョブオーケストレーションとコスト管理",
         type: LessonType.EXERCISE,
-        introText:
-          "複数のNotebookやDLTパイプラインを、決まった順序・スケジュールで実行するには「Workflows（Jobs）」を使います。あわせて、クラスタポリシーによるコスト管理の考え方も押さえましょう。",
+        attentionText:
+          "深夜のバッチ処理が失敗していたことに、翌朝出社してから気づく——それも、担当者への通知が届いていなかったせいだとしたら？",
+        relevanceText:
+          "Workflowsによるオーケストレーションとコスト管理は、Data Engineerとして「一人でパイプライン運用を任せられる」と評価されるための最後のピースです。",
         lectureContent:
           "## Workflowsによる複数タスクのオーケストレーション\n\nDatabricks Workflowsでは、1つのJobの中に複数のタスク（Notebook、DLTパイプライン、Pythonスクリプトなど）を定義し、タスク間の依存関係（「Aが成功したらBを実行する」）や条件分岐、リトライ回数、通知設定（失敗時にメール通知するなど）を設定できます。\n\n```\nTask A（Extract） → Task B（Transform） → Task C（Load）\n                              ↘\n                               Task D（品質チェック、Bと並行実行）\n```\n\n## クラスタポリシーによるコスト管理\n\nクラスタポリシーは、「誰がどんなスペックのクラスタを作成できるか」を制限する仕組みです。例えば「学習用ユーザーは最大2ノードまで」「本番用Job Clusterは特定のインスタンスタイプのみ」といった制約をかけ、意図しない高額なクラスタが作成されるのを防ぎます。",
         exampleContent:
@@ -773,8 +818,10 @@ const courses: CourseSeed[] = [
         slug: "etl-basics",
         title: "ETLの基本設計：Extract, Transform, Load",
         type: LessonType.EXERCISE,
-        introText:
-          "ETLはデータエンジニアリングの中心的な仕事です。抽出・変換・格納の3ステップを、Databricksでどう実装するかを学びます。",
+        attentionText:
+          "「データエンジニアって、結局何をする仕事なの？」——その答えの多くは、たった3文字「ETL」に集約されます。",
+        relevanceText:
+          "ETLの3ステップを実装できることは、Data Engineer求人の職務内容そのものです。ここからLevel 3は、副業案件の実務そのものに近づいていきます。",
         lectureContent:
           "## ETLの3ステップ\n\n1. **Extract（抽出）**: 元データ（DB、ファイル、APIなど）から読み込む\n2. **Transform（変換）**: 欠損値処理、型変換、結合などでデータを整形する\n3. **Load（格納）**: 分析用のテーブルに書き込む\n\nDatabricksではこれらをNotebookとJobsで組み合わせて実装します。",
         exampleContent:
@@ -801,8 +848,10 @@ const courses: CourseSeed[] = [
         slug: "data-quality-testing",
         title: "データ品質とテスト：壊れたパイプラインに気づく仕組み",
         type: LessonType.EXERCISE,
-        introText:
-          "ETLパイプラインは「動いているように見えて、実は間違ったデータを生成している」状態が最も危険です。データ品質チェックとテストの考え方を学び、問題に早く気づける仕組みを作りましょう。",
+        attentionText:
+          "パイプラインはエラーも出さずに正常終了したのに、後から「実は集計結果が間違っていた」と発覚する——これほど怖いことはありません。",
+        relevanceText:
+          "品質チェックを組み込む力は、「動くだけのパイプライン」と「信頼されるパイプライン」を分ける決定的な違いであり、実務での評価に直結します。",
         lectureContent:
           "## データ品質チェックの観点\n\n実務でよく行われるデータ品質チェックには以下があります。\n\n- **件数チェック**: 前日と比べて極端に件数が増減していないか\n- **NULLチェック**: 必須列にNULLが混入していないか\n- **一意性チェック**: 主キーが重複していないか\n- **範囲チェック**: 金額がマイナスになっていないか、日付が未来すぎないか\n\n```python\nrow_count = clean_df.count()\nassert row_count > 0, \"変換後のデータが0件です\"\n\nnull_count = clean_df.filter(clean_df.customer_id.isNull()).count()\nassert null_count == 0, f\"customer_idにNULLが{null_count}件あります\"\n\nduplicate_count = clean_df.count() - clean_df.dropDuplicates([\"order_id\"]).count()\nassert duplicate_count == 0, f\"order_idの重複が{duplicate_count}件あります\"\n```\n\nこうしたチェックをETL処理の最後に組み込んでおくことで、「気づかないうちにデータが壊れる」事態を防げます。",
         exampleContent:
@@ -832,8 +881,10 @@ const courses: CourseSeed[] = [
         slug: "incremental-load-idempotency",
         title: "増分ロードと冪等性：安全に「やり直せる」パイプライン",
         type: LessonType.TEXT,
-        introText:
-          "毎回全件を洗い替えるのは非効率です。差分（増分）だけを処理する設計と、同じ処理を何度実行しても結果が変わらない「冪等性」という考え方を学び、安全に再実行できるパイプラインを設計しましょう。",
+        attentionText:
+          "夜間バッチが途中で落ちてしまった。もう一度実行して大丈夫でしょうか？それとも、データが二重に増えてしまうのでしょうか？",
+        relevanceText:
+          "冪等性を意識した設計は、実務で「安心して再実行できるパイプライン」を作れるかどうかの分かれ目であり、トラブル対応力として評価される重要な視点です。",
         lectureContent:
           "## フルロードと増分ロード\n\n- **フルロード**: 毎回すべてのデータを洗い替える。シンプルだがデータ量が増えると遅くコストがかかる。\n- **増分ロード（Incremental Load）**: 前回処理した時点より新しいデータだけを処理する。効率的だが「どこまで処理したか」を管理する必要がある。\n\n```sql\n-- 「最終更新日時」を使った増分抽出の例\nSELECT * FROM raw_orders\nWHERE updated_at > (SELECT MAX(updated_at) FROM orders_clean);\n```\n\n## 冪等性（Idempotency）とは\n\n冪等性とは、「同じ処理を1回実行しても、10回実行しても、最終的な結果が同じになる」という性質です。ジョブが途中で失敗し再実行した際に、データが重複してしまうと大きな問題になります。\n\n```sql\n-- 冪等でない例（再実行すると重複が増える）\nINSERT INTO orders_clean SELECT * FROM staging;\n\n-- 冪等な例（MERGEを使えば再実行しても重複しない）\nMERGE INTO orders_clean t USING staging s\nON t.order_id = s.order_id\nWHEN MATCHED THEN UPDATE SET *\nWHEN NOT MATCHED THEN INSERT *;\n```",
         exampleContent:
@@ -873,8 +924,10 @@ const courses: CourseSeed[] = [
         slug: "performance-basics",
         title: "パフォーマンス改善の基本的な考え方",
         type: LessonType.TEXT,
-        introText:
-          "実務では「動くこと」だけでなく「速く・安定して動くこと」が求められます。パフォーマンス改善の基本的な視点を学びます。",
+        attentionText:
+          "同じ処理なのに、データが増えるにつれてどんどん遅くなっていく——「動けばいい」の先にある課題に、そろそろ向き合う時が来ました。",
+        relevanceText:
+          "パフォーマンス改善の視点を持っていることは、単なる実装者ではなく「運用を見据えたエンジニア」として評価される、Level 4からの実務レベルの入り口です。",
         lectureContent:
           "## パフォーマンス改善の基本\n\n- **パーティショニング**: データを適切な単位に分割し、処理範囲を絞る\n- **キャッシュ**: 繰り返し使うデータをメモリに保持する\n- **不要な列・行の早期除外**: 処理の最初の段階でデータ量を減らす\n\nこれらはDatabricksに限らず、多くのデータ基盤で共通する考え方です。",
         exampleContent:
@@ -901,8 +954,10 @@ const courses: CourseSeed[] = [
         slug: "z-ordering-cluster-sizing",
         title: "Z-Orderingとクラスタサイジングの実践",
         type: LessonType.TEXT,
-        introText:
-          "パーティショニングだけでは解決できない性能課題に対応するZ-Orderingという技術と、コストと速度のバランスを取るクラスタサイジングの考え方を学びます。",
+        attentionText:
+          "クラスタを2倍の大きさにしたのに、処理時間はほとんど変わらなかった——そんな「宝の持ち腐れ」を避けるには、何を見るべきでしょうか？",
+        relevanceText:
+          "Z-Orderingとクラスタサイジングの使い分けを理解していることは、コストと性能の両方に責任を持てる、実務で信頼されるデータエンジニアの視点そのものです。",
         lectureContent:
           "## Z-Orderingとは\n\nZ-Orderingは、複数の列（よく `WHERE` や `JOIN` で使われる列）に基づいてデータを並び替え、関連するデータを同じファイルに近接配置する最適化技術です。パーティショニングが「1つの列で大きくフォルダ分けする」のに対し、Z-Orderingは「複数の列で細かく並び替える」イメージです。\n\n```sql\nOPTIMIZE sales.orders ZORDER BY (customer_id, order_date);\n```\n\n## クラスタサイジングの考え方\n\n- **ワーカー数を増やす（スケールアウト）**: 並列処理できるデータ量が増える。データ量が非常に大きい場合に有効。\n- **インスタンスサイズを上げる（スケールアップ）**: 1台あたりのメモリ・CPUが増える。複雑な集計やシャッフルが多い処理で有効。\n- **オーバースペック**: 必要以上に大きなクラスタを使うと、性能向上が頭打ちになり、コストだけが増える「宝の持ち腐れ」になりやすい。\n\n実務では、まず小さいクラスタで試し、処理時間とコストのバランスを見ながら段階的に調整するのが定石です。",
         exampleContent:
@@ -932,8 +987,10 @@ const courses: CourseSeed[] = [
         slug: "monitoring-alerting-cost-optimization",
         title: "監視・アラートとコスト最適化",
         type: LessonType.TEXT,
-        introText:
-          "パイプラインは「作って終わり」ではありません。実務では、障害に気づく仕組みと、無駄なコストを継続的に削減する運用が求められます。監視・アラートとコスト最適化の基本を学びます。",
+        attentionText:
+          "パイプラインが1週間前から静かに失敗し続けていた——誰も気づかないまま、報告書には間違ったデータが載り続けていたとしたら？",
+        relevanceText:
+          "監視・アラートとコスト最適化の視点は、パイプラインを「作る人」から「安心して任せられる運用者」へとステップアップするために欠かせない、実務そのものの視点です。",
         lectureContent:
           "## 監視すべき代表的な指標\n\n- **Job成功/失敗の履歴**: 失敗が続いていないか\n- **実行時間の推移**: 徐々に遅くなっていないか（データ量増加やスキュー〈偏り〉の兆候）\n- **データ品質チェックの結果**: 品質チェックに失敗した回数\n- **クラスタの起動時間・コスト**: 想定より高額になっていないか\n\n## アラートの設計\n\nDatabricks Workflowsでは、Jobが失敗した際にメールやSlack通知を送るよう設定できます。「誰が」「どんな条件で」「どのチャンネルに」通知を受け取るかを事前に設計しておくことで、障害対応の初動が大きく変わります。\n\n## コスト最適化の継続的な取り組み\n\n- 使われなくなったJob・クラスタ・テーブルの棚卸し\n- Auto Terminationの見直し\n- Job ClusterとAll-Purpose Clusterの使い分けの徹底\n- 過剰にスケジュールされたJob（例：不要に頻繁な実行）の見直し",
         exampleContent:
@@ -974,8 +1031,10 @@ const courses: CourseSeed[] = [
         slug: "capstone-scenario-and-extract",
         title: "お題設定とデータ取得（Extract）：気象オープンデータAPIを叩く",
         type: LessonType.EXERCISE,
-        introText:
-          "あなたは小売企業のデータ担当としてアサインされました。「天気と来店・売上の関係を分析したい」という依頼を受け、まずは気象データを外部の公開APIから取得するところから始めます。実務のETLは、この「外部データの取得」から始まることがほとんどです。",
+        attentionText:
+          "あなたは小売企業のデータ担当としてアサインされました。ある日、店長からこんな依頼が届きます——「天気と来店・売上の関係を分析したい」。",
+        relevanceText:
+          "ここまでLevel 1〜4で学んだ知識を総動員する、実務そのものの疑似体験がここから始まります。実務のETLは、この「外部データの取得」から始まることがほとんどです。",
         lectureContent:
           "## 今回のお題\n\n架空の小売企業で、次のような依頼を受けたとします。\n\n> 「雨の日と晴れの日で来店数に違いがあるか知りたい。まずは天気データを集めてほしい」\n\nこうした依頼に応えるには、まず信頼できる外部データソースからデータを取得（Extract）する必要があります。今回は、**Open-Meteo**という無料・登録不要の気象オープンデータAPIを使います。\n\n## Open-Meteo APIの概要\n\n- エンドポイント例: `https://api.open-meteo.com/v1/forecast`\n- クエリパラメータで緯度・経度、取得したい項目（最高気温、最低気温、降水量など）、期間を指定します\n- APIキーの登録が不要なため、学習用途に適しています\n\n```\nGET https://api.open-meteo.com/v1/forecast?latitude=35.6895&longitude=139.6917&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=Asia%2FTokyo\n```\n\nこのURLは、東京（緯度35.6895、経度139.6917）の日別の最高気温・最低気温・降水量を、直近の予報期間分まとめて返します。",
         exampleContent:
@@ -1006,8 +1065,10 @@ const courses: CourseSeed[] = [
         slug: "capstone-transform-load",
         title: "データの加工とDelta Lakeへの格納（Transform/Load）",
         type: LessonType.EXERCISE,
-        introText:
-          "取得しただけのJSONは、まだ「使えるデータ」ではありません。ここでは、JSONを表形式のDataFrameに変換し、クレンジングしたうえでDelta Lakeテーブルとして格納します。Level 1〜3で学んだSQL・DataFrame・Delta Lakeの知識がここで一気につながります。",
+        attentionText:
+          "APIから取得したJSONをそのまま眺めていても、「雨の日と晴れの日の違い」は見えてきません。データを使える形に変える一手間が必要です。",
+        relevanceText:
+          "Level 1〜3で学んだSQL・DataFrame・Delta Lakeの知識がここで一気につながり、「バラバラに学んだ知識が実務でどうつながるか」を体感できる、この演習コースの核心部分です。",
         lectureContent:
           "## JSON配列を表形式に変換する\n\nAPIから返るJSONは「列ごとの配列」になっていました。これを「1日1行」の表形式に変換するには、同じインデックス同士を組み合わせます。\n\n```python\nimport pandas as pd\n\ndaily = data[\"daily\"]\ndf = pd.DataFrame({\n    \"date\": daily[\"time\"],\n    \"temp_max\": daily[\"temperature_2m_max\"],\n    \"temp_min\": daily[\"temperature_2m_min\"],\n    \"precipitation\": daily[\"precipitation_sum\"],\n})\n```\n\n## クレンジングとDelta Lakeへの格納\n\n- 欠損値（`null`）がないか確認する\n- 列の型（日付は日付型、気温は数値型）を確認・変換する\n- 「雨が降ったかどうか」のようなビジネス上便利な列（`is_rainy`）を追加しておくと、後の集計が楽になります\n\n```python\nspark_df = spark.createDataFrame(df)\nspark_df = spark_df.withColumn(\"is_rainy\", spark_df.precipitation > 0)\nspark_df.write.mode(\"overwrite\").saveAsTable(\"analytics.weather_daily\")\n```",
         exampleContent:
@@ -1038,8 +1099,10 @@ const courses: CourseSeed[] = [
         slug: "capstone-bi-visualization",
         title: "集計とBI可視化：ダッシュボードで意思決定を支援する",
         type: LessonType.EXERCISE,
-        introText:
-          "データが整ったら、いよいよ「見て判断できる形」にします。集計とグラフ化を行い、依頼者（店舗担当者）が一目で状況を理解できるダッシュボードを作ります。",
+        attentionText:
+          "どれだけ精緻な分析をしても、店長に「結局どういうこと？」と聞き返されたら、その分析は伝わっていません。",
+        relevanceText:
+          "集計結果を分かりやすく可視化し、意思決定に繋げる力は、Data AnalystやBI Engineerとして評価される「伝わる仕事」の総仕上げです。",
         lectureContent:
           "## 集計でビジネスの問いに答える\n\n「雨の日と晴れの日で何が違うか」を確認するには、`is_rainy` ごとに気温を集計してみると傾向がつかめます。\n\n```sql\nSELECT\n  is_rainy,\n  COUNT(*) AS day_count,\n  ROUND(AVG(temp_max), 1) AS avg_temp_max,\n  ROUND(AVG(precipitation), 1) AS avg_precipitation\nFROM analytics.weather_daily\nGROUP BY is_rainy;\n```\n\n## ダッシュボードとしての可視化\n\nDatabricksのSQLエディタでは、クエリ結果からそのままグラフ（棒グラフ・折れ線グラフなど）を作成し、ダッシュボードにまとめることができます。「日別の気温推移」「雨の日の日数」などをグラフにすることで、依頼者に一目で伝わる資料になります。",
         exampleContent:
@@ -1069,8 +1132,10 @@ const courses: CourseSeed[] = [
         slug: "capstone-wrap-up",
         title: "総まとめ：ここまでの経験は、実務でどう活きるか",
         type: LessonType.TEXT,
-        introText:
-          "Level 1から積み上げてきた学習が、ここで1本のパイプラインとしてつながりました。最後に、この経験が実務のどんな場面で使えるのかを整理し、次のキャリアステップを描きます。",
+        attentionText:
+          "Level 1で「行と列」から始まったあなたの学習が、気づけば実際のAPIからデータを取得し、加工し、可視化するところまで辿り着きました。",
+        relevanceText:
+          "この経験を「実務でどう語れるか」に変換することが、副業案件への応募や面接で自信を持って一歩を踏み出すための、最後の総仕上げです。",
         lectureContent:
           "## あなたがこのコースで実際に行ったこと\n\n1. 公開APIから外部データを取得した（Extract）\n2. JSONを表形式に変換し、クレンジングしてDelta Lakeに格納した（Transform/Load）\n3. 集計・可視化を行い、ビジネスの問いに答える資料を作った（BI）\n\nこれは、実務のデータエンジニアリング・データ分析業務の縮図です。企業の現場では、扱うデータの種類や規模が変わるだけで、行っている工程の骨格は今回とほとんど同じです。\n\n## どのポジションで、この経験が使えるか\n\n- **Data Engineer**：ETLパイプラインの設計・実装・運用\n- **Analytics Engineer**：整形済みデータの集計テーブル設計、BIとの橋渡し\n- **BI Engineer / Data Analyst**：ダッシュボード設計、意思決定支援\n\nどのポジションを目指す場合も、「取得→加工→可視化」を自分の手で一通り経験したことは、大きな強みになります。",
         exampleContent:
@@ -1155,7 +1220,8 @@ export async function seedDatabase(prisma: PrismaClient) {
           title: lessonSeed.title,
           type: lessonSeed.type,
           orderIndex: lessonIndex,
-          introText: lessonSeed.introText,
+          attentionText: lessonSeed.attentionText,
+          relevanceText: lessonSeed.relevanceText,
           lectureContent: lessonSeed.lectureContent,
           exampleContent: lessonSeed.exampleContent,
           handsOnContent: lessonSeed.handsOnContent,
@@ -1167,7 +1233,8 @@ export async function seedDatabase(prisma: PrismaClient) {
           title: lessonSeed.title,
           type: lessonSeed.type,
           orderIndex: lessonIndex,
-          introText: lessonSeed.introText,
+          attentionText: lessonSeed.attentionText,
+          relevanceText: lessonSeed.relevanceText,
           lectureContent: lessonSeed.lectureContent,
           exampleContent: lessonSeed.exampleContent,
           handsOnContent: lessonSeed.handsOnContent,

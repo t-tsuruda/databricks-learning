@@ -57,8 +57,13 @@ export default async function LessonDetailPage({
       <p className="text-xs font-semibold uppercase tracking-wide text-brand">{course.title}</p>
       <h1 className="mt-1 text-2xl font-bold">{lesson.title}</h1>
 
-      <div className="mt-4 rounded-lg border border-brand/30 bg-indigo-50 p-4 text-sm text-indigo-900">
-        {lesson.introText}
+      <div className="mt-4 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
+        <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">🤔 ちょっと気になりませんか？</p>
+        <p className="mt-1">{lesson.attentionText}</p>
+      </div>
+      <div className="mt-3 rounded-lg border border-brand/30 bg-indigo-50 p-4 text-sm text-indigo-900">
+        <p className="text-xs font-semibold uppercase tracking-wide text-brand">🎯 これがあなたにとって意味すること</p>
+        <p className="mt-1">{lesson.relevanceText}</p>
       </div>
 
       <section className="mt-8">

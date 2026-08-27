@@ -35,7 +35,7 @@ export function AdminActionForm({
       {state ? (
         <p
           role="status"
-          className={`mt-2 text-sm ${state.ok ? "text-emerald-700" : "text-red-600"}`}
+          className={`mt-2 whitespace-pre-line text-sm ${state.ok ? "text-emerald-700" : "text-red-600"}`}
         >
           {state.message}
         </p>
