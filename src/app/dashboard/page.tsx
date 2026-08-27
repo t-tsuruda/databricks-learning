@@ -5,6 +5,7 @@ import { getProgressSummary } from "@/lib/progress";
 import { getLevelInfo, MAX_LEVEL } from "@/lib/skill-levels";
 import { fetchJobListings, LEARNER_LEVEL_JOB_KEYWORDS, getMarketTrendUrl } from "@/lib/jobs";
 import { getLearnerLevel } from "@/lib/learner-level";
+import { ExpandableTagList } from "@/components/expandable-tag-list";
 
 export const metadata = {
   title: "ダッシュボード | Databricks学習アプリ",
@@ -126,16 +127,10 @@ export default async function DashboardPage() {
           {summary.achievedSkillTags.length > 0 ? (
             <>
               <p className="mt-2 text-xs text-foreground/60">これまでの学習で身についたスキル</p>
-              <ul className="mt-2 flex flex-wrap gap-2">
-                {summary.achievedSkillTags.map((tag) => (
-                  <li
-                    key={tag}
-                    className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-800"
-                  >
-                    {tag}
-                  </li>
-                ))}
-              </ul>
+              <ExpandableTagList
+                tags={summary.achievedSkillTags}
+                tagClassName="rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-800"
+              />
             </>
           ) : (
             <p className="mt-2 text-sm text-foreground/60">レッスンを完了すると、ここにスキルキーワードが表示されます。</p>
@@ -144,16 +139,10 @@ export default async function DashboardPage() {
           {summary.nextLevelSkillTags.length > 0 ? (
             <>
               <p className="mt-4 text-xs text-foreground/60">次のレベルで身につくスキル</p>
-              <ul className="mt-2 flex flex-wrap gap-2">
-                {summary.nextLevelSkillTags.map((tag) => (
-                  <li
-                    key={tag}
-                    className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-foreground/70"
-                  >
-                    {tag}
-                  </li>
-                ))}
-              </ul>
+              <ExpandableTagList
+                tags={summary.nextLevelSkillTags}
+                tagClassName="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-foreground/70"
+              />
             </>
           ) : null}
         </section>

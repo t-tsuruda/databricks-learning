@@ -170,10 +170,10 @@ export async function getProgressSummary(userId: string): Promise<ProgressSummar
       skillTagSet.add(tag);
     }
   }
-  const achievedSkillTags = Array.from(skillTagSet).slice(0, 24);
+  const achievedSkillTags = Array.from(skillTagSet);
 
   const nextLevelSkillTags = firstIncompleteCourse
-    ? Array.from(new Set(firstIncompleteCourse.lessons.flatMap((lesson) => lesson.skillTags))).slice(0, 16)
+    ? Array.from(new Set(firstIncompleteCourse.lessons.flatMap((lesson) => lesson.skillTags)))
     : [];
 
   const completedCoursesCount = courseSummaries.filter((course) => course.status === "COMPLETED").length;
