@@ -29,7 +29,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   const rows = course.lessons.map((lesson) => [
     lesson.slug,
     lesson.title,
-    lesson.questTitle,
     lesson.type,
     String(lesson.orderIndex),
     lesson.attentionText,

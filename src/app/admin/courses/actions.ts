@@ -112,7 +112,6 @@ const lessonSchema = z.object({
     .min(1)
     .regex(/^[a-z0-9-]+$/, "スラッグは半角英小文字・数字・ハイフンのみ使用できます"),
   title: z.string().trim().min(1),
-  questTitle: z.string().trim().optional(),
   type: z.enum(["TEXT", "EXERCISE", "QUIZ"]),
   orderIndex: z.coerce.number().int().min(0),
   attentionText: z.string().trim().min(1),
@@ -130,7 +129,6 @@ const lessonSchema = z.object({
 function buildLessonValues(raw: {
   slug: unknown;
   title: unknown;
-  questTitle?: unknown;
   type: unknown;
   orderIndex: unknown;
   attentionText: unknown;
@@ -167,7 +165,6 @@ function buildLessonValues(raw: {
   return {
     slug: parsed.slug,
     title: parsed.title,
-    questTitle: parsed.questTitle || parsed.title,
     type: parsed.type as LessonType,
     orderIndex: parsed.orderIndex,
     attentionText: parsed.attentionText,
@@ -187,7 +184,6 @@ function lessonValuesFromForm(formData: FormData) {
   return buildLessonValues({
     slug: formData.get("slug"),
     title: formData.get("title"),
-    questTitle: formData.get("questTitle") ?? undefined,
     type: formData.get("type"),
     orderIndex: formData.get("orderIndex"),
     attentionText: formData.get("attentionText"),
@@ -330,7 +326,6 @@ export async function importLessonsFromCsv(courseId: string, formData: FormData)
       const values = buildLessonValues({
         slug: raw.slug,
         title: raw.title,
-        questTitle: raw.questTitle || undefined,
         type: raw.type,
         orderIndex: raw.orderIndex || String(rowIndex),
         attentionText: raw.attentionText,

@@ -25,12 +25,12 @@ export default async function DashboardPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
       <h1 className="text-2xl font-bold">
-        {session!.user.name ?? "挑戦者"} さんのミッションボード
+        {session!.user.name ?? "学習者"} さんのダッシュボード
       </h1>
 
-      {/* ミッションレベル（10段階） */}
+      {/* 学習者レベル（10段階） */}
       <section className="mt-6 rounded-2xl border border-brand/30 bg-indigo-50 p-6 shadow-sm">
-        <p className="text-xs font-semibold uppercase tracking-wide text-brand">あなたのミッションレベル</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-brand">あなたの学習者レベル</p>
         <div className="mt-2 flex flex-wrap items-end gap-3">
           <span className="text-4xl font-black leading-none text-brand">Lv.{learnerLevel.current.level}</span>
           <div>
@@ -68,12 +68,12 @@ export default async function DashboardPage() {
       </section>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
-        {/* 現在のミッションフェーズと進捗 */}
+        {/* 現在のカリキュラムと進捗 */}
         <section className="rounded-xl border border-border bg-surface p-6 lg:col-span-2">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wide text-brand">
-                現在のミッションフェーズ（{summary.currentLevel} / {MAX_LEVEL}）
+                現在のカリキュラム（{summary.currentLevel} / {MAX_LEVEL}）
               </p>
               <h2 className="mt-1 text-xl font-bold">{levelInfo.name}</h2>
               <p className="mt-1 text-sm text-foreground/70">{levelInfo.description}</p>
@@ -82,7 +82,7 @@ export default async function DashboardPage() {
 
           <div className="mt-6">
             <div className="flex justify-between text-sm text-foreground/70">
-              <span>全体のミッション達成度</span>
+              <span>全体の学習進捗</span>
               <span>{summary.overallPercent}%</span>
             </div>
             <div className="mt-2 h-3 w-full overflow-hidden rounded-full bg-slate-200">
@@ -103,21 +103,19 @@ export default async function DashboardPage() {
 
           {summary.nextGoal ? (
             <div className="mt-6 rounded-lg border border-brand/30 bg-indigo-50 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-brand">次のミッション</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-brand">次の学習目標</p>
               <p className="mt-1 font-semibold">{summary.nextGoal.course.title}</p>
-              <p className="text-sm text-foreground/70">
-                {summary.nextGoal.lesson.questTitle || summary.nextGoal.lesson.title}
-              </p>
+              <p className="text-sm text-foreground/70">{summary.nextGoal.lesson.title}</p>
               <Link
                 href={`/courses/${summary.nextGoal.course.slug}/lessons/${summary.nextGoal.lesson.slug}`}
                 className="mt-3 inline-block rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
               >
-                ミッションを再開する
+                続きから学習する
               </Link>
             </div>
           ) : (
             <p className="mt-6 rounded-lg border border-emerald-300 bg-emerald-50 p-4 text-sm text-emerald-800">
-              公開中のミッションをすべてクリアしました。新しいミッションの追加をお楽しみに。
+              公開中のコースをすべて完了しました。新しいコースの追加をお楽しみに。
             </p>
           )}
         </section>
@@ -252,7 +250,7 @@ export default async function DashboardPage() {
 
       <div className="mt-8 text-center">
         <Link href="/courses" className="text-sm font-medium text-brand hover:underline">
-          すべてのミッションを見る →
+          すべてのコースを見る →
         </Link>
       </div>
     </div>

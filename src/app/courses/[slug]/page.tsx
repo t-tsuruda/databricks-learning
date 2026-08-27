@@ -41,7 +41,7 @@ export default async function CourseDetailPage({
 
       <div className="mt-6">
         <div className="flex justify-between text-sm text-foreground/70">
-          <span>このコースのミッション達成度</span>
+          <span>このコースの進捗</span>
           <span>{course.percent}%</span>
         </div>
         <div className="mt-2 h-3 w-full overflow-hidden rounded-full bg-slate-200">
@@ -54,11 +54,11 @@ export default async function CourseDetailPage({
           href={`/courses/${course.slug}/lessons/${firstIncompleteLesson.slug}`}
           className="mt-6 inline-block rounded-md bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark"
         >
-          {course.completedLessons > 0 ? "ミッションを再開する" : "最初のミッションに挑む"}
+          {course.completedLessons > 0 ? "続きから学習する" : "学習を始める"}
         </Link>
       ) : (
         <p className="mt-6 rounded-md border border-emerald-300 bg-emerald-50 p-3 text-sm text-emerald-800">
-          全ミッションクリア！お疲れさまでした！
+          このコースは完了しました。お疲れさまでした！
         </p>
       )}
 
@@ -84,10 +84,8 @@ export default async function CourseDetailPage({
                 {lesson.isCompleted ? "✓" : index + 1}
               </span>
               <span className="flex-1">
-                <span className="block font-medium">{lesson.questTitle || lesson.title}</span>
-                <span className="text-xs text-foreground/60">
-                  {TYPE_LABEL[lesson.type]} ・ {lesson.title}
-                </span>
+                <span className="block font-medium">{lesson.title}</span>
+                <span className="text-xs text-foreground/60">{TYPE_LABEL[lesson.type]}</span>
               </span>
             </Link>
           </li>

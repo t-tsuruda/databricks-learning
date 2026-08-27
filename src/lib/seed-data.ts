@@ -11,7 +11,6 @@ type ReferenceLink = { label: string; url: string };
 type LessonSeed = {
   slug: string;
   title: string;
-  questTitle: string;
   type: LessonTypeT;
   attentionText: string;
   relevanceText: string;
@@ -51,7 +50,6 @@ const courses: CourseSeed[] = [
       {
         slug: "what-is-data",
         title: "データとは何か：表形式データの基本",
-        questTitle: "データの正体を暴け：表形式データ解読ミッション",
         type: LessonType.TEXT,
         attentionText:
           "エクセルの表、家計簿、LINEの既読リスト——実はこれらもすべて「データ」です。「データ」と聞くと難しそうに感じるかもしれませんが、正体を知れば拍子抜けするほどシンプルです。",
@@ -89,7 +87,6 @@ const courses: CourseSeed[] = [
       {
         slug: "sql-select-basics",
         title: "SQLの基本：SELECT文でデータを取り出す",
-        questTitle: "SELECT文で欲しい情報だけを引き出せ",
         type: LessonType.EXERCISE,
         attentionText:
           "「このデータの中から、条件に合う情報だけ欲しい」——そう思ったとき、Excelでフィルタをかけるように、何百万行のデータからでも一瞬で答えを出せる方法があります。",
@@ -127,7 +124,6 @@ const courses: CourseSeed[] = [
       {
         slug: "sql-aggregation",
         title: "集計とグルーピング：GROUP BYで傾向をつかむ",
-        questTitle: "GROUP BYで隠れた傾向を掴め",
         type: LessonType.EXERCISE,
         attentionText:
           "「一番売れている商品は？」「今月の売上合計は？」——上司や取引先から聞かれたとき、1件ずつ手で数えていては日が暮れてしまいます。",
@@ -165,7 +161,6 @@ const courses: CourseSeed[] = [
       {
         slug: "data-modeling-intro",
         title: "データモデリング入門：正規化とテーブル設計",
-        questTitle: "テーブル分割の謎を解け：JOINマスターへの道",
         type: LessonType.TEXT,
         attentionText:
           "1つの巨大な表にあらゆる情報を詰め込んだデータを見たことはありませんか？一見便利そうですが、実は更新漏れやデータの重複という「実務の地雷」が潜んでいます。",
@@ -203,7 +198,6 @@ const courses: CourseSeed[] = [
       {
         slug: "sql-subquery-case",
         title: "サブクエリとCASE式：条件分岐とネストしたSQL",
-        questTitle: "複雑な問いに答えろ：サブクエリ&CASE式クエスト",
         type: LessonType.EXERCISE,
         attentionText:
           "「平均より高い注文だけを、金額帯ごとに分類して」——こんな一見複雑な依頼も、実はSQL1本で解決できます。",
@@ -241,7 +235,6 @@ const courses: CourseSeed[] = [
       {
         slug: "sql-null-handling",
         title: "NULLと欠損値の扱い：実務データの落とし穴",
-        questTitle: "NULLの罠を見破れ",
         type: LessonType.EXERCISE,
         attentionText:
           "同じ集計クエリのはずなのに、実行するたびに平均値が微妙に違う……そんな経験はありませんか？犯人は、見落とされがちな「NULL」かもしれません。",
@@ -291,7 +284,6 @@ const courses: CourseSeed[] = [
       {
         slug: "python-basics-for-data",
         title: "データ処理のためのPython基礎",
-        questTitle: "Pythonでデータ処理の武器を手に入れろ",
         type: LessonType.TEXT,
         attentionText:
           "SQLだけでは書きにくい「繰り返しの処理」や「複雑な条件分岐」。実務のデータエンジニアはそれをどう解決しているのでしょうか？答えの多くはPythonにあります。",
@@ -326,7 +318,6 @@ const courses: CourseSeed[] = [
       {
         slug: "python-control-flow-functions",
         title: "制御構文と関数：繰り返しと再利用可能なコード",
-        questTitle: "繰り返しと関数で処理を自動化せよ",
         type: LessonType.EXERCISE,
         attentionText:
           "同じようなコードをコピー＆ペーストして少しずつ書き換えていたら、いつの間にか直し忘れが1箇所だけ残ってしまった——そんな経験はありませんか？",
@@ -363,7 +354,6 @@ const courses: CourseSeed[] = [
       {
         slug: "dataframe-basics",
         title: "DataFrameでデータを扱う",
-        questTitle: "DataFrameを操りデータを加工せよ",
         type: LessonType.EXERCISE,
         attentionText:
           "SQLで学んだ「絞り込み」や「選択」を、Pythonのコードでも同じように書けるとしたら？Databricksのデータ処理は、まさにこの発想で成り立っています。",
@@ -398,7 +388,6 @@ const courses: CourseSeed[] = [
       {
         slug: "pandas-data-wrangling",
         title: "pandasでのデータ加工：欠損値処理と列の変換",
-        questTitle: "汚れたデータをpandasで洗い出せ",
         type: LessonType.EXERCISE,
         attentionText:
           "「このCSV、ところどころ値が抜けている……」実務データの多くは、綺麗な状態でやってくることの方が稀です。",
@@ -448,7 +437,6 @@ const courses: CourseSeed[] = [
       {
         slug: "fact-dimension",
         title: "ファクトテーブルとディメンションテーブル",
-        questTitle: "スタースキーマを設計せよ",
         type: LessonType.TEXT,
         attentionText:
           "「売上を、月別に見たい」「いや地域別でも見たい」「顧客別も」——分析の切り口は毎回変わるのに、なぜ同じ売上データで対応できるのでしょうか？",
@@ -483,7 +471,6 @@ const courses: CourseSeed[] = [
       {
         slug: "slowly-changing-dimension",
         title: "Slowly Changing Dimension（SCD）：変化する属性の記録方法",
-        questTitle: "変化するデータの履歴を守れ：SCD攻略",
         type: LessonType.TEXT,
         attentionText:
           "顧客が引っ越したら、住所データを単純に上書きしていいのでしょうか？もし「引っ越し前の売上データを、当時の地域別に再集計したい」と言われたら？",
@@ -532,7 +519,6 @@ const courses: CourseSeed[] = [
       {
         slug: "what-is-lakehouse",
         title: "Lakehouseとは何か",
-        questTitle: "Lakehouseの正体を突き止めろ",
         type: LessonType.TEXT,
         attentionText:
           "「Databricksって結局何なの？」——求人票でよく見かけるこの単語の正体を、ここでようやく明らかにします。",
@@ -567,7 +553,6 @@ const courses: CourseSeed[] = [
       {
         slug: "workspace-tour",
         title: "Databricks Workspaceの基本構成",
-        questTitle: "Databricks Workspace探索ミッション",
         type: LessonType.EXERCISE,
         attentionText:
           "初めて開く管理画面やツールに戸惑った経験はありませんか？Databricksも同じで、最初に全体像を知っておくだけで学習効率が大きく変わります。",
@@ -601,7 +586,6 @@ const courses: CourseSeed[] = [
       {
         slug: "unity-catalog-governance",
         title: "Unity Catalogとデータガバナンス",
-        questTitle: "権限管理の番人となれ：Unity Catalog攻略",
         type: LessonType.TEXT,
         attentionText:
           "会社の全データに全社員がアクセスできる状態を想像してみてください。便利どころか、個人情報漏洩のリスクだらけです。",
@@ -638,7 +622,6 @@ const courses: CourseSeed[] = [
       {
         slug: "cluster-compute-management",
         title: "クラスタとコンピュートの管理",
-        questTitle: "コストを制する者がクラスタを制す",
         type: LessonType.TEXT,
         attentionText:
           "「気づいたらクラウドの請求額が跳ね上がっていた」——クラスタを起動しっぱなしにしたことが原因、というのはデータエンジニアあるあるの失敗談です。",
@@ -675,7 +658,6 @@ const courses: CourseSeed[] = [
       {
         slug: "databricks-cli-repos",
         title: "Databricks CLIとRepos：コードのバージョン管理",
-        questTitle: "コードの歴史を守れ：CLI&Repos攻略",
         type: LessonType.EXERCISE,
         attentionText:
           "「あのNotebook、誰がいつ何を変更したんだっけ？」——コードの変更履歴が追えないと、チームでの開発は簡単に破綻します。",
@@ -725,7 +707,6 @@ const courses: CourseSeed[] = [
       {
         slug: "delta-lake-basics",
         title: "Delta Lakeとは何か",
-        questTitle: "壊れないテーブルを作れ：Delta Lakeの力",
         type: LessonType.TEXT,
         attentionText:
           "「昨日までは正しかった集計結果が、今日は違う……」データが知らないうちに壊れていたら、どうやって原因を突き止めますか？",
@@ -759,7 +740,6 @@ const courses: CourseSeed[] = [
       {
         slug: "delta-merge-optimize-vacuum",
         title: "MERGE・OPTIMIZE・VACUUM：Delta Lakeの実務操作",
-        questTitle: "MERGE・OPTIMIZE・VACUUMで運用を極めろ",
         type: LessonType.EXERCISE,
         attentionText:
           "毎日全件を洗い替えていたら、データ量が増えるにつれ処理時間もクラウド代もどんどん膨らんでいく——そんな運用、続けられますか？",
@@ -797,7 +777,6 @@ const courses: CourseSeed[] = [
       {
         slug: "auto-loader-streaming-ingestion",
         title: "Auto Loaderによる継続的なデータ取り込み",
-        questTitle: "止まらない取り込みを実現せよ：Auto Loader攻略",
         type: LessonType.TEXT,
         attentionText:
           "毎朝、新しく届いたファイルだけを手作業で確認してデータベースに取り込む——それを365日続けられますか？",
@@ -834,7 +813,6 @@ const courses: CourseSeed[] = [
       {
         slug: "delta-live-tables-pipelines",
         title: "Delta Live Tables（DLT）による宣言的パイプライン",
-        questTitle: "宣言するだけでパイプラインを作れ：DLT攻略",
         type: LessonType.TEXT,
         attentionText:
           "パイプラインのどこかでエラーが起きたとき、原因のテーブルを探すのに何時間もかかった——そんな経験、したくありませんよね。",
@@ -872,7 +850,6 @@ const courses: CourseSeed[] = [
       {
         slug: "workflows-jobs-cost-management",
         title: "Workflowsによるジョブオーケストレーションとコスト管理",
-        questTitle: "自動化とコストを両立せよ：Workflows攻略",
         type: LessonType.EXERCISE,
         attentionText:
           "深夜のバッチ処理が失敗していたことに、翌朝出社してから気づく——それも、担当者への通知が届いていなかったせいだとしたら？",
@@ -921,7 +898,6 @@ const courses: CourseSeed[] = [
       {
         slug: "etl-basics",
         title: "ETLの基本設計：Extract, Transform, Load",
-        questTitle: "ETLの3ステップをマスターせよ",
         type: LessonType.EXERCISE,
         attentionText:
           "「データエンジニアって、結局何をする仕事なの？」——その答えの多くは、たった3文字「ETL」に集約されます。",
@@ -955,7 +931,6 @@ const courses: CourseSeed[] = [
       {
         slug: "data-quality-testing",
         title: "データ品質とテスト：壊れたパイプラインに気づく仕組み",
-        questTitle: "壊れたデータを見破れ：品質チェック攻略",
         type: LessonType.EXERCISE,
         attentionText:
           "パイプラインはエラーも出さずに正常終了したのに、後から「実は集計結果が間違っていた」と発覚する——これほど怖いことはありません。",
@@ -992,7 +967,6 @@ const courses: CourseSeed[] = [
       {
         slug: "incremental-load-idempotency",
         title: "増分ロードと冪等性：安全に「やり直せる」パイプライン",
-        questTitle: "何度実行しても壊れないパイプラインを作れ",
         type: LessonType.TEXT,
         attentionText:
           "夜間バッチが途中で落ちてしまった。もう一度実行して大丈夫でしょうか？それとも、データが二重に増えてしまうのでしょうか？",
@@ -1041,7 +1015,6 @@ const courses: CourseSeed[] = [
       {
         slug: "performance-basics",
         title: "パフォーマンス改善の基本的な考え方",
-        questTitle: "遅いクエリを高速化せよ",
         type: LessonType.TEXT,
         attentionText:
           "同じ処理なのに、データが増えるにつれてどんどん遅くなっていく——「動けばいい」の先にある課題に、そろそろ向き合う時が来ました。",
@@ -1075,7 +1048,6 @@ const courses: CourseSeed[] = [
       {
         slug: "z-ordering-cluster-sizing",
         title: "Z-Orderingとクラスタサイジングの実践",
-        questTitle: "Z-Orderingとサイジングでチューニングせよ",
         type: LessonType.TEXT,
         attentionText:
           "クラスタを2倍の大きさにしたのに、処理時間はほとんど変わらなかった——そんな「宝の持ち腐れ」を避けるには、何を見るべきでしょうか？",
@@ -1112,7 +1084,6 @@ const courses: CourseSeed[] = [
       {
         slug: "monitoring-alerting-cost-optimization",
         title: "監視・アラートとコスト最適化",
-        questTitle: "止まらない基盤を守れ：監視&コスト最適化ミッション",
         type: LessonType.TEXT,
         attentionText:
           "パイプラインが1週間前から静かに失敗し続けていた——誰も気づかないまま、報告書には間違ったデータが載り続けていたとしたら？",
@@ -1162,7 +1133,6 @@ const courses: CourseSeed[] = [
       {
         slug: "capstone-scenario-and-extract",
         title: "お題設定とデータ取得（Extract）：気象オープンデータAPIを叩く",
-        questTitle: "ミッション開始：天気データを入手せよ",
         type: LessonType.EXERCISE,
         attentionText:
           "あなたは小売企業のデータ基盤担当としてアサインされました。ある日、店長からこんな依頼が届きます——「天気と来店・売上の関係を分析したい」。",
@@ -1200,7 +1170,6 @@ const courses: CourseSeed[] = [
       {
         slug: "capstone-medallion-design",
         title: "データ基盤の設計図を描く：メダリオンアーキテクチャの設計",
-        questTitle: "データ基盤の設計図を描け：メダリオン建築ミッション",
         type: LessonType.TEXT,
         attentionText:
           "「とりあえずデータを取得して、とりあえずテーブルに保存する」——それで一度は動くかもしれません。しかし、半年後にチームメンバーが増えたとき、そのテーブルの意味を説明できますか？",
@@ -1238,7 +1207,6 @@ const courses: CourseSeed[] = [
       {
         slug: "capstone-bronze-silver-transform",
         title: "Bronze→Silver：生データの取り込みと整形",
-        questTitle: "生データを磨き上げろ：Bronze→Silver精錬ミッション",
         type: LessonType.EXERCISE,
         attentionText:
           "APIから取得したJSONをそのまま眺めていても、「雨の日と晴れの日の違い」は見えてきません。設計した層構成に沿って、実際にデータを流し込んでいきましょう。",
@@ -1275,7 +1243,6 @@ const courses: CourseSeed[] = [
       {
         slug: "capstone-gold-aggregation",
         title: "Gold層の構築：ダッシュボードが読みにいく集計テーブル",
-        questTitle: "答えが見えるテーブルを作れ：Gold層構築ミッション",
         type: LessonType.EXERCISE,
         attentionText:
           "ダッシュボードのたびに同じ集計クエリをBIツールから毎回実行していたら、データ量が増えるほど表示は遅くなり、コストもかさみます。",
@@ -1312,7 +1279,6 @@ const courses: CourseSeed[] = [
       {
         slug: "capstone-governance-permissions",
         title: "権限制御とガバナンス：Unity Catalogでこの基盤を守る",
-        questTitle: "基盤を守れ：権限設計ミッション",
         type: LessonType.TEXT,
         attentionText:
           "自分一人で作っている間は気にならなくても、チームが増えたとき「誰でもGoldを書き換えられる」「分析担当がBronzeの生データまで見えてしまう」状態は、事故のもとになります。",
@@ -1349,7 +1315,6 @@ const courses: CourseSeed[] = [
       {
         slug: "capstone-compute-orchestration",
         title: "コンピュートとWorkflowsによるパイプラインの自動化",
-        questTitle: "自動で回り続ける仕組みを作れ：オーケストレーションミッション",
         type: LessonType.EXERCISE,
         attentionText:
           "ここまでの処理を、あなたが毎朝手作業でノートブックを1つずつ実行していくつもりですか？それでは「担当者が休んだ日はデータが更新されない基盤」になってしまいます。",
@@ -1387,7 +1352,6 @@ const courses: CourseSeed[] = [
       {
         slug: "capstone-delta-sharing",
         title: "Delta Sharingで社外の関係者とデータを安全に共有する",
-        questTitle: "外部の仲間へ安全にデータを届けろ：Delta Sharingミッション",
         type: LessonType.TEXT,
         attentionText:
           "本部の企画チームが「このデータを見たい」と言ってきました。ただし、彼らはDatabricksのアカウントを持っていません。CSVをメールで送りますか？",
@@ -1424,7 +1388,6 @@ const courses: CourseSeed[] = [
       {
         slug: "capstone-bi-visualization",
         title: "Gold層からのBI可視化：ダッシュボードで意思決定を支援する",
-        questTitle: "数字を武器に変えろ：ダッシュボード構築ミッション",
         type: LessonType.EXERCISE,
         attentionText:
           "どれだけ精緻な分析をしても、店長に「結局どういうこと？」と聞き返されたら、その分析は伝わっていません。",
@@ -1461,7 +1424,6 @@ const courses: CourseSeed[] = [
       {
         slug: "capstone-wrap-up",
         title: "総まとめ：Databricks担当者としてデータ基盤を任せられる人材へ",
-        questTitle: "最終ミッション報告：あなたはもう実装者じゃない",
         type: LessonType.TEXT,
         attentionText:
           "Level 1で「行と列」から始まったあなたの学習が、気づけばメダリオンアーキテクチャの設計、権限制御、パイプラインの自動化、社外へのデータ共有まで辿り着きました。",
@@ -1543,7 +1505,6 @@ export async function seedDatabase(prisma: PrismaClient) {
           courseId: course.id,
           slug: lessonSeed.slug,
           title: lessonSeed.title,
-          questTitle: lessonSeed.questTitle,
           type: lessonSeed.type,
           orderIndex: lessonIndex,
           attentionText: lessonSeed.attentionText,
@@ -1559,7 +1520,6 @@ export async function seedDatabase(prisma: PrismaClient) {
         },
         update: {
           title: lessonSeed.title,
-          questTitle: lessonSeed.questTitle,
           type: lessonSeed.type,
           orderIndex: lessonIndex,
           attentionText: lessonSeed.attentionText,
