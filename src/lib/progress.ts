@@ -5,6 +5,7 @@ export type LessonSummary = {
   id: string;
   slug: string;
   title: string;
+  questTitle: string;
   type: LessonType;
   orderIndex: number;
   isCompleted: boolean;
@@ -90,6 +91,7 @@ export async function getProgressSummary(userId: string): Promise<ProgressSummar
       id: lesson.id,
       slug: lesson.slug,
       title: lesson.title,
+      questTitle: lesson.questTitle,
       type: lesson.type,
       orderIndex: lesson.orderIndex,
       isCompleted: completedLessonIds.has(lesson.id),

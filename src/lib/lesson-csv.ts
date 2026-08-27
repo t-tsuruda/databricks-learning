@@ -4,6 +4,7 @@
 export const LESSON_CSV_COLUMNS = [
   "slug",
   "title",
+  "questTitle",
   "type",
   "orderIndex",
   "attentionText",
@@ -22,6 +23,7 @@ export const LESSON_CSV_COLUMNS = [
 export const LESSON_CSV_EXAMPLE_ROW = [
   "example-lesson-slug",
   "サンプルレッスンのタイトル",
+  "挑戦心を煽るクエストタイトルをここに書きます（空欄可、空の場合はタイトルが使われます）",
   "TEXT",
   "0",
   "（Attention）学習者の興味を引く問いかけや意外な事実をここに書きます。",

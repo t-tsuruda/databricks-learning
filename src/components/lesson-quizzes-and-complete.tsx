@@ -20,12 +20,14 @@ export function LessonQuizzesAndComplete({
   isCompleted,
   nextHref,
   children,
+  stepNumber = 3,
 }: {
   quizzes: QuizData[];
   lessonId: string;
   isCompleted: boolean;
   nextHref: string;
   children?: React.ReactNode;
+  stepNumber?: number;
 }) {
   const [results, setResults] = useState<Record<string, boolean | null>>({});
 
@@ -40,7 +42,7 @@ export function LessonQuizzesAndComplete({
         <section className="mt-8">
           <h2 className="flex items-center gap-2 text-lg font-bold">
             <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand text-sm text-white">
-              3
+              {stepNumber}
             </span>
             確認する
           </h2>

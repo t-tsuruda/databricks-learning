@@ -62,7 +62,8 @@ export default async function LessonDetailPage({
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
       <p className="text-xs font-semibold uppercase tracking-wide text-brand">{course.title}</p>
-      <h1 className="mt-1 text-2xl font-bold">{lesson.title}</h1>
+      <h1 className="mt-1 text-2xl font-bold">{lesson.questTitle || lesson.title}</h1>
+      <p className="mt-1 text-sm text-foreground/60">何を学ぶか：{lesson.title}</p>
 
       <div className="mt-3">
         <div className="flex justify-between text-xs text-foreground/60">
@@ -87,22 +88,29 @@ export default async function LessonDetailPage({
         href={prevHref}
         className="mt-3 inline-block text-sm font-medium text-brand hover:underline"
       >
-        ← {prevLesson ? "前のレッスンに戻る" : "コースに戻る"}
+        ← {prevLesson ? "前のクエストに戻る" : "コースに戻る"}
       </Link>
-
-      <div className="mt-4 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
-        <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">🤔 ちょっと気になりませんか？</p>
-        <p className="mt-1">{lesson.attentionText}</p>
-      </div>
-      <div className="mt-3 rounded-lg border border-brand/30 bg-indigo-50 p-4 text-sm text-indigo-900">
-        <p className="text-xs font-semibold uppercase tracking-wide text-brand">🎯 これがあなたにとって意味すること</p>
-        <p className="mt-1">{lesson.relevanceText}</p>
-      </div>
 
       <section className="mt-8">
         <h2 className="flex items-center gap-2 text-lg font-bold">
           <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand text-sm text-white">
             1
+          </span>
+          クエスト
+        </h2>
+        <div className="mt-3 space-y-3 rounded-xl border border-amber-300 bg-amber-50 p-5 text-sm text-amber-900">
+          <p>{lesson.attentionText}</p>
+          <p className="border-t border-amber-200 pt-3">
+            <span className="font-semibold">🎯 このクエストの意味：</span>
+            {lesson.relevanceText}
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-8">
+        <h2 className="flex items-center gap-2 text-lg font-bold">
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand text-sm text-white">
+            2
           </span>
           学ぶ
         </h2>
@@ -135,9 +143,9 @@ export default async function LessonDetailPage({
       <section className="mt-8">
         <h2 className="flex items-center gap-2 text-lg font-bold">
           <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand text-sm text-white">
-            2
+            3
           </span>
-          試す
+          解決する
         </h2>
         <div className="mt-3 rounded-xl border border-border bg-surface p-5">
           <MarkdownContent content={lesson.handsOnContent} />
@@ -155,6 +163,7 @@ export default async function LessonDetailPage({
       </section>
 
       <LessonQuizzesAndComplete
+        stepNumber={4}
         quizzes={quizzes.map((quiz) => {
           const answer = answerByQuizId.get(quiz.id);
           return {

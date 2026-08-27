@@ -69,6 +69,7 @@ model Lesson {
   courseId   String
   slug       String
   title      String
+  questTitle String @default("") // 挑戦心を煽るクエストタイトル（大見出し、22-1）。titleは「何を学ぶか」のサブタイトルとして表示
   type       LessonType @default(TEXT)
   orderIndex Int
 

@@ -5,6 +5,7 @@ import { HandsOnEditor } from "@/components/admin/hands-on-editor";
 type LessonFormValues = {
   slug: string;
   title: string;
+  questTitle: string;
   type: string;
   orderIndex: number;
   attentionText: string;
@@ -32,7 +33,7 @@ export function LessonForm({
     <AdminActionForm action={action} className="space-y-4">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Field label="スラッグ" name="slug" defaultValue={defaultValues?.slug} />
-        <Field label="タイトル" name="title" defaultValue={defaultValues?.title} />
+        <Field label="タイトル（何を学ぶかのサブタイトル）" name="title" defaultValue={defaultValues?.title} />
         <div>
           <label htmlFor="type" className="block text-sm font-medium">
             種別
@@ -50,6 +51,11 @@ export function LessonForm({
         </div>
       </div>
 
+      <Field
+        label="クエストタイトル（挑戦心を煽る大見出し）"
+        name="questTitle"
+        defaultValue={defaultValues?.questTitle}
+      />
       <Field
         label="表示順"
         name="orderIndex"

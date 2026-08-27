@@ -13,8 +13,8 @@ test("signup, complete a lesson, and see progress update", async ({ page }) => {
   await page.click('button[type="submit"]');
 
   await page.waitForURL("**/dashboard");
-  await expect(page.getByRole("heading", { name: /さんのダッシュボード/ })).toBeVisible();
-  await expect(page.getByText("全体の学習進捗")).toBeVisible();
+  await expect(page.getByRole("heading", { name: /さんのミッションボード/ })).toBeVisible();
+  await expect(page.getByText("全体のミッション達成度")).toBeVisible();
   await expect(page.getByText("0%").first()).toBeVisible();
 
   await page.getByRole("link", { name: "コース一覧" }).click();
@@ -22,10 +22,12 @@ test("signup, complete a lesson, and see progress update", async ({ page }) => {
   await page.getByRole("link", { name: "データ入門とSQLの基礎" }).click();
   await page.waitForURL("**/courses/data-sql-basics");
 
-  await page.getByRole("link", { name: "学習を始める" }).click();
+  await page.getByRole("link", { name: "最初のミッションに挑む" }).click();
   await page.waitForURL("**/lessons/what-is-data");
 
-  await expect(page.getByRole("heading", { name: "データとは何か：表形式データの基本" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "データの正体を暴け：表形式データ解読ミッション" }),
+  ).toBeVisible();
 
   const quizOption = page.getByLabel("行（Row）");
   await quizOption.check();

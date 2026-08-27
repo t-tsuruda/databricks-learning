@@ -41,6 +41,7 @@ export default async function EditLessonPage({
             defaultValues={{
               slug: lesson.slug,
               title: lesson.title,
+              questTitle: lesson.questTitle,
               type: lesson.type,
               orderIndex: lesson.orderIndex,
               attentionText: lesson.attentionText,
