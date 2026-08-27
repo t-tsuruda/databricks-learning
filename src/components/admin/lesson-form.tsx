@@ -15,6 +15,7 @@ type LessonFormValues = {
   modelAnswerContent: string;
   outcomes: string;
   relatedJobs: string;
+  skillTags: string;
   referenceLinks: { label: string; url: string }[];
 };
 
@@ -99,6 +100,11 @@ export function LessonForm({
         label="このスキルが使われる仕事(カンマ区切り)"
         name="relatedJobs"
         defaultValue={defaultValues?.relatedJobs}
+      />
+      <Field
+        label="身につくスキルキーワード(カンマ区切り・例：Window関数, MERGE文)"
+        name="skillTags"
+        defaultValue={defaultValues?.skillTags}
       />
 
       <AdminSubmitButton className="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark">

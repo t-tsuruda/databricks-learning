@@ -39,6 +39,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     lesson.modelAnswerContent,
     safeParseOutcomesForCsv(lesson.outcomesJson).join("\n"),
     lesson.relatedJobs,
+    safeParseOutcomesForCsv(lesson.skillTagsJson).join(","),
     lesson.referenceLinksJson,
     JSON.stringify(
       lesson.quizzes.map((quiz) => ({

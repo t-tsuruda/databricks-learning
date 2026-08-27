@@ -20,6 +20,7 @@ type LessonSeed = {
   modelAnswerContent: string;
   outcomes: string[];
   relatedJobs: string[];
+  skillTags: string[];
   referenceLinks: ReferenceLink[];
   quizzes: QuizSeed[];
 };
@@ -64,9 +65,10 @@ const courses: CourseSeed[] = [
           "身の回りの情報を表形式データとして捉え直せる",
         ],
         relatedJobs: ["Data Analyst", "Reporting Analyst", "BI Support"],
+        skillTags: ["表形式データ", "行と列", "主キー"],
         referenceLinks: [
           { label: "Databricks公式ドキュメント", url: "https://docs.databricks.com/en/index.html" },
-          { label: "Wikipedia: リレーショナルデータベース", url: "https://ja.wikipedia.org/wiki/%E3%83%AA%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9" },
+          { label: "Qiita: リレーショナルデータベース入門", url: "https://qiita.com/search?q=%E3%83%AA%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%8A%E3%83%AB%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9+%E5%85%A5%E9%96%80" },
         ],
         quizzes: [
           {
@@ -100,9 +102,10 @@ const courses: CourseSeed[] = [
           "簡単な条件でデータを絞り込むSQLを書ける",
         ],
         relatedJobs: ["Data Analyst", "Reporting Analyst", "Junior Data Engineer"],
+        skillTags: ["SELECT文", "WHERE句"],
         referenceLinks: [
           { label: "Databricks SQL言語マニュアル", url: "https://docs.databricks.com/en/sql/language-manual/index.html" },
-          { label: "W3Schools: SQL SELECT", url: "https://www.w3schools.com/sql/sql_select.asp" },
+          { label: "Qiita: SQLのSELECT文の使い方", url: "https://qiita.com/search?q=SQL+SELECT%E6%96%87+%E4%BD%BF%E3%81%84%E6%96%B9" },
         ],
         quizzes: [
           {
@@ -136,8 +139,9 @@ const courses: CourseSeed[] = [
           "GROUP BYでデータをグループ単位に集計できる",
         ],
         relatedJobs: ["Data Analyst", "BI Support", "Junior Data Engineer"],
+        skillTags: ["GROUP BY", "COUNT/SUM/AVG"],
         referenceLinks: [
-          { label: "W3Schools: SQL GROUP BY", url: "https://www.w3schools.com/sql/sql_groupby.asp" },
+          { label: "Qiita: SQLのGROUP BYで集計する", url: "https://qiita.com/search?q=SQL+GROUP+BY+%E9%9B%86%E8%A8%88+%E5%88%9D%E5%BF%83%E8%80%85" },
           { label: "Databricks SQL 集計関数リファレンス", url: "https://docs.databricks.com/en/sql/language-manual/sql-ref-functions-builtin.html" },
         ],
         quizzes: [
@@ -172,9 +176,10 @@ const courses: CourseSeed[] = [
           "JOINを使って複数テーブルを結合できる",
         ],
         relatedJobs: ["Data Analyst", "Data Engineer Intern", "Analytics Engineer"],
+        skillTags: ["JOIN", "正規化"],
         referenceLinks: [
-          { label: "W3Schools: SQL JOIN", url: "https://www.w3schools.com/sql/sql_join.asp" },
-          { label: "Wikipedia: データベース正規化", url: "https://ja.wikipedia.org/wiki/%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9%E6%AD%A3%E8%A6%8F%E5%8C%96" },
+          { label: "Qiita: SQLのJOINを初心者向けに解説", url: "https://qiita.com/search?q=SQL+JOIN+%E5%88%9D%E5%BF%83%E8%80%85+%E3%82%8F%E3%81%8B%E3%82%8A%E3%82%84%E3%81%99%E3%81%8F" },
+          { label: "Qiita: データベース正規化をわかりやすく", url: "https://qiita.com/search?q=%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9%E6%AD%A3%E8%A6%8F%E5%8C%96+%E3%82%8F%E3%81%8B%E3%82%8A%E3%82%84%E3%81%99%E3%81%8F" },
         ],
         quizzes: [
           {
@@ -208,9 +213,10 @@ const courses: CourseSeed[] = [
           "CASE式で条件に応じたラベル付けができる",
         ],
         relatedJobs: ["Data Analyst", "BI Support", "Junior Data Engineer"],
+        skillTags: ["サブクエリ", "CASE式"],
         referenceLinks: [
-          { label: "W3Schools: SQL CASE", url: "https://www.w3schools.com/sql/sql_case.asp" },
-          { label: "W3Schools: SQL Subqueries", url: "https://www.w3schools.com/sql/sql_subqueries.asp" },
+          { label: "Qiita: SQLのCASE式の使い方", url: "https://qiita.com/search?q=SQL+CASE%E5%BC%8F+%E4%BD%BF%E3%81%84%E6%96%B9" },
+          { label: "Qiita: SQLのサブクエリ入門", url: "https://qiita.com/search?q=SQL+%E3%82%B5%E3%83%96%E3%82%AF%E3%82%A8%E3%83%AA+%E5%85%A5%E9%96%80" },
         ],
         quizzes: [
           {
@@ -244,9 +250,10 @@ const courses: CourseSeed[] = [
           "COALESCEを使ってNULLに既定値を設定できる",
         ],
         relatedJobs: ["Data Analyst", "Data Engineer Intern", "Analytics Engineer"],
+        skillTags: ["NULL処理", "COALESCE"],
         referenceLinks: [
           { label: "Databricks SQLリファレンス: NULL値の扱い", url: "https://docs.databricks.com/en/sql/language-manual/sql-ref-null-semantics.html" },
-          { label: "W3Schools: SQL NULL Values", url: "https://www.w3schools.com/sql/sql_null_values.asp" },
+          { label: "Qiita: SQLのNULLの扱い方", url: "https://qiita.com/search?q=SQL+NULL+%E5%88%9D%E5%BF%83%E8%80%85" },
         ],
         quizzes: [
           {
@@ -287,6 +294,7 @@ const courses: CourseSeed[] = [
           "**模範解答**\n\n```python\nsales = [3000, 5400, 1200]\ntotal = sum(sales)\nprint(total)  # 8500\n\norders = [\n    {\"customer\": \"田中\", \"amount\": 3000},\n    {\"customer\": \"鈴木\", \"amount\": 5400},\n    {\"customer\": \"佐藤\", \"amount\": 1200},\n]\ntotal = sum(o[\"amount\"] for o in orders)\nprint(total)  # 9500\nprint(total / len(orders))  # 3166.67\n```",
         outcomes: ["Pythonの基本文法（変数・リスト・辞書）を使える", "簡単な集計処理をコードで書ける"],
         relatedJobs: ["Data Engineer Intern", "Junior Data Engineer"],
+        skillTags: ["Python基礎", "リスト・辞書"],
         referenceLinks: [
           { label: "Python公式チュートリアル", url: "https://docs.python.org/ja/3/tutorial/index.html" },
           { label: "Databricks Notebooksの使い方", url: "https://docs.databricks.com/en/notebooks/index.html" },
@@ -323,6 +331,7 @@ const courses: CourseSeed[] = [
           "処理を関数として切り出し、再利用できる",
         ],
         relatedJobs: ["Data Engineer Intern", "Junior Data Engineer"],
+        skillTags: ["制御構文", "関数定義"],
         referenceLinks: [
           { label: "Python公式チュートリアル: 制御構造", url: "https://docs.python.org/ja/3/tutorial/controlflow.html" },
         ],
@@ -355,6 +364,7 @@ const courses: CourseSeed[] = [
           "**模範解答**\n\n```python\ndf = spark.table(\"samples.tpch.orders\")\ndf.printSchema()\ndf.show(5)\n\ndf.filter(df.o_totalprice > 300000).select(\"o_custkey\", \"o_totalprice\").show(10)\n\ndf.filter(df.o_orderstatus == \"O\").select(\"o_custkey\", \"o_totalprice\").count()\n```\n\nSQLの`WHERE`が`.filter()`に、`SELECT 列名`が`.select()`に対応していることを確認できていればOKです。",
         outcomes: ["DataFrameの基本的な考え方を理解する", "filter/selectでデータを加工できる"],
         relatedJobs: ["Data Engineer Intern", "Analytics Engineer"],
+        skillTags: ["DataFrame", "filter/select"],
         referenceLinks: [
           { label: "Apache Spark DataFrame ガイド", url: "https://spark.apache.org/docs/latest/sql-programming-guide.html" },
           { label: "Databricks PySpark基礎", url: "https://docs.databricks.com/en/pyspark/basics.html" },
@@ -391,6 +401,7 @@ const courses: CourseSeed[] = [
           "pandasのgroupbyでSQLのGROUP BYに相当する集計ができる",
         ],
         relatedJobs: ["Data Engineer Intern", "Data Analyst", "Analytics Engineer"],
+        skillTags: ["pandas", "欠損値処理"],
         referenceLinks: [
           { label: "pandas公式ドキュメント", url: "https://pandas.pydata.org/docs/user_guide/index.html" },
           { label: "pandas: 欠損値の扱い", url: "https://pandas.pydata.org/docs/user_guide/missing_data.html" },
@@ -434,8 +445,9 @@ const courses: CourseSeed[] = [
           "**模範解答例（動画配信サービスの場合）**\n\n- 測定したい数値：視聴時間、視聴回数、評価スコア\n- ファクトテーブル：`fact_playback(playback_id, user_id, content_id, date_id, watch_seconds)`\n- ディメンション：`dim_user(user_id, plan_type, region)`、`dim_content(content_id, genre, release_year)`、`dim_date(date_id, year, month, day_of_week)`\n\n`fact_playback`が3つのディメンションテーブルとそれぞれの主キー（`user_id`, `content_id`, `date_id`）で結びつく、中心にファクトを置いた星形（スタースキーマ）の構造になっていればOKです。",
         outcomes: ["ファクト/ディメンションの違いを説明できる", "スタースキーマの基本構造をイメージできる"],
         relatedJobs: ["Analytics Engineer", "Junior Data Engineer"],
+        skillTags: ["ファクトテーブル", "ディメンション", "スタースキーマ"],
         referenceLinks: [
-          { label: "Wikipedia: スタースキーマ", url: "https://en.wikipedia.org/wiki/Star_schema" },
+          { label: "Qiita: スタースキーマをわかりやすく解説", url: "https://qiita.com/search?q=%E3%82%B9%E3%82%BF%E3%83%BC%E3%82%B9%E3%82%AD%E3%83%BC%E3%83%9E+%E3%82%8F%E3%81%8B%E3%82%8A%E3%82%84%E3%81%99%E3%81%8F" },
           { label: "Databricks: メダリオンアーキテクチャ", url: "https://www.databricks.com/glossary/medallion-architecture" },
         ],
         quizzes: [
@@ -470,8 +482,9 @@ const courses: CourseSeed[] = [
           "履歴を残す必要がある場合の設計パターンをイメージできる",
         ],
         relatedJobs: ["Analytics Engineer", "Data Engineer"],
+        skillTags: ["SCD Type 2", "履歴管理"],
         referenceLinks: [
-          { label: "Wikipedia: Slowly Changing Dimension", url: "https://en.wikipedia.org/wiki/Slowly_changing_dimension" },
+          { label: "Qiita: Slowly Changing Dimension(SCD)を解説", url: "https://qiita.com/search?q=Slowly+Changing+Dimension+SCD+%E8%A7%A3%E8%AA%AC" },
         ],
         quizzes: [
           {
@@ -512,6 +525,7 @@ const courses: CourseSeed[] = [
           "**模範解答例**\n\nLakehouseは、データレイクの「あらゆる形式のデータを安価に貯められる柔軟性」と、データウェアハウスの「スキーマ管理やSQLでの高速分析といった信頼性」を両立させたアーキテクチャです。`samples.tpch.orders`のようにスキーマが管理されたテーブルとしてSQLで即座に分析できる一方、生ログのような非構造化データも同じ基盤に安価に貯められる点が、この2つを兼ね備えている感覚に当たります。",
         outcomes: ["Lakehouseの概念を説明できる", "Databricks Workspaceにログインできる"],
         relatedJobs: ["Junior Data Engineer", "Analytics Engineer（初級）"],
+        skillTags: ["Lakehouse"],
         referenceLinks: [
           { label: "Databricksとは（公式）", url: "https://www.databricks.com/product/data-lakehouse" },
           { label: "Databricksドキュメント: Lakehouseの基礎", url: "https://docs.databricks.com/en/lakehouse/index.html" },
@@ -545,6 +559,7 @@ const courses: CourseSeed[] = [
           "**模範解答**\n\n```python\nprint(\"Hello Databricks\")\n```\n```sql\nSHOW CATALOGS;\n```\n\nNotebookは右上のCompute欄で割り当てられたクラスタ（Serverless Computeなど）上で実行され、`SHOW CATALOGS`で`samples`や`main`といったアクセス可能なカタログ一覧が確認できます。",
         outcomes: ["Notebook/Cluster/Catalog/Jobsの役割を説明できる", "Notebookを作成しコードを実行できる"],
         relatedJobs: ["Junior Data Engineer", "Analytics Engineer（初級）"],
+        skillTags: ["Databricks Workspace", "Notebook"],
         referenceLinks: [
           { label: "Databricks Workspaceの概要", url: "https://docs.databricks.com/en/workspace/index.html" },
         ],
@@ -580,6 +595,7 @@ const courses: CourseSeed[] = [
           "GRANT文による権限管理の考え方を理解している",
         ],
         relatedJobs: ["Junior Data Engineer", "Data Engineer", "Analytics Engineer"],
+        skillTags: ["Unity Catalog", "GRANT文"],
         referenceLinks: [
           { label: "Databricks: Unity Catalogとは", url: "https://docs.databricks.com/en/data-governance/unity-catalog/index.html" },
         ],
@@ -615,6 +631,7 @@ const courses: CourseSeed[] = [
           "Auto Terminationなどコストに関わる設定の重要性を理解している",
         ],
         relatedJobs: ["Junior Data Engineer", "Data Engineer"],
+        skillTags: ["クラスタ管理", "Auto Termination"],
         referenceLinks: [
           { label: "Databricks Compute（クラスタ）の概要", url: "https://docs.databricks.com/en/compute/index.html" },
         ],
@@ -650,6 +667,7 @@ const courses: CourseSeed[] = [
           "Databricks CLIの基本的な使い方をイメージできる",
         ],
         relatedJobs: ["Data Engineer", "Analytics Engineer"],
+        skillTags: ["Databricks CLI", "Databricks Repos"],
         referenceLinks: [
           { label: "Databricks Repos（Git連携）", url: "https://docs.databricks.com/en/repos/index.html" },
           { label: "Databricks CLIドキュメント", url: "https://docs.databricks.com/en/dev-tools/cli/index.html" },
@@ -693,6 +711,7 @@ const courses: CourseSeed[] = [
           "**模範解答**\n\n```sql\nCREATE TABLE IF NOT EXISTS main.default.practice_orders (\n  order_id INT, customer_name STRING, amount DOUBLE\n);\nINSERT INTO main.default.practice_orders VALUES (1, '田中', 3000);\nUPDATE main.default.practice_orders SET amount = 3500 WHERE order_id = 1;\n\nDESCRIBE HISTORY main.default.practice_orders;\n-- version 0: CREATE TABLE, version 1: INSERT, version 2: UPDATE\n\nSELECT * FROM main.default.practice_orders VERSION AS OF 1;\n-- amount = 3000（UPDATE前の状態）\n```",
         outcomes: ["Delta Lakeの主要な特徴を説明できる", "Deltaテーブルの変更履歴を確認できる"],
         relatedJobs: ["Junior Data Engineer", "Analytics Engineer（初級）"],
+        skillTags: ["Delta Lake", "タイムトラベル"],
         referenceLinks: [
           { label: "Databricks: Delta Lakeとは", url: "https://docs.databricks.com/en/delta/index.html" },
         ],
@@ -728,6 +747,7 @@ const courses: CourseSeed[] = [
           "OPTIMIZEとVACUUMの目的の違いを説明できる",
         ],
         relatedJobs: ["Data Engineer", "Analytics Engineer"],
+        skillTags: ["MERGE文", "OPTIMIZE", "VACUUM"],
         referenceLinks: [
           { label: "Databricks: DeltaテーブルのMERGE操作", url: "https://docs.databricks.com/en/delta/merge.html" },
           { label: "Databricks: OPTIMIZEとZ-Ordering", url: "https://docs.databricks.com/en/delta/optimize.html" },
@@ -764,6 +784,7 @@ const courses: CourseSeed[] = [
           "チェックポイントによる冪等な取り込みの重要性を理解している",
         ],
         relatedJobs: ["Data Engineer", "Analytics Engineer"],
+        skillTags: ["Auto Loader", "チェックポイント"],
         referenceLinks: [
           { label: "Databricks: Auto Loaderとは", url: "https://docs.databricks.com/en/ingestion/auto-loader/index.html" },
         ],
@@ -799,6 +820,7 @@ const courses: CourseSeed[] = [
           "Bronze/Silver/Goldのメダリオンアーキテクチャを理解している",
         ],
         relatedJobs: ["Data Engineer", "Analytics Engineer"],
+        skillTags: ["Delta Live Tables", "メダリオンアーキテクチャ"],
         referenceLinks: [
           { label: "Databricks: Delta Live Tablesとは", url: "https://docs.databricks.com/en/delta-live-tables/index.html" },
           { label: "Databricks: メダリオンアーキテクチャ", url: "https://www.databricks.com/glossary/medallion-architecture" },
@@ -835,6 +857,7 @@ const courses: CourseSeed[] = [
           "クラスタポリシーによるコスト管理の考え方を説明できる",
         ],
         relatedJobs: ["Data Engineer", "Analytics Engineer"],
+        skillTags: ["Workflows", "クラスタポリシー"],
         referenceLinks: [
           { label: "Databricks Workflows（Jobs）の概要", url: "https://docs.databricks.com/en/jobs/index.html" },
         ],
@@ -877,6 +900,7 @@ const courses: CourseSeed[] = [
           "**模範解答**\n\n```python\ndf = spark.table(\"samples.tpch.orders\")\ndf2 = df.dropna()\nprint(df.count(), df2.count())\n\ndf3 = df2.withColumnRenamed(\"o_totalprice\", \"total_price\")\ndf3.write.mode(\"overwrite\").saveAsTable(\"main.default.orders_clean\")\n```\n```sql\nSELECT COUNT(*), AVG(total_price) FROM main.default.orders_clean;\n```\n\n`mode(\"append\")`に変えて再実行すると、既存データはそのままに新しい行が追記されるため件数が増え、`overwrite`のようにテーブル全体が置き換わることはありません。",
         outcomes: ["ETLの3ステップを説明できる", "簡単なETL処理をNotebookで実装できる"],
         relatedJobs: ["Data Engineer", "Data Pipeline Assistant"],
+        skillTags: ["ETL", "Extract/Transform/Load"],
         referenceLinks: [
           { label: "Databricks: ETLパイプラインの基本パターン", url: "https://docs.databricks.com/en/getting-started/data-pipeline-get-started.html" },
         ],
@@ -912,6 +936,7 @@ const courses: CourseSeed[] = [
           "品質チェックをパイプラインに組み込む重要性を説明できる",
         ],
         relatedJobs: ["Data Engineer", "Analytics Engineer"],
+        skillTags: ["データ品質チェック", "assert検証"],
         referenceLinks: [
           { label: "Databricks: Delta Live Tablesのデータ品質（Expectations）", url: "https://docs.databricks.com/en/delta-live-tables/expectations.html" },
         ],
@@ -947,6 +972,7 @@ const courses: CourseSeed[] = [
           "冪等性の重要性と、MERGEによる実現方法を理解している",
         ],
         relatedJobs: ["Data Engineer", "Analytics Engineer"],
+        skillTags: ["増分ロード", "冪等性"],
         referenceLinks: [
           { label: "Databricks: MERGE操作リファレンス", url: "https://docs.databricks.com/en/delta/merge.html" },
         ],
@@ -989,6 +1015,7 @@ const courses: CourseSeed[] = [
           "**模範解答**\n\n```sql\nSELECT COUNT(*) FROM samples.tpch.orders WHERE o_orderdate > '1998-01-01';\nSELECT COUNT(*) FROM samples.tpch.orders;\n```\n\nもしテーブルが日付でパーティション分割されていれば、`WHERE o_orderdate > '1998-01-01'`のような絞り込みクエリは、該当する日付範囲のパーティションだけを読み込めばよく、テーブル全体をスキャンする必要がなくなるため、全件スキャンより大幅に高速化されます。",
         outcomes: ["パフォーマンス改善の基本的な考え方を説明できる", "パーティショニングの効果をイメージできる"],
         relatedJobs: ["Data Engineer", "Analytics Engineer"],
+        skillTags: ["パーティショニング", "クエリチューニング"],
         referenceLinks: [
           { label: "Databricks: パフォーマンスチューニングの概要", url: "https://docs.databricks.com/en/optimizations/index.html" },
         ],
@@ -1024,6 +1051,7 @@ const courses: CourseSeed[] = [
           "スケールアウトとスケールアップの使い分けを理解している",
         ],
         relatedJobs: ["Data Engineer", "Analytics Engineer"],
+        skillTags: ["Z-Ordering", "クラスタサイジング"],
         referenceLinks: [
           { label: "Databricks: OPTIMIZEとZ-Ordering", url: "https://docs.databricks.com/en/delta/optimize.html" },
         ],
@@ -1059,6 +1087,7 @@ const courses: CourseSeed[] = [
           "継続的なコスト最適化の取り組み方をイメージできる",
         ],
         relatedJobs: ["Data Engineer", "Analytics Engineer"],
+        skillTags: ["監視・アラート", "コスト最適化"],
         referenceLinks: [
           { label: "Databricks: Jobの監視とアラート設定", url: "https://docs.databricks.com/en/jobs/index.html" },
         ],
@@ -1105,6 +1134,7 @@ const courses: CourseSeed[] = [
           "取得した生データをまず保存する（Extract）ことの意味を説明できる",
         ],
         relatedJobs: ["Data Engineer", "Data Analyst", "Analytics Engineer"],
+        skillTags: ["外部API連携", "requestsライブラリ"],
         referenceLinks: [
           { label: "Open-Meteo API公式ドキュメント", url: "https://open-meteo.com/en/docs" },
           { label: "Python requestsライブラリ", url: "https://requests.readthedocs.io/en/latest/" },
@@ -1141,6 +1171,7 @@ const courses: CourseSeed[] = [
           "コードを書く前にテーブル構成を設計する視点を持てる",
         ],
         relatedJobs: ["Data Engineer", "Data Platform Engineer", "Analytics Engineer"],
+        skillTags: ["メダリオンアーキテクチャ設計", "Bronze/Silver/Gold"],
         referenceLinks: [
           { label: "Databricks: メダリオンアーキテクチャ", url: "https://www.databricks.com/glossary/medallion-architecture" },
           { label: "Databricks: Lakehouseの基礎", url: "https://docs.databricks.com/en/lakehouse/index.html" },
@@ -1177,6 +1208,7 @@ const courses: CourseSeed[] = [
           "appendとoverwriteの使い分けを踏まえてデータを格納できる",
         ],
         relatedJobs: ["Data Engineer", "Analytics Engineer", "Data Pipeline Assistant"],
+        skillTags: ["Bronze層実装", "Silver層実装"],
         referenceLinks: [
           { label: "Databricks: Delta Lakeとは", url: "https://docs.databricks.com/en/delta/index.html" },
         ],
@@ -1212,6 +1244,7 @@ const courses: CourseSeed[] = [
           "BIがGold層を読みにいく設計の意図を説明できる",
         ],
         relatedJobs: ["Analytics Engineer", "BI Engineer", "Data Engineer"],
+        skillTags: ["CTAS", "Gold層設計"],
         referenceLinks: [
           { label: "Databricks SQL言語マニュアル", url: "https://docs.databricks.com/en/sql/language-manual/index.html" },
         ],
@@ -1247,6 +1280,7 @@ const courses: CourseSeed[] = [
           "Bronze/Silver/Goldそれぞれへのアクセス範囲を意図を持って制限できる",
         ],
         relatedJobs: ["Data Platform Engineer", "Data Engineer", "Databricks管理者"],
+        skillTags: ["Unity Catalog権限設計", "最小権限の原則"],
         referenceLinks: [
           { label: "Databricks: Unity Catalogとは", url: "https://docs.databricks.com/en/data-governance/unity-catalog/index.html" },
         ],
@@ -1282,6 +1316,7 @@ const courses: CourseSeed[] = [
           "処理内容に応じたコンピュートの選定とAuto Terminationの適用ができる",
         ],
         relatedJobs: ["Data Engineer", "Data Platform Engineer", "Analytics Engineer"],
+        skillTags: ["Workflowsオーケストレーション", "コンピュート選定"],
         referenceLinks: [
           { label: "Databricks Workflows（Jobs）の概要", url: "https://docs.databricks.com/en/jobs/index.html" },
           { label: "Databricks Compute（クラスタ）の概要", url: "https://docs.databricks.com/en/compute/index.html" },
@@ -1318,6 +1353,7 @@ const courses: CourseSeed[] = [
           "共有範囲をGold層に限定する設計判断ができる",
         ],
         relatedJobs: ["Data Platform Engineer", "Data Engineer", "Databricks管理者"],
+        skillTags: ["Delta Sharing"],
         referenceLinks: [
           { label: "Databricks: Delta Sharingとは", url: "https://www.databricks.com/product/delta-sharing" },
         ],
@@ -1353,6 +1389,7 @@ const courses: CourseSeed[] = [
           "集計結果をグラフ化し、意思決定に繋がる言葉でまとめられる",
         ],
         relatedJobs: ["BI Engineer", "Analytics Engineer", "Data Analyst"],
+        skillTags: ["Databricks SQLダッシュボード", "データ可視化"],
         referenceLinks: [
           { label: "Databricks SQLダッシュボード", url: "https://docs.databricks.com/en/dashboards/index.html" },
         ],
@@ -1388,6 +1425,7 @@ const courses: CourseSeed[] = [
           "この経験が実務のどのポジション（特にデータ基盤全体を任される役割）で活きるかを説明できる",
         ],
         relatedJobs: ["Data Engineer", "Data Platform Engineer", "Analytics Engineer", "BI Engineer", "Data Analyst"],
+        skillTags: ["データ基盤設計力", "キャリア接続"],
         referenceLinks: [
           { label: "Databricks: メダリオンアーキテクチャ", url: "https://www.databricks.com/glossary/medallion-architecture" },
         ],
@@ -1471,6 +1509,7 @@ export async function seedDatabase(prisma: PrismaClient) {
           modelAnswerContent: lessonSeed.modelAnswerContent,
           outcomesJson: JSON.stringify(lessonSeed.outcomes),
           relatedJobs: lessonSeed.relatedJobs.join(","),
+          skillTagsJson: JSON.stringify(lessonSeed.skillTags),
           referenceLinksJson: JSON.stringify(lessonSeed.referenceLinks),
         },
         update: {
@@ -1485,6 +1524,7 @@ export async function seedDatabase(prisma: PrismaClient) {
           modelAnswerContent: lessonSeed.modelAnswerContent,
           outcomesJson: JSON.stringify(lessonSeed.outcomes),
           relatedJobs: lessonSeed.relatedJobs.join(","),
+          skillTagsJson: JSON.stringify(lessonSeed.skillTags),
           referenceLinksJson: JSON.stringify(lessonSeed.referenceLinks),
         },
       });

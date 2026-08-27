@@ -8,7 +8,31 @@ export type JobListing = {
 export type JobListingsResult = {
   jobs: JobListing[];
   isLive: boolean; // true = fetched from a real external API, false = fallback sample data
+  totalCount: number | null; // real total match count from the live API, when available (docs/prd.md 21-3)
 };
+
+// 学習者レベル（1-10, src/lib/learner-level.ts）に応じて求人検索キーワードを
+// 段階的に変化させる（docs/prd.md 21-3）。実務での役割の広がりに合わせて
+// 若いレベルほど入門的な職種、高いレベルほど基盤全体を担う職種にしている。
+export const LEARNER_LEVEL_JOB_KEYWORDS: Record<number, string> = {
+  1: "Data Analyst",
+  2: "Data Analyst",
+  3: "Reporting Analyst",
+  4: "Data Engineer Intern",
+  5: "Junior Data Engineer",
+  6: "Analytics Engineer",
+  7: "Data Engineer",
+  8: "Data Engineer",
+  9: "BI Engineer",
+  10: "Data Platform Engineer",
+};
+
+// 市場動向・年収相場を知りたいというニーズに応える外部リンク。具体的な年収額を
+// アプリ内ででっち上げると学習者に誤解を与えるため、実際のデータを持つ検索結果
+// ページへ案内する（架空の数値は表示しない）。
+export function getMarketTrendUrl(keyword: string): string {
+  return `https://www.google.com/search?q=${encodeURIComponent(`${keyword} 年収 相場 求人`)}`;
+}
 
 const ADZUNA_COUNTRY = process.env.ADZUNA_COUNTRY || "gb";
 
@@ -37,7 +61,7 @@ export async function fetchJobListings(keywords: string[]): Promise<JobListingsR
   const primaryKeyword = keywords[0];
 
   if (!appId || !appKey || !primaryKeyword) {
-    return { jobs: buildFallback(keywords), isLive: false };
+    return { jobs: buildFallback(keywords), isLive: false, totalCount: null };
   }
 
   try {
@@ -50,10 +74,11 @@ export async function fetchJobListings(keywords: string[]): Promise<JobListingsR
 
     const response = await fetch(url.toString(), { next: { revalidate: 3600 } });
     if (!response.ok) {
-      return { jobs: buildFallback(keywords), isLive: false };
+      return { jobs: buildFallback(keywords), isLive: false, totalCount: null };
     }
 
     const data = (await response.json()) as {
+      count?: number;
       results?: { title?: string; company?: { display_name?: string }; location?: { display_name?: string }; redirect_url?: string }[];
     };
 
@@ -67,12 +92,12 @@ export async function fetchJobListings(keywords: string[]): Promise<JobListingsR
       }));
 
     if (jobs.length === 0) {
-      return { jobs: buildFallback(keywords), isLive: false };
+      return { jobs: buildFallback(keywords), isLive: false, totalCount: null };
     }
 
-    return { jobs, isLive: true };
+    return { jobs, isLive: true, totalCount: typeof data.count === "number" ? data.count : null };
   } catch {
-    return { jobs: buildFallback(keywords), isLive: false };
+    return { jobs: buildFallback(keywords), isLive: false, totalCount: null };
   }
 }
 

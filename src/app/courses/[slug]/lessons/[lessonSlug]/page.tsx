@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { auth } from "@/auth";
@@ -47,15 +48,47 @@ export default async function LessonDetailPage({
     .filter(Boolean);
 
   const currentIndex = course.lessons.findIndex((l) => l.id === lesson.id);
+  const prevLesson = currentIndex > 0 ? course.lessons[currentIndex - 1] : undefined;
+  const prevHref = prevLesson
+    ? `/courses/${course.slug}/lessons/${prevLesson.slug}`
+    : `/courses/${course.slug}`;
   const nextLesson = course.lessons[currentIndex + 1];
   const nextHref = nextLesson
     ? `/courses/${course.slug}/lessons/${nextLesson.slug}`
     : `/courses/${course.slug}`;
+  const coursePositionPercent =
+    course.lessons.length > 0 ? Math.round(((currentIndex + 1) / course.lessons.length) * 100) : 0;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
       <p className="text-xs font-semibold uppercase tracking-wide text-brand">{course.title}</p>
       <h1 className="mt-1 text-2xl font-bold">{lesson.title}</h1>
+
+      <div className="mt-3">
+        <div className="flex justify-between text-xs text-foreground/60">
+          <span>コース内の進捗</span>
+          <span>
+            {currentIndex + 1} / {course.lessons.length}
+          </span>
+        </div>
+        <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-slate-200">
+          <div
+            className="h-full rounded-full bg-brand transition-all"
+            style={{ width: `${coursePositionPercent}%` }}
+            role="progressbar"
+            aria-valuenow={coursePositionPercent}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          />
+        </div>
+      </div>
+
+      <Link
+        href={prevHref}
+        className="mt-3 inline-block text-sm font-medium text-brand hover:underline"
+      >
+        ← {prevLesson ? "前のレッスンに戻る" : "コースに戻る"}
+      </Link>
 
       <div className="mt-4 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
         <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">🤔 ちょっと気になりませんか？</p>

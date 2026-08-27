@@ -4,7 +4,8 @@ import { auth } from "@/auth";
 import { getProgressSummary } from "@/lib/progress";
 import { pickMotivationalMessage } from "@/lib/app-settings";
 import { getLevelInfo, MAX_LEVEL } from "@/lib/skill-levels";
-import { fetchJobListings } from "@/lib/jobs";
+import { fetchJobListings, LEARNER_LEVEL_JOB_KEYWORDS, getMarketTrendUrl } from "@/lib/jobs";
+import { getLearnerLevel } from "@/lib/learner-level";
 
 export const metadata = {
   title: "ダッシュボード | Databricks学習アプリ",
@@ -17,9 +18,11 @@ export default async function DashboardPage() {
   const summary = await getProgressSummary(userId);
   const levelInfo = getLevelInfo(summary.currentLevel);
   const motivationalMessage = await pickMotivationalMessage(summary.totalCompleted);
+  const learnerLevel = getLearnerLevel(summary.overallPercent);
 
-  const jobSearchKeywords = summary.nextLevelJobs.length > 0 ? summary.nextLevelJobs : summary.relatedJobs;
-  const jobListings = jobSearchKeywords.length > 0 ? await fetchJobListings(jobSearchKeywords) : null;
+  const jobKeyword = LEARNER_LEVEL_JOB_KEYWORDS[learnerLevel.current.level] ?? "Data Analyst";
+  const jobListings = await fetchJobListings([jobKeyword]);
+  const marketTrendUrl = getMarketTrendUrl(jobKeyword);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
@@ -33,13 +36,52 @@ export default async function DashboardPage() {
         </p>
       ) : null}
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-3">
-        {/* 現在のレベルと進捗 */}
+      {/* 学習者レベル（10段階） */}
+      <section className="mt-6 overflow-hidden rounded-2xl border border-indigo-800/30 bg-gradient-to-br from-indigo-600 to-indigo-800 p-6 text-white shadow-sm">
+        <p className="text-xs font-semibold uppercase tracking-wide text-indigo-200">あなたの学習者レベル</p>
+        <div className="mt-2 flex flex-wrap items-end gap-3">
+          <span className="text-4xl font-black leading-none">Lv.{learnerLevel.current.level}</span>
+          <div>
+            <p className="text-lg font-bold">{learnerLevel.current.name}</p>
+            <p className="text-sm text-indigo-100">{learnerLevel.current.skillDescription}</p>
+          </div>
+        </div>
+
+        {learnerLevel.next ? (
+          <div className="mt-5">
+            <div className="flex justify-between text-xs text-indigo-200">
+              <span>次のレベルまで</span>
+              <span>{Math.round(learnerLevel.percentIntoLevel)}%</span>
+            </div>
+            <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-white/20">
+              <div
+                className="h-full rounded-full bg-white transition-all"
+                style={{ width: `${learnerLevel.percentIntoLevel}%` }}
+                role="progressbar"
+                aria-valuenow={Math.round(learnerLevel.percentIntoLevel)}
+                aria-valuemin={0}
+                aria-valuemax={100}
+              />
+            </div>
+            <p className="mt-3 text-sm text-indigo-100">
+              次は <span className="font-semibold text-white">Lv.{learnerLevel.next.level} {learnerLevel.next.name}</span>
+              　— {learnerLevel.next.skillDescription}
+            </p>
+          </div>
+        ) : (
+          <p className="mt-5 text-sm text-indigo-100">
+            最高レベルに到達しました。ここからは、実務での経験を積み重ねていくフェーズです。
+          </p>
+        )}
+      </section>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-3">
+        {/* 現在のカリキュラムと進捗 */}
         <section className="rounded-xl border border-border bg-surface p-6 lg:col-span-2">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wide text-brand">
-                現在のレベル（{summary.currentLevel} / {MAX_LEVEL}）
+                現在のカリキュラム（{summary.currentLevel} / {MAX_LEVEL}）
               </p>
               <h2 className="mt-1 text-xl font-bold">{levelInfo.name}</h2>
               <p className="mt-1 text-sm text-foreground/70">{levelInfo.description}</p>
@@ -86,37 +128,37 @@ export default async function DashboardPage() {
           )}
         </section>
 
-        {/* キャリア視点 */}
+        {/* スキルキーワード */}
         <section className="rounded-xl border border-border bg-surface p-6">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-brand">目指せる役割</h2>
-          {summary.relatedJobs.length > 0 ? (
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-brand">身につけたスキルキーワード</h2>
+          {summary.achievedSkillTags.length > 0 ? (
             <>
-              <p className="mt-2 text-xs text-foreground/60">これまでの学習で近づいた仕事</p>
+              <p className="mt-2 text-xs text-foreground/60">これまでの学習で身についたスキル</p>
               <ul className="mt-2 flex flex-wrap gap-2">
-                {summary.relatedJobs.map((job) => (
+                {summary.achievedSkillTags.map((tag) => (
                   <li
-                    key={job}
+                    key={tag}
                     className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-800"
                   >
-                    {job}
+                    {tag}
                   </li>
                 ))}
               </ul>
             </>
           ) : (
-            <p className="mt-2 text-sm text-foreground/60">レッスンを完了すると、ここに関連する仕事が表示されます。</p>
+            <p className="mt-2 text-sm text-foreground/60">レッスンを完了すると、ここにスキルキーワードが表示されます。</p>
           )}
 
-          {summary.nextLevelJobs.length > 0 ? (
+          {summary.nextLevelSkillTags.length > 0 ? (
             <>
-              <p className="mt-4 text-xs text-foreground/60">次のレベルで近づく仕事</p>
+              <p className="mt-4 text-xs text-foreground/60">次のレベルで身につくスキル</p>
               <ul className="mt-2 flex flex-wrap gap-2">
-                {summary.nextLevelJobs.map((job) => (
+                {summary.nextLevelSkillTags.map((tag) => (
                   <li
-                    key={job}
+                    key={tag}
                     className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-foreground/70"
                   >
-                    {job}
+                    {tag}
                   </li>
                 ))}
               </ul>
@@ -125,40 +167,52 @@ export default async function DashboardPage() {
         </section>
       </div>
 
-      {jobListings ? (
-        <section className="mt-6 rounded-xl border border-border bg-surface p-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-brand">
-              あなたのレベルに近い求人（参考）
-            </h2>
-            {!jobListings.isLive ? (
-              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-foreground/50">サンプル表示</span>
-            ) : null}
-          </div>
-          <p className="mt-1 text-xs text-foreground/60">
-            キーワード「{jobSearchKeywords[0]}」に関連する求人の参考情報です。応募条件は各求人の掲載元でご確認ください。
+      <section className="mt-6 rounded-xl border border-border bg-surface p-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-brand">
+            あなたのレベルに近い求人（参考）
+          </h2>
+          {!jobListings.isLive ? (
+            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-foreground/50">サンプル表示</span>
+          ) : null}
+        </div>
+        <p className="mt-1 text-xs text-foreground/60">
+          Lv.{learnerLevel.current.level}「{learnerLevel.current.name}」に近いキーワード「{jobKeyword}」の求人の参考情報です。応募条件は各求人の掲載元でご確認ください。
+        </p>
+        {jobListings.isLive && jobListings.totalCount !== null ? (
+          <p className="mt-2 text-sm font-semibold text-foreground">
+            現在 {jobListings.totalCount.toLocaleString()} 件の求人が見つかりました
           </p>
-          <ul className="mt-3 space-y-2">
-            {jobListings.jobs.map((job) => (
-              <li key={job.url} className="rounded-lg border border-border p-3 text-sm">
-                <a
-                  href={job.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-medium text-brand hover:underline"
-                >
-                  {job.title} ↗
-                </a>
-                {job.company || job.location ? (
-                  <p className="mt-0.5 text-xs text-foreground/60">
-                    {[job.company, job.location].filter(Boolean).join(" ・ ")}
-                  </p>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
+        ) : null}
+        <ul className="mt-3 space-y-2">
+          {jobListings.jobs.map((job) => (
+            <li key={job.url} className="rounded-lg border border-border p-3 text-sm">
+              <a
+                href={job.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-brand hover:underline"
+              >
+                {job.title} ↗
+              </a>
+              {job.company || job.location ? (
+                <p className="mt-0.5 text-xs text-foreground/60">
+                  {[job.company, job.location].filter(Boolean).join(" ・ ")}
+                </p>
+              ) : null}
+            </li>
+          ))}
+        </ul>
+        <a
+          href={marketTrendUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 flex items-center justify-between rounded-lg border border-brand/30 bg-indigo-50 p-3 text-sm font-medium text-brand hover:bg-indigo-100"
+        >
+          <span>「{jobKeyword}」の市場動向・年収相場をもっと詳しく調べる</span>
+          <span aria-hidden>↗</span>
+        </a>
+      </section>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         {/* 達成バッジ */}

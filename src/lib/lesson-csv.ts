@@ -14,6 +14,7 @@ export const LESSON_CSV_COLUMNS = [
   "modelAnswerContent",
   "outcomes",
   "relatedJobs",
+  "skillTags",
   "referenceLinksJson",
   "quizzesJson",
 ] as const;
@@ -31,6 +32,7 @@ export const LESSON_CSV_EXAMPLE_ROW = [
   "**模範解答**\n\n手順に対する模範的な回答例をMarkdown形式で書きます（空欄可）。",
   "できるようになったこと1\nできるようになったこと2",
   "Data Engineer,Data Analyst",
+  "Window関数,MERGE文",
   JSON.stringify([{ label: "参考サイト", url: "https://example.com" }]),
   JSON.stringify([
     {

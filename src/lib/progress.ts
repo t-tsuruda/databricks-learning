@@ -9,6 +9,7 @@ export type LessonSummary = {
   orderIndex: number;
   isCompleted: boolean;
   relatedJobs: string[];
+  skillTags: string[];
 };
 
 export type CourseSummary = {
@@ -43,6 +44,8 @@ export type ProgressSummary = {
   achievedOutcomes: string[];
   relatedJobs: string[];
   nextLevelJobs: string[];
+  achievedSkillTags: string[];
+  nextLevelSkillTags: string[];
   badges: Badge[];
   completedCoursesCount: number;
 };
@@ -52,6 +55,15 @@ function splitJobs(value: string): string[] {
     .split(",")
     .map((job) => job.trim())
     .filter(Boolean);
+}
+
+function parseSkillTags(json: string): string[] {
+  try {
+    const parsed = JSON.parse(json) as unknown;
+    return Array.isArray(parsed) ? parsed.filter((tag): tag is string => typeof tag === "string") : [];
+  } catch {
+    return [];
+  }
 }
 
 export async function getProgressSummary(userId: string): Promise<ProgressSummary> {
@@ -81,6 +93,7 @@ export async function getProgressSummary(userId: string): Promise<ProgressSummar
       orderIndex: lesson.orderIndex,
       isCompleted: completedLessonIds.has(lesson.id),
       relatedJobs: splitJobs(lesson.relatedJobs),
+      skillTags: parseSkillTags(lesson.skillTagsJson),
     }));
 
     const completed = lessons.filter((lesson) => lesson.isCompleted).length;
@@ -149,6 +162,18 @@ export async function getProgressSummary(userId: string): Promise<ProgressSummar
     ? Array.from(new Set(firstIncompleteCourse.lessons.flatMap((lesson) => lesson.relatedJobs))).slice(0, 8)
     : [];
 
+  const skillTagSet = new Set<string>();
+  for (const progress of completedLessonProgress) {
+    for (const tag of parseSkillTags(progress.lesson.skillTagsJson)) {
+      skillTagSet.add(tag);
+    }
+  }
+  const achievedSkillTags = Array.from(skillTagSet).slice(0, 24);
+
+  const nextLevelSkillTags = firstIncompleteCourse
+    ? Array.from(new Set(firstIncompleteCourse.lessons.flatMap((lesson) => lesson.skillTags))).slice(0, 16)
+    : [];
+
   const completedCoursesCount = courseSummaries.filter((course) => course.status === "COMPLETED").length;
 
   const badges: Badge[] = [
@@ -194,6 +219,8 @@ export async function getProgressSummary(userId: string): Promise<ProgressSummar
     achievedOutcomes: Array.from(outcomeSet),
     relatedJobs,
     nextLevelJobs,
+    achievedSkillTags,
+    nextLevelSkillTags,
     badges,
     completedCoursesCount,
   };

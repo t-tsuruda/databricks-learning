@@ -23,8 +23,19 @@ const courseSchema = z.object({
   orderIndex: z.coerce.number().int().min(0),
 });
 
+function buildCourseValues(raw: {
+  slug: unknown;
+  title: unknown;
+  description: unknown;
+  missionText: unknown;
+  level: unknown;
+  orderIndex: unknown;
+}) {
+  return courseSchema.parse(raw);
+}
+
 function courseValuesFromForm(formData: FormData) {
-  return courseSchema.parse({
+  return buildCourseValues({
     slug: formData.get("slug"),
     title: formData.get("title"),
     description: formData.get("description"),
@@ -107,6 +118,7 @@ const lessonSchema = z.object({
   modelAnswerContent: z.string().trim().optional(),
   outcomes: z.string().trim().min(1),
   relatedJobs: z.string().trim().min(1),
+  skillTags: z.string().trim().optional(),
   referenceLinksJson: z.string().trim().optional(),
 });
 
@@ -123,6 +135,7 @@ function buildLessonValues(raw: {
   modelAnswerContent?: unknown;
   outcomes: unknown;
   relatedJobs: unknown;
+  skillTags?: unknown;
   referenceLinksJson?: unknown;
 }) {
   const parsed = lessonSchema.parse(raw);
@@ -138,6 +151,12 @@ function buildLessonValues(raw: {
     .map((job) => job.trim())
     .filter(Boolean)
     .join(",");
+  const skillTagsJson = JSON.stringify(
+    (parsed.skillTags ?? "")
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter(Boolean),
+  );
 
   return {
     slug: parsed.slug,
@@ -152,6 +171,7 @@ function buildLessonValues(raw: {
     modelAnswerContent: parsed.modelAnswerContent || "",
     outcomesJson,
     relatedJobs,
+    skillTagsJson,
     referenceLinksJson: parsed.referenceLinksJson || "[]",
   };
 }
@@ -170,6 +190,7 @@ function lessonValuesFromForm(formData: FormData) {
     modelAnswerContent: formData.get("modelAnswerContent") ?? undefined,
     outcomes: formData.get("outcomes"),
     relatedJobs: formData.get("relatedJobs"),
+    skillTags: formData.get("skillTags") ?? undefined,
     referenceLinksJson: formData.get("referenceLinksJson") ?? undefined,
   });
 }
@@ -311,6 +332,7 @@ export async function importLessonsFromCsv(courseId: string, formData: FormData)
         modelAnswerContent: raw.modelAnswerContent || undefined,
         outcomes: raw.outcomes,
         relatedJobs: raw.relatedJobs,
+        skillTags: raw.skillTags || undefined,
         referenceLinksJson: raw.referenceLinksJson || undefined,
       });
 
@@ -363,6 +385,73 @@ export async function importLessonsFromCsv(courseId: string, formData: FormData)
   revalidatePath(`/admin/courses/${courseId}`);
 
   const summary = `新規${createdCount}件・更新${updatedCount}件のレッスンを反映しました。`;
+  if (errors.length > 0) {
+    return {
+      ok: createdCount + updatedCount > 0,
+      message: `${summary}\nエラーが${errors.length}件ありました:\n${errors.join("\n")}`,
+    };
+  }
+  return { ok: true, message: summary };
+}
+
+export async function importCoursesFromCsv(formData: FormData): Promise<ActionResult> {
+  await requireAdminSession();
+
+  const file = formData.get("csvFile");
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, message: "CSVファイルを選択してください。" };
+  }
+
+  const text = await file.text();
+  const rows = parseCsv(text).filter((row) => row.some((cell) => cell.trim() !== ""));
+  if (rows.length < 2) {
+    return { ok: false, message: "CSVにヘッダー行と1件以上のデータ行が必要です。" };
+  }
+
+  const header = rows[0].map((cell) => cell.trim());
+  const dataRows = rows.slice(1);
+
+  let createdCount = 0;
+  let updatedCount = 0;
+  const errors: string[] = [];
+
+  for (let rowIndex = 0; rowIndex < dataRows.length; rowIndex++) {
+    const rowNumber = rowIndex + 2; // 1-indexed CSV line number, +1 for the header row
+    const cells = dataRows[rowIndex];
+    const raw: Record<string, string> = {};
+    header.forEach((key, columnIndex) => {
+      raw[key] = cells[columnIndex] ?? "";
+    });
+
+    try {
+      const values = buildCourseValues({
+        slug: raw.slug,
+        title: raw.title,
+        description: raw.description,
+        missionText: raw.missionText,
+        level: raw.level,
+        orderIndex: raw.orderIndex || String(rowIndex),
+      });
+      const isPublished = raw.isPublished?.trim().toLowerCase() === "true";
+
+      const existing = await prisma.course.findUnique({ where: { slug: values.slug }, select: { id: true } });
+
+      await prisma.course.upsert({
+        where: { slug: values.slug },
+        create: { ...values, isPublished },
+        update: { ...values, isPublished },
+      });
+
+      if (existing) updatedCount++;
+      else createdCount++;
+    } catch (error) {
+      errors.push(`行${rowNumber}: ${errorMessage(error)}`);
+    }
+  }
+
+  revalidatePath("/admin/courses");
+
+  const summary = `新規${createdCount}件・更新${updatedCount}件のコースを反映しました。`;
   if (errors.length > 0) {
     return {
       ok: createdCount + updatedCount > 0,

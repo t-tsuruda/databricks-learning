@@ -15,7 +15,7 @@ test("signup, complete a lesson, and see progress update", async ({ page }) => {
   await page.waitForURL("**/dashboard");
   await expect(page.getByRole("heading", { name: /さんのダッシュボード/ })).toBeVisible();
   await expect(page.getByText("全体の学習進捗")).toBeVisible();
-  await expect(page.getByText("0%")).toBeVisible();
+  await expect(page.getByText("0%").first()).toBeVisible();
 
   await page.getByRole("link", { name: "コース一覧" }).click();
   await page.waitForURL("**/courses");

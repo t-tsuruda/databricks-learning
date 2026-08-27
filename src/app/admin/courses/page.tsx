@@ -3,7 +3,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { AdminActionForm, AdminSubmitButton } from "@/components/admin/action-form";
 
-import { togglePublish, deleteCourse } from "./actions";
+import { togglePublish, deleteCourse, importCoursesFromCsv } from "./actions";
 
 export const metadata = {
   title: "コース/コンテンツ管理 | 管理画面",
@@ -25,6 +25,30 @@ export default async function AdminCoursesPage() {
         >
           + 新しいコースを作成
         </Link>
+      </div>
+
+      <div className="mt-4 rounded-xl border border-border bg-surface p-6">
+        <h3 className="text-sm font-semibold">CSV一括インポート/エクスポート</h3>
+        <p className="mt-1 text-xs text-foreground/60">
+          スラッグが一致するコースは上書き更新、一致しないコースは新規作成されます。
+        </p>
+        <div className="mt-3 flex flex-wrap gap-4 text-xs">
+          <Link href="/admin/courses/csv-template" className="font-medium text-brand hover:underline">
+            ひな形CSVをダウンロード
+          </Link>
+          <Link href="/admin/courses/csv-export" className="font-medium text-brand hover:underline">
+            現在のコースをCSVでエクスポート
+          </Link>
+        </div>
+        <AdminActionForm action={importCoursesFromCsv} className="mt-4 flex flex-wrap items-center gap-3">
+          <input type="file" name="csvFile" accept=".csv,text/csv" required className="text-sm" />
+          <AdminSubmitButton
+            pendingChildren="インポート中..."
+            className="rounded-md border border-brand px-3 py-1.5 text-xs font-semibold text-brand hover:bg-indigo-50"
+          >
+            CSVをインポート
+          </AdminSubmitButton>
+        </AdminActionForm>
       </div>
 
       <div className="mt-4 overflow-x-auto rounded-xl border border-border bg-surface">

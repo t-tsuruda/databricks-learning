@@ -21,6 +21,7 @@ export default async function EditLessonPage({
   if (!lesson || lesson.courseId !== courseId) notFound();
 
   const outcomes = safeParseOutcomes(lesson.outcomesJson).join("\n");
+  const skillTags = safeParseOutcomes(lesson.skillTagsJson).join(",");
   const referenceLinks = safeParseReferenceLinks(lesson.referenceLinksJson);
 
   const updateLessonBound = updateLesson.bind(null, courseId, lessonId);
@@ -50,6 +51,7 @@ export default async function EditLessonPage({
               modelAnswerContent: lesson.modelAnswerContent,
               outcomes,
               relatedJobs: lesson.relatedJobs,
+              skillTags,
               referenceLinks,
             }}
           />
