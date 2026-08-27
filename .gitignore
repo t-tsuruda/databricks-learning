@@ -40,10 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# prisma (local sqlite dev database)
-/prisma/*.db
-/prisma/*.db-journal
-
 # playwright
 /test-results/
 /playwright-report/

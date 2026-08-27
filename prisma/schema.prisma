@@ -1,17 +1,20 @@
 // Prisma schema for the Databricks Learning Platform.
 //
-// Local development uses SQLite (zero-config, file-based) so the app runs
-// without any external service. For production, switch the datasource
-// provider to "postgresql" and point DATABASE_URL at a managed Postgres
-// instance (e.g. Supabase or Neon free tier) — see README.md.
+// Production uses PostgreSQL (deployed on Vercel with Vercel Postgres /
+// Neon). DATABASE_URL is the pooled connection (used by the app at
+// runtime) and DATABASE_URL_UNPOOLED is the direct connection (used by
+// Prisma Migrate, which cannot run through a pgbouncer-style pooler). Both
+// are injected automatically when a Postgres storage integration is
+// attached to the Vercel project — see README.md.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 enum LessonType {

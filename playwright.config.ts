@@ -11,8 +11,9 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   webServer: {
-    command:
-      "rm -f prisma/e2e-test.db && DATABASE_URL='file:./e2e-test.db' npx prisma migrate deploy && DATABASE_URL='file:./e2e-test.db' npx tsx prisma/seed.ts && DATABASE_URL='file:./e2e-test.db' npm run dev -- --port 3100",
+    // Reuses the DATABASE_URL from .env (idempotent: migrate deploy applies
+    // nothing new if already up to date, and the seed script upserts).
+    command: "npx prisma migrate deploy && npx tsx prisma/seed.ts && npm run dev -- --port 3100",
     url: "http://localhost:3100",
     reuseExistingServer: false,
     timeout: 60_000,
