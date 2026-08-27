@@ -43,6 +43,7 @@ export default async function AdminCourseEditPage({
               title: course.title,
               description: course.description,
               missionText: course.missionText,
+              closingColumn: course.closingColumn,
               level: course.level,
               orderIndex: course.orderIndex,
             }}

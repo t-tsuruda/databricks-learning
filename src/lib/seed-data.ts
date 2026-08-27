@@ -30,6 +30,7 @@ type CourseSeed = {
   title: string;
   description: string;
   missionText: string;
+  closingColumn: string;
   level: number;
   lessons: LessonSeed[];
 };
@@ -42,6 +43,8 @@ const courses: CourseSeed[] = [
       "データとは何か、表形式データの考え方から、SQLを使ったデータの抽出・集計までを一気通貫で学びます。",
     missionText:
       "この章を終えると、データの見方とSQLによる抽出・集計の基礎を理解し、実務で使われる「データを見て答えを出す」ための最初の一歩を踏み出せます。",
+    closingColumn:
+      "## コラム：「わからない」が「見える」に変わった日\n\n多くの人にとって、データは「専門家だけが扱える難しいもの」に見えます。しかし実際には、行・列・主キーというたった3つの概念さえ押さえれば、目の前の表が急に「読めるもの」に変わります。\n\nこのコースを終えたあなたは、もう「データを見るだけの人」ではありません。SQLという共通言語を手に入れ、自分の力でテーブルから答えを引き出せる「学び始めた人」です。この小さな自信が、この先の学習を支える土台になります。次のコースでは、いよいよPythonでデータを操る世界に進みます。",
     level: 1,
     lessons: [
       {
@@ -274,6 +277,8 @@ const courses: CourseSeed[] = [
     description: "PythonとpandasライクなDataFrame操作で、SQLでは難しい柔軟なデータ処理を学びます。",
     missionText:
       "このコースを終えると、Pythonでデータを読み込み、加工し、簡単な集計ができるようになります。ETLの実装言語としての第一歩です。",
+    closingColumn:
+      "## コラム：SQLだけでは足りない場面に出会ったら\n\nSQLは強力ですが、「複雑な条件分岐を繰り返す」「外部のファイルやAPIと連携する」といった場面では、コードの力が必要になります。Pythonはその代表格であり、データエンジニアリングの現場で最も長く使われ続けている言語の一つです。\n\nここで身につけたif/for/関数、DataFrame、pandasの基礎は、この先のETLパイプライン設計やLevel 5の総合演習で何度も登場します。一度覚えれば一生使える資産です。焦らず、手を動かして体に馴染ませていきましょう。",
     level: 1,
     lessons: [
       {
@@ -425,6 +430,8 @@ const courses: CourseSeed[] = [
     description: "ディメンションとファクト、スタースキーマなど、分析基盤の設計に欠かせない考え方を学びます。",
     missionText:
       "このレベルに到達すると、データ分析の下準備と簡単なパイプライン構築に参加できるようになります。",
+    closingColumn:
+      "## コラム：良い設計は「見えない」\n\nデータモデリングの成果は、地味です。うまく設計されたテーブル群は「当たり前に使えて当たり前」に見え、誰も褒めてくれません。逆に設計が悪いと、半年後には誰も触りたがらない厄介なテーブルになります。\n\nファクト/ディメンションやSCDという考え方は、まさに「後から困らないための投資」です。今は地味に感じるかもしれませんが、実務でこの視点を持っている人は驚くほど少なく、確実に差別化要因になります。次はいよいよDatabricksそのものに入っていきます。",
     level: 1,
     lessons: [
       {
@@ -505,6 +512,8 @@ const courses: CourseSeed[] = [
     description: "Databricksが提唱するLakehouseアーキテクチャの考え方と、Workspaceの基本構成を学びます。",
     missionText:
       "このレベルに到達すると、Databricksの全体像を理解し、実際の操作に自信を持って進めるようになります。",
+    closingColumn:
+      "## コラム：「触ったことがある」と「わかっている」の違い\n\nDatabricksの求人票を眺めると、Lakehouse・Unity Catalog・クラスタ管理・CLIといった単語が並びます。これらを「聞いたことがある」状態から「仕組みを説明できる」状態に引き上げたのが、このコースです。\n\n特にUnity Catalogによる権限管理やクラスタコストの考え方は、実務未経験者が見落としがちな領域です。ここを押さえているだけで、面接での説得力が変わります。次はDelta LakeとJobsで、実際にデータを動かす感覚を掴んでいきましょう。",
     level: 2,
     lessons: [
       {
@@ -691,6 +700,8 @@ const courses: CourseSeed[] = [
     description: "Databricksの中核技術であるDelta Lakeの特徴と、Jobsによる自動実行の基本を学びます。",
     missionText:
       "このコースを終えると、Databricksを使って簡単なデータパイプラインを運用できるようになります。",
+    closingColumn:
+      "## コラム：信頼できるデータは、誰かへの敬意である\n\nMERGEで重複を防ぎ、Auto Loaderで取りこぼしなく取り込み、DLTで宣言的にパイプラインを組む——これらはすべて「データを使う人を裏切らないため」の技術です。数字を見て意思決定する人にとって、その数字が正しいことは当たり前ではありません。\n\nあなたがここで学んだ「信頼できるデータを作る技術」は、地味に見えて実は最も評価される実務スキルの一つです。次のETLパイプライン設計では、この信頼性をさらに体系立てて学んでいきます。",
     level: 2,
     lessons: [
       {
@@ -880,6 +891,8 @@ const courses: CourseSeed[] = [
     description: "実務レベルのETL（抽出・変換・格納）パイプラインの設計と品質管理の考え方を学びます。",
     missionText:
       "このコースを終えると、実務に近いデータパイプラインの設計・実装ができるようになります。",
+    closingColumn:
+      "## コラム：ETLは、誰の目にも触れない縁の下の力持ち\n\nダッシュボードやAIモデルは注目されますが、その裏で動くETLパイプラインが賞賛されることはほとんどありません。それでも、ETLが止まれば全てが止まります。データ品質チェックや冪等性という考え方は、まさに「誰にも気づかれずに、静かに信頼を支え続ける」ための技術です。\n\nこの縁の下の力持ちの役割を理解し、実装できることは、データエンジニアとしての土台そのものです。次はパフォーマンスと運用、いよいよ「作って終わり」ではない領域に踏み込みます。",
     level: 3,
     lessons: [
       {
@@ -995,6 +1008,8 @@ const courses: CourseSeed[] = [
     description: "パイプラインの性能改善と、実務での安定運用に必要な考え方を学びます。",
     missionText:
       "このコースを終えると、パイプラインの性能改善と安定運用まで見据えたエンジニアリングができるようになります。",
+    closingColumn:
+      "## コラム：「動く」から「動き続ける」へ\n\n初心者と経験者を分ける最も分かりやすい基準は、「動くコードが書けるか」ではなく「動き続けるコードが書けるか」だと思います。パーティショニングやZ-Ordering、監視・アラート・コスト最適化は、まさに「動き続けさせる」ための技術です。\n\nここまでのLevel 1〜4で、あなたはデータの基礎からDatabricksの運用まで一通りの視点を手に入れました。次のLevel 5では、これらすべてを1つのプロジェクトとして統合し、実際に手を動かして形にしていきます。",
     level: 4,
     lessons: [
       {
@@ -1111,6 +1126,8 @@ const courses: CourseSeed[] = [
       "架空の実務シナリオに沿って、公開APIからのデータ取得からBI可視化までを一気通貫で行う、これまでの学習の集大成となる演習コースです。",
     missionText:
       "このコースを終えると、データ取得・加工・格納・可視化までを自分ひとりで一通り組み立てられるようになります。ここまでの学習が「実務でできること」として形になる、最後の総仕上げです。",
+    closingColumn:
+      "## コラム：あなたはもう、「学んでいる人」ではない\n\nLevel 1で表の見方から始まったあなたは、ここまでの過程で、外部APIからのデータ取得、メダリオンアーキテクチャの設計、Unity Catalogによる権限制御、Workflowsによる自動化、そしてDelta Sharingによる安全な共有までを、すべて自分の手で組み立てました。\n\nこれは、もう「勉強中の人」の実績ではありません。実務で通用する、データ基盤構築の経験です。ぜひこの経験を、職務経歴書や面接の言葉にして、次の一歩（副業案件への応募、キャリアチェンジ）に活かしてください。そして、学び続けることを止めないでください——ここがゴールではなく、スタートラインです。",
     level: 5,
     lessons: [
       {
@@ -1445,24 +1462,11 @@ const courses: CourseSeed[] = [
   },
 ];
 
-const motivationalMessages = [
-  "最初の1歩は小さくても、あなたはすでにデータの入口に立っている",
-  "この単元を終えると、実務でよく使うデータ処理の基礎が身につく",
-  "今のあなたは、未経験者ではなく『学び始めた人』だ",
-  "次のステップに進むと、業務で使うスキルに近づく",
-  "あなたの成長は、求人での価値に直結している",
-];
-
 export async function seedDatabase(prisma: PrismaClient) {
   console.log("Seeding app settings...");
   await prisma.appSetting.upsert({
     where: { key: "signup_enabled" },
     create: { key: "signup_enabled", value: "true" },
-    update: {},
-  });
-  await prisma.appSetting.upsert({
-    where: { key: "motivational_messages" },
-    create: { key: "motivational_messages", value: JSON.stringify(motivationalMessages) },
     update: {},
   });
 
@@ -1477,6 +1481,7 @@ export async function seedDatabase(prisma: PrismaClient) {
         title: courseSeed.title,
         description: courseSeed.description,
         missionText: courseSeed.missionText,
+        closingColumn: courseSeed.closingColumn,
         level: courseSeed.level,
         orderIndex: courseIndex,
         isPublished: true,
@@ -1485,6 +1490,7 @@ export async function seedDatabase(prisma: PrismaClient) {
         title: courseSeed.title,
         description: courseSeed.description,
         missionText: courseSeed.missionText,
+        closingColumn: courseSeed.closingColumn,
         level: courseSeed.level,
         orderIndex: courseIndex,
       },

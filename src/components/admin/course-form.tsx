@@ -5,6 +5,7 @@ type CourseFormValues = {
   title: string;
   description: string;
   missionText: string;
+  closingColumn: string;
   level: number;
   orderIndex: number;
 };
@@ -30,6 +31,13 @@ export function CourseForm({
         name="missionText"
         defaultValue={defaultValues?.missionText}
         rows={2}
+      />
+      <TextAreaField
+        label="修了コラム(Markdown・コース完了後に表示。モチベーション維持用, 任意)"
+        name="closingColumn"
+        defaultValue={defaultValues?.closingColumn}
+        rows={6}
+        required={false}
       />
       <div className="grid grid-cols-2 gap-4">
         <Field
@@ -86,11 +94,13 @@ function TextAreaField({
   name,
   defaultValue,
   rows = 4,
+  required = true,
 }: {
   label: string;
   name: string;
   defaultValue?: string;
   rows?: number;
+  required?: boolean;
 }) {
   return (
     <div>
@@ -100,7 +110,7 @@ function TextAreaField({
       <textarea
         id={name}
         name={name}
-        required
+        required={required}
         rows={rows}
         defaultValue={defaultValue}
         className="mt-1 w-full rounded-md border border-border px-3 py-2 text-sm font-mono"

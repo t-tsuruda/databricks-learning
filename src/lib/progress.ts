@@ -18,6 +18,7 @@ export type CourseSummary = {
   title: string;
   description: string;
   missionText: string;
+  closingColumn: string;
   level: number;
   orderIndex: number;
   lessons: LessonSummary[];
@@ -110,6 +111,7 @@ export async function getProgressSummary(userId: string): Promise<ProgressSummar
       title: course.title,
       description: course.description,
       missionText: course.missionText,
+      closingColumn: course.closingColumn,
       level: course.level,
       orderIndex: course.orderIndex,
       lessons,

@@ -2,7 +2,6 @@ import Link from "next/link";
 
 import { auth } from "@/auth";
 import { getProgressSummary } from "@/lib/progress";
-import { pickMotivationalMessage } from "@/lib/app-settings";
 import { getLevelInfo, MAX_LEVEL } from "@/lib/skill-levels";
 import { fetchJobListings, LEARNER_LEVEL_JOB_KEYWORDS, getMarketTrendUrl } from "@/lib/jobs";
 import { getLearnerLevel } from "@/lib/learner-level";
@@ -17,7 +16,6 @@ export default async function DashboardPage() {
 
   const summary = await getProgressSummary(userId);
   const levelInfo = getLevelInfo(summary.currentLevel);
-  const motivationalMessage = await pickMotivationalMessage(summary.totalCompleted);
   const learnerLevel = getLearnerLevel(summary.overallPercent);
 
   const jobKeyword = LEARNER_LEVEL_JOB_KEYWORDS[learnerLevel.current.level] ?? "Data Analyst";
@@ -30,32 +28,26 @@ export default async function DashboardPage() {
         {session!.user.name ?? "学習者"} さんのダッシュボード
       </h1>
 
-      {motivationalMessage ? (
-        <p className="mt-3 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-900">
-          {motivationalMessage}
-        </p>
-      ) : null}
-
       {/* 学習者レベル（10段階） */}
-      <section className="mt-6 overflow-hidden rounded-2xl border border-indigo-800/30 bg-gradient-to-br from-indigo-600 to-indigo-800 p-6 text-white shadow-sm">
-        <p className="text-xs font-semibold uppercase tracking-wide text-indigo-200">あなたの学習者レベル</p>
+      <section className="mt-6 rounded-2xl border border-brand/30 bg-indigo-50 p-6 shadow-sm">
+        <p className="text-xs font-semibold uppercase tracking-wide text-brand">あなたの学習者レベル</p>
         <div className="mt-2 flex flex-wrap items-end gap-3">
-          <span className="text-4xl font-black leading-none">Lv.{learnerLevel.current.level}</span>
+          <span className="text-4xl font-black leading-none text-brand">Lv.{learnerLevel.current.level}</span>
           <div>
-            <p className="text-lg font-bold">{learnerLevel.current.name}</p>
-            <p className="text-sm text-indigo-100">{learnerLevel.current.skillDescription}</p>
+            <p className="text-lg font-bold text-foreground">{learnerLevel.current.name}</p>
+            <p className="text-sm text-foreground/70">{learnerLevel.current.skillDescription}</p>
           </div>
         </div>
 
         {learnerLevel.next ? (
           <div className="mt-5">
-            <div className="flex justify-between text-xs text-indigo-200">
+            <div className="flex justify-between text-xs text-foreground/60">
               <span>次のレベルまで</span>
               <span>{Math.round(learnerLevel.percentIntoLevel)}%</span>
             </div>
-            <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-white/20">
+            <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-white">
               <div
-                className="h-full rounded-full bg-white transition-all"
+                className="h-full rounded-full bg-brand transition-all"
                 style={{ width: `${learnerLevel.percentIntoLevel}%` }}
                 role="progressbar"
                 aria-valuenow={Math.round(learnerLevel.percentIntoLevel)}
@@ -63,13 +55,13 @@ export default async function DashboardPage() {
                 aria-valuemax={100}
               />
             </div>
-            <p className="mt-3 text-sm text-indigo-100">
-              次は <span className="font-semibold text-white">Lv.{learnerLevel.next.level} {learnerLevel.next.name}</span>
+            <p className="mt-3 text-sm text-foreground/70">
+              次は <span className="font-semibold text-brand">Lv.{learnerLevel.next.level} {learnerLevel.next.name}</span>
               　— {learnerLevel.next.skillDescription}
             </p>
           </div>
         ) : (
-          <p className="mt-5 text-sm text-indigo-100">
+          <p className="mt-5 text-sm text-foreground/70">
             最高レベルに到達しました。ここからは、実務での経験を積み重ねていくフェーズです。
           </p>
         )}
@@ -240,7 +232,7 @@ export default async function DashboardPage() {
 
         {/* 身についたスキル */}
         <section className="rounded-xl border border-border bg-surface p-6">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-brand">これまでに身につけたスキル</h2>
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-brand">あなたができるようになったこと</h2>
           {summary.achievedOutcomes.length > 0 ? (
             <ul className="mt-3 space-y-2 text-sm">
               {summary.achievedOutcomes.map((outcome) => (

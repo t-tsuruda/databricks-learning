@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { getProgressSummary } from "@/lib/progress";
 import { getLevelInfo } from "@/lib/skill-levels";
+import { MarkdownContent } from "@/components/markdown-content";
 
 const TYPE_LABEL: Record<string, string> = {
   TEXT: "座学",
@@ -60,6 +61,12 @@ export default async function CourseDetailPage({
           このコースは完了しました。お疲れさまでした！
         </p>
       )}
+
+      {course.status === "COMPLETED" && course.closingColumn.trim() ? (
+        <div className="mt-6 rounded-xl border border-amber-300 bg-amber-50 p-6">
+          <MarkdownContent content={course.closingColumn} />
+        </div>
+      ) : null}
 
       <ol className="mt-8 space-y-2">
         {course.lessons.map((lesson, index) => (

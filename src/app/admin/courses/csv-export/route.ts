@@ -15,6 +15,7 @@ export async function GET() {
     course.title,
     course.description,
     course.missionText,
+    course.closingColumn,
     String(course.level),
     String(course.orderIndex),
     course.isPublished ? "true" : "false",

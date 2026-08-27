@@ -51,6 +51,7 @@ model Course {
   title       String
   description String
   missionText String // ARCS Attention/Relevance copy shown at course entry
+  closingColumn String @default("") // 修了時のモチベーションコラム（学習者向け, Satisfaction）
   level       Int // 1-4, matches curriculum level
   orderIndex  Int
   isPublished Boolean  @default(true)

@@ -19,6 +19,7 @@ const courseSchema = z.object({
   title: z.string().trim().min(1),
   description: z.string().trim().min(1),
   missionText: z.string().trim().min(1),
+  closingColumn: z.string().trim().optional(),
   level: z.coerce.number().int().min(1).max(20),
   orderIndex: z.coerce.number().int().min(0),
 });
@@ -28,10 +29,12 @@ function buildCourseValues(raw: {
   title: unknown;
   description: unknown;
   missionText: unknown;
+  closingColumn?: unknown;
   level: unknown;
   orderIndex: unknown;
 }) {
-  return courseSchema.parse(raw);
+  const parsed = courseSchema.parse(raw);
+  return { ...parsed, closingColumn: parsed.closingColumn || "" };
 }
 
 function courseValuesFromForm(formData: FormData) {
@@ -40,6 +43,7 @@ function courseValuesFromForm(formData: FormData) {
     title: formData.get("title"),
     description: formData.get("description"),
     missionText: formData.get("missionText"),
+    closingColumn: formData.get("closingColumn") ?? undefined,
     level: formData.get("level"),
     orderIndex: formData.get("orderIndex"),
   });
@@ -429,6 +433,7 @@ export async function importCoursesFromCsv(formData: FormData): Promise<ActionRe
         title: raw.title,
         description: raw.description,
         missionText: raw.missionText,
+        closingColumn: raw.closingColumn || undefined,
         level: raw.level,
         orderIndex: raw.orderIndex || String(rowIndex),
       });

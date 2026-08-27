@@ -19,21 +19,3 @@ export async function updateSignupEnabled(formData: FormData): Promise<ActionRes
   revalidatePath("/admin/settings");
   return { ok: true, message: "保存しました。" };
 }
-
-export async function updateMotivationalMessages(formData: FormData): Promise<ActionResult> {
-  await requireAdminSession();
-  const raw = String(formData.get("messages") ?? "");
-  const messages = raw
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean);
-
-  await prisma.appSetting.upsert({
-    where: { key: "motivational_messages" },
-    create: { key: "motivational_messages", value: JSON.stringify(messages) },
-    update: { value: JSON.stringify(messages) },
-  });
-
-  revalidatePath("/admin/settings");
-  return { ok: true, message: "保存しました。" };
-}
