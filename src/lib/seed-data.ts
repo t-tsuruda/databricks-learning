@@ -1120,6 +1120,168 @@ const courses: CourseSeed[] = [
     ],
   },
   {
+    slug: "ml-ai-bi-practice",
+    title: "機械学習とAI/BI活用：MLflowとGenieで意思決定を加速する",
+    description:
+      "MLflowによる機械学習の実験管理・モデル管理から、AI/BI Genieによる自然言語データ分析、Databricks Asset Bundlesによる安全なデプロイまで、機械学習・生成AI活用の現場でデータ基盤担当者に求められる実務スキルを学びます。",
+    missionText:
+      "この章を終えると、モデルの実験管理とデプロイ、自然言語によるセルフサービスBIの設計、コードとしての安全なデプロイ管理という、機械学習と生成AI時代のデータ基盤運用に欠かせない3つの柱を実務レベルで語れるようになります。",
+    closingColumn:
+      "## コラム：AIが「答え」を出す時代に、あなたが設計するのは「答えの土台」\n\n生成AIが自然言語でSQLを書き、モデルの学習コードまで提案してくれる時代に、「データエンジニアやアナリティクスエンジニアの仕事はなくなるのでは」と感じたことはないでしょうか。\n\nこのコースで学んだMLflowによる実験の再現性の担保、Genieが正しく答えるための指示設計、Asset Bundlesによる安全なデプロイの仕組みは、どれも「AIやツールが出す答えを、安心して現場で使えるようにする」ための土台づくりです。AIがアウトプットを生み出すスピードが上がるほど、その土台を整備し、品質と再現性を保証できる人の価値はむしろ高まります。\n\nあなたは今回、AIに代替される作業ではなく、AIや自動化をうまく活かすための「地盤」を作る力を身につけました。次のコースのパフォーマンスチューニングと運用、そして最終章の総合演習でも、この「地盤を作る」視点がそのまま活きてきます。",
+    level: 4,
+    lessons: [
+      {
+        slug: "mlflow-experiment-tracking",
+        title: "MLflowで機械学習の実験管理とモデルレジストリを実践する",
+        type: LessonType.EXERCISE,
+        attentionText:
+          "「先週試したモデルの方が精度が良かった気がするけど、どのノートブックのどのセルだったか思い出せない」——機械学習プロジェクトでよくある「実験の迷子」は、思いつきで試行錯誤を繰り返すほど深刻になります。",
+        relevanceText:
+          "MLflowによる実験管理は、データサイエンティストやMLエンジニアだけの話ではありません。機械学習を含むデータ基盤全体を任されるDatabricks担当者にとっても、「どのモデルが」「どのデータ・パラメータで」「どんな精度だったか」を再現可能な形で残すことは、モデルを安全に本番運用するための土台になります。",
+        lectureContent:
+          "## MLflow Trackingで実験を記録する\n\nMLflowはDatabricksにネイティブに統合された、機械学習のライフサイクル管理ツールです。中でも**MLflow Tracking**は、モデル学習の「実験」を記録する仕組みです。\n\n- **Run（実行）**: 1回のモデル学習の記録単位\n- **Parameter（パラメータ）**: 学習時に設定した値（例：木の深さ、学習率）\n- **Metric（メトリクス）**: 精度・誤差などの評価指標\n- **Artifact（アーティファクト）**: 学習済みモデルファイルやグラフなどの成果物\n\n```python\nimport mlflow\n\nmlflow.autolog()  # scikit-learnなどの主要ライブラリなら自動でパラメータ・メトリクスを記録\n\nwith mlflow.start_run(run_name=\"baseline_model\"):\n    model.fit(X_train, y_train)\n    mlflow.log_metric(\"accuracy\", accuracy)\n```\n\n## Unity CatalogのModel Registryでモデルを管理する\n\n学習した複数のモデルの中から「本番で使うべきモデル」を管理するのが**Model Registry**です。現在のDatabricksでは、モデルをUnity Catalogに登録し、`@champion`（現行の本番モデル）や`@challenger`（比較対象の候補モデル）といった**エイリアス**で、どのモデルが本番用かを明示します。\n\n```python\nmlflow.register_model(\n    model_uri=f\"runs:/{run_id}/model\",\n    name=\"main.ml_models.churn_predictor\",\n)\n```\n\nエイリアスを使うことで、コードを変更せずに「本番で使うモデル」だけを切り替えられるようになります。",
+        exampleContent:
+          "実務では、同じ課題に対して10種類以上のパラメータの組み合わせを試すことも珍しくありません。MLflow Trackingで実験を記録していないと、「一番良かったモデルがどれだったか」を再現できず、せっかくの試行錯誤が資産になりません。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. Databricks Free Editionのノートブックで、`scikit-learn`などを使った簡単な分類・回帰モデル（例：`sklearn.datasets`のサンプルデータ）を1つ用意してください。\n2. `mlflow.autolog()`を有効にし、`with mlflow.start_run():`のブロック内でモデルを学習させてください。\n3. パラメータ（例：木の深さ、正則化の強さなど）を変えて、同じモデルを2〜3回学習させ、複数のRunを記録してください。\n4. 画面左の「Experiments」から、記録された複数のRunを比較し、どのパラメータの組み合わせが最も精度が良かったかを確認してください。\n5. 最も精度が良かったRunのモデルを`main.ml_models.<好きな名前>`としてUnity Catalogに登録するコード（`mlflow.register_model`）を書いてください（実際に登録できる権限がない場合は、コードを書くところまでで構いません）。",
+        modelAnswerContent:
+          "**模範解答例**\n\n```python\nimport mlflow\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.metrics import accuracy_score\n\nmlflow.autolog()\n\nfor max_depth in [3, 5, 10]:\n    with mlflow.start_run(run_name=f\"rf_depth_{max_depth}\"):\n        model = RandomForestClassifier(max_depth=max_depth)\n        model.fit(X_train, y_train)\n        preds = model.predict(X_test)\n        acc = accuracy_score(y_test, preds)\n        mlflow.log_metric(\"accuracy\", acc)\n\n# Experiments画面で一番accuracyが高かったRunのrun_idを確認したうえで\nmlflow.register_model(\n    model_uri=\"runs:/<best_run_id>/model\",\n    name=\"main.ml_models.sample_classifier\",\n)\n```\n\n`autolog()`を使うことで、`fit()`を呼ぶだけでパラメータ・メトリクス・モデル自体が自動的に記録されます。複数のRunをExperiments画面で比較し、最良のRunだけをUnity CatalogのModel Registryに登録することで、「どのモデルが検証済みで本番投入候補か」をチーム全体で共有できます。",
+        outcomes: [
+          "MLflow Trackingで機械学習の実験（パラメータ・メトリクス・モデル）を記録できる",
+          "Unity CatalogのModel Registryにモデルを登録し、エイリアスで管理する考え方を説明できる",
+        ],
+        relatedJobs: ["Data Scientist", "Machine Learning Engineer", "Data Engineer"],
+        skillTags: ["MLflow Tracking", "実験管理", "Model Registry"],
+        referenceLinks: [
+          { label: "Qiita（taka_yayoiさん）: MLflowとは何か", url: "https://qiita.com/taka_yayoi/items/799b0320e4d8ae2e4234" },
+          { label: "Databricks公式: MLflowによる機械学習のライフサイクル管理", url: "https://docs.databricks.com/en/mlflow/index.html" },
+        ],
+        quizzes: [
+          {
+            question: "MLflow Trackingで記録される情報の組み合わせとして最も適切なものはどれですか？",
+            options: [
+              { label: "パラメータ・メトリクス・モデルなどのアーティファクト", isCorrect: true },
+              { label: "SQLのGRANT文の実行履歴のみ", isCorrect: false },
+              { label: "クラスタの起動・終了時刻のみ", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "model-deployment-serving",
+        title: "モデルのデプロイと運用：バッチ推論とモデルサービングの基礎",
+        type: LessonType.TEXT,
+        attentionText:
+          "せっかく高精度なモデルを作っても、「それを誰が」「どうやって」「日々の業務の中で」使うのかが決まっていなければ、ノートブックの中で眠ったままになります。",
+        relevanceText:
+          "モデルを「作る」ことと「実務で動かし続ける」ことの間には大きな距離があります。この距離を埋める設計ができることが、データサイエンティストと二人三脚で働くDatabricks担当者に求められる実務スキルです。",
+        lectureContent:
+          "## バッチ推論とリアルタイム推論、どちらを選ぶか\n\nモデルを本番で使う方法は、大きく2つに分かれます。\n\n- **バッチ推論**: 登録済みモデルを使い、定期的に大量データへまとめて予測を行う（例：毎晩、全顧客の解約リスクスコアを再計算する）\n- **リアルタイム推論（Model Serving）**: Webサービスやアプリからのリクエストに対して、その場で1件ずつ予測結果を返す（例：ECサイトでのレコメンド表示）\n\n多くの実務ケースでは、まず実装・運用がシンプルなバッチ推論から始め、本当に「その場で即座に」予測が必要な場合にのみModel Servingを検討するのが現実的です。\n\n## バッチ推論の実装イメージ\n\n```python\nimport mlflow\n\nmodel_uri = \"models:/main.ml_models.churn_predictor@champion\"\npredict_udf = mlflow.pyfunc.spark_udf(spark, model_uri=model_uri)\n\nscored_df = customers_df.withColumn(\"churn_score\", predict_udf(*feature_columns))\nscored_df.write.mode(\"overwrite\").saveAsTable(\"main.gold.churn_scores\")\n```\n\n## Model Serving（リアルタイム推論）の考え方\n\nDatabricksのModel Servingは、登録済みモデルをフルマネージドなREST APIエンドポイントとして公開する機能です。アプリケーション側は、HTTPリクエストを送るだけでモデルの予測結果を得られます。ただし、エンドポイントの可用性やレイテンシ、コストの監視が新たな運用負荷になるため、「本当にリアルタイム性が必要か」を見極めることが重要です。",
+        exampleContent:
+          "実務では、『解約予測モデルを毎朝バッチで実行し、Gold層のテーブルに書き戻してBIダッシュボードで確認する』という運用が非常に多く採用されます。リアルタイム性が本当に必要なのは、ECサイトのレコメンドのように「今この瞬間のユーザー行動」に反応する必要があるケースに限られます。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. 前のレッスンでUnity Catalogに登録したモデル（またはそれを想定したモデル）を使い、`mlflow.pyfunc.load_model`または`mlflow.pyfunc.spark_udf`を使ったバッチ推論のコードを書いてください。\n2. 予測結果を新しいカラムとして追加したDataFrameを、Gold層相当のテーブルとして保存するコード（`saveAsTable`）を書いてください。\n3. あなたが今取り組んでいる（または想定する）業務課題を1つ選び、「バッチ推論で十分か」「リアルタイム推論（Model Serving）が必要か」を、判断理由とあわせて2〜3行で説明してください。",
+        modelAnswerContent:
+          "**模範解答例**\n\n```python\nmodel_uri = \"models:/main.ml_models.churn_predictor@champion\"\npredict_udf = mlflow.pyfunc.spark_udf(spark, model_uri=model_uri)\n\nscored_df = customers_df.withColumn(\n    \"churn_score\", predict_udf(*feature_columns)\n)\nscored_df.write.mode(\"overwrite\").saveAsTable(\"main.gold.churn_scores\")\n```\n\n判断例：「解約予測は、営業チームが毎朝の朝会で確認する用途であり、1秒単位の即時性は不要なため、コストと運用負荷が低いバッチ推論を選択する。一方、ECサイトの商品レコメンドはユーザーの直近のクリックに反応する必要があるため、Model Servingによるリアルタイム推論が適している。」",
+        outcomes: [
+          "バッチ推論とリアルタイム推論（Model Serving）の違いと使い分けを説明できる",
+          "登録済みモデルを使ったバッチ推論をSpark DataFrameに対して実装できる",
+        ],
+        relatedJobs: ["Machine Learning Engineer", "Data Engineer", "Data Scientist"],
+        skillTags: ["バッチ推論", "Model Serving", "MLOps"],
+        referenceLinks: [
+          { label: "Qiita（taka_yayoiさん）: MLflowとDelta Lakeを用いた機械学習トレーニング", url: "https://qiita.com/taka_yayoi/items/eadc1e7094988484b2a1" },
+          { label: "Databricks公式: Model Serving", url: "https://docs.databricks.com/en/machine-learning/model-serving/index.html" },
+        ],
+        quizzes: [
+          {
+            question: "「毎朝、全顧客の解約リスクスコアをまとめて再計算し、ダッシュボードで確認する」という要件に最も適した推論方式はどれですか？",
+            options: [
+              { label: "リアルタイム推論（Model Serving）", isCorrect: false },
+              { label: "バッチ推論", isCorrect: true },
+              { label: "推論は行わず手作業で判断する", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "genie-ai-bi-natural-language",
+        title: "AI/BI Genieで自然言語データ分析を実現する",
+        type: LessonType.EXERCISE,
+        attentionText:
+          "「先月の売上トップ5の商品を教えて」とチャットのように話しかけるだけで、SQLを1行も書かずにGoldテーブルから答えが返ってくるとしたら、あなたの仕事はどう変わるでしょうか。",
+        relevanceText:
+          "AI/BI Genieのような自然言語分析ツールが広がるほど、Databricks担当者の仕事は「SQLを書く人」から「AIが正しく答えられるようにテーブルと定義を整える人」へと変わっていきます。この設計力こそが、生成AI時代に求められる新しい実務スキルです。",
+        lectureContent:
+          "## Genieとは何か\n\n**AI/BI Genie**は、自然言語の質問に対して、Databricks上のテーブルからSQLを自動生成し、回答してくれる機能です。ビジネス側の担当者が、SQLを書けなくても自分自身でデータに問いかけられるようになります。\n\n## Genieスペースを「育てる」という仕事\n\nGenieは魔法ではありません。回答精度は、Genieスペースにどのテーブルを紐付け、どんな**指示（Instructions）**を与えたかに大きく左右されます。\n\n- **対象テーブルの選定**: 生データ（Bronze/Silver）ではなく、意味が明確なGoldテーブルを対象にする\n- **指示（Instructions）の設定**: 「『売上』は`gross_amount`ではなく`net_amount`列を指す」のような、社内特有の用語やビジネスルールを明文化する\n- **サンプル質問とSQLの登録**: よくある質問とその正しいSQLをあらかじめ登録し、Genieの回答精度を高める\n\n## 精度向上のPDCA\n\n1. ユーザーの質問と、Genieが生成したSQL・回答を確認する\n2. 誤った回答があれば、原因（テーブル不足、指示の曖昧さなど）を特定する\n3. 指示やサンプルSQLを追加・修正する\n4. 再度同じ質問を試し、改善を確認する\n\nこの改善サイクルを回し続けることが、Genieスペースの運用担当者の実務そのものです。",
+        exampleContent:
+          "実務では、『売上』という言葉ひとつをとっても、部署によって「総額」を指すのか「返品を除いた金額」を指すのか解釈が割れることがあります。この曖昧さを事前にGenieの指示として明文化しておかないと、部署ごとに違う答えが返ってきてしまい、かえって混乱を招きます。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. Databricks Free EditionでAI/BIのGenieスペースを新規作成し、これまでのレッスンで作成したテーブル（例：Gold層の集計テーブル）を1つ以上紐付けてください。\n2. テーブルやカラムに対して、コメント（説明文）を追加し、Genieが列の意味を理解しやすいようにしてください。\n3. 「合計金額はいくらですか」「一番多いカテゴリは何ですか」など、自然言語で2〜3個質問し、Genieが生成したSQLと回答を確認してください。\n4. 回答が意図と違っていた場合、Genieの「指示（Instructions）」機能を使って、用語の定義やルールを追加し、同じ質問を再度試してください。\n5. 改善前後でのSQLや回答の違いをメモに残してください。",
+        modelAnswerContent:
+          "**模範解答例**\n\n指示（Instructions）の追加例：\n\n> 「売上」と質問された場合は、`net_amount`列（返品・割引を控除した後の金額）の合計を指すものとする。`gross_amount`（返品前の総額）とは区別すること。\n\nこのような指示を1文加えるだけで、Genieが生成するSQLの`SUM()`対象列が正しいものに変わり、部署間で解釈がぶれていた「売上」の定義が統一されます。改善前は`gross_amount`を合計していたが、指示追加後は`net_amount`を正しく合計するSQLが生成されるようになった、という変化を確認できれば理解できています。",
+        outcomes: [
+          "Genieスペースの精度が、対象テーブルの選定と指示（Instructions）の設計に左右されることを説明できる",
+          "自然言語での質問→SQL生成→回答という一連の流れを実際に試し、改善サイクルを回せる",
+        ],
+        relatedJobs: ["Analytics Engineer", "BI Engineer", "Data Analyst", "Databricks管理者"],
+        skillTags: ["AI/BI Genie", "自然言語分析", "セマンティックレイヤー設計"],
+        referenceLinks: [
+          { label: "Qiita（taka_yayoiさん）: Databricks無料版で始めるGenie入門", url: "https://qiita.com/taka_yayoi/items/b5f0dbe7d720dba369ca" },
+          { label: "Qiita（taka_yayoiさん）: AI/BI Genieスペースのベストプラクティス", url: "https://qiita.com/taka_yayoi/items/bc7deb2fafbc065915b7" },
+          { label: "Databricks公式: AI/BI Genie", url: "https://docs.databricks.com/en/genie/index.html" },
+        ],
+        quizzes: [
+          {
+            question: "Genieスペースの回答精度を高めるための取り組みとして、最も適切なものはどれですか？",
+            options: [
+              { label: "Bronzeの生データをそのまま紐付け、ユーザーの解釈に任せる", isCorrect: false },
+              { label: "意味が明確なGoldテーブルを対象にし、用語の定義を指示（Instructions）として明文化する", isCorrect: true },
+              { label: "一度設定したら二度と指示を見直さない", isCorrect: false },
+            ],
+          },
+        ],
+      },
+      {
+        slug: "databricks-asset-bundles-cicd",
+        title: "Databricks Asset Bundlesで安全にコードをデプロイする",
+        type: LessonType.TEXT,
+        attentionText:
+          "ノートブックを手作業で本番ワークスペースにコピーしてデプロイしていませんか？　それでは「開発環境では動いたのに本番だけ動かない」「誰が・いつ・何を変更したか分からない」という事故がいつか必ず起こります。",
+        relevanceText:
+          "JobやPipeline、権限設定までを「コード」として管理し、環境ごとに安全に反映できる仕組みを持つことは、単発の実装者ではなく、データ基盤全体の変更管理を任される担当者に不可欠なスキルです。",
+        lectureContent:
+          "## Databricks Asset Bundles（DAB）とは\n\n**Databricks Asset Bundles（DAB）**は、Job・Pipeline・権限設定などのDatabricksリソースを`databricks.yml`というYAMLファイルにコードとして定義し、Gitで管理しながらデプロイするための仕組みです。なお2026年にはDABの概念が整理され、「Declarative Automation Bundles」という名称に変わっていますが、「リソースをコードとして宣言し、環境ごとに安全にデプロイする」という考え方の本質は変わりません。\n\n## bundleの構成イメージ\n\n```yaml\nbundle:\n  name: sales-pipeline\n\ntargets:\n  dev:\n    workspace:\n      host: https://dev-workspace.databricks.com\n  prod:\n    workspace:\n      host: https://prod-workspace.databricks.com\n    mode: production\n\nresources:\n  jobs:\n    daily_sales_etl:\n      name: \"Daily Sales ETL (${bundle.target})\"\n      tasks:\n        - task_key: bronze_to_silver\n          notebook_task:\n            notebook_path: ./notebooks/bronze_to_silver.py\n```\n\n## なぜコードとして管理するのか\n\n- **再現性**: 同じ`databricks.yml`から、dev/staging/prodのどの環境にも同じ構成をデプロイできる\n- **レビュー可能性**: Pull Requestでレビューしてからデプロイできるため、「誰が何を変更したか」が記録に残る\n- **ロールバック**: Gitの履歴を戻すだけで、以前の構成に戻せる\n\n## 基本的なコマンド\n\n```bash\ndatabricks bundle validate -t dev    # 構成に誤りがないか検証\ndatabricks bundle deploy -t dev      # dev環境にデプロイ\ndatabricks bundle run daily_sales_etl -t dev  # デプロイしたJobを実行\n```",
+        exampleContent:
+          "実務では、CI/CDパイプライン（GitHub Actionsなど）の中で`databricks bundle deploy -t prod`を自動実行し、`main`ブランチにマージされたタイミングで本番環境に安全に反映する、という運用がよく行われます。手作業でのコピペを一切なくすことが、事故を防ぐ最大のポイントです。",
+        handsOnContent:
+          "**ハンズオン課題**\n\n1. これまでのレッスンで作成したJob（またはパイプライン）を1つ思い浮かべ、それを`databricks.yml`のbundleとして定義するYAMLを書いてください（`bundle`名、`targets`にdev/prodの2つ、`resources.jobs`に該当のJobを1つ）。\n2. dev用ターゲットとprod用ターゲットで、変えるべき設定（ワークスペースのURL、クラスタサイズ、通知先メールアドレスなど）を最低2つ挙げてください。\n3. `databricks bundle validate` → `databricks bundle deploy` → `databricks bundle run`という3つのコマンドが、それぞれ何をするためのものかを自分の言葉で説明してください。\n4. 「ノートブックの手動コピペによるデプロイ」と比べて、bundleを使ったデプロイのどこが「事故が起きにくい」のかを2〜3行でまとめてください。",
+        modelAnswerContent:
+          "**模範解答例**\n\n```yaml\nbundle:\n  name: daily-sales-etl\n\ntargets:\n  dev:\n    workspace:\n      host: https://dev-workspace.databricks.com\n  prod:\n    workspace:\n      host: https://prod-workspace.databricks.com\n    mode: production\n\nresources:\n  jobs:\n    daily_sales_etl:\n      name: \"Daily Sales ETL (${bundle.target})\"\n      tasks:\n        - task_key: bronze_to_silver\n          notebook_task:\n            notebook_path: ./notebooks/bronze_to_silver.py\n      email_notifications:\n        on_failure:\n          - data-team@example.com\n```\n\ndev/prodで変えるべき設定：ワークスペースのホストURL、通知先メールアドレス（devは開発者個人、prodはチームのメーリングリスト）、クラスタサイズ（devは小さく安く、prodは処理量に応じたサイズ）。\n\n手動コピペと比べた利点：Gitで変更履歴が残るため「いつ・誰が・何を変えたか」を追跡でき、`validate`によりデプロイ前に構成ミスを検知でき、同じ定義から複数環境へ再現性を持ってデプロイできるため「開発環境では動いたのに本番では動かない」という事故を防げる。",
+        outcomes: [
+          "Databricks Asset Bundlesの目的（コードとしてのリソース管理・環境間の再現性）を説明できる",
+          "databricks.ymlの基本構成（bundle/targets/resources）を読み書きできる",
+        ],
+        relatedJobs: ["Data Platform Engineer", "Databricks管理者", "Data Engineer"],
+        skillTags: ["Databricks Asset Bundles", "CI/CD", "Infrastructure as Code"],
+        referenceLinks: [
+          { label: "Qiita（taka_yayoiさん）: 2026年版 Declarative Automation Bundles（旧DAB）入門", url: "https://qiita.com/taka_yayoi/items/b76e40011e79b5d05b86" },
+          { label: "Databricks公式: Databricks Asset Bundles", url: "https://docs.databricks.com/en/dev-tools/bundles/index.html" },
+        ],
+        quizzes: [
+          {
+            question: "Databricks Asset Bundlesを使ってJobをコードとして管理する最大の利点は何ですか？",
+            options: [
+              { label: "ノートブックを手作業でコピーする手間が完全になくなり、コード管理と環境間の再現性が保証される", isCorrect: true },
+              { label: "クラスタの起動速度が自動的に速くなる", isCorrect: false },
+              { label: "SQLを書かなくてもすべてのJobが自動生成される", isCorrect: false },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
     slug: "capstone-open-data-mini-platform",
     title: "実務総合演習：オープンデータで作るミニデータ基盤",
     description:
